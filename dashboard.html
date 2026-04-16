@@ -2315,14 +2315,14 @@
           rows.length;
 
         let table =
-          "<table><thead><tr><th>Session ID</th><th>Name</th><th>Email</th><th>Message</th><th>Submitted At</th></tr></thead><tbody>";
+          "<table><thead><tr><th>Session ID</th><th>Name</th><th>Mobile No</th><th>Email</th><th>Message</th><th>Submitted At</th></tr></thead><tbody>";
         let recentTable =
           "<table><thead><tr><th>Name</th><th>Message</th><th>Submitted At</th></tr></thead><tbody>";
 
         let filteredCount = 0;
         rows.forEach((row, idx) => {
           const searchString =
-            `${row.session_id} ${row.name || ""} ${row.email || ""} ${row.message || ""}`.toLowerCase();
+            `${row.session_id} ${row.name || ""} ${row.phone || ""} ${row.email || ""} ${row.message || ""}`.toLowerCase();
           if (filterText && !searchString.includes(filterText.toLowerCase()))
             return;
           filteredCount++;
@@ -2334,7 +2334,7 @@
           const msgPreview = msg.length > 40 ? msg.substring(0, 40) + "…" : msg;
           const msgCell = `<span class="msg-preview">${msgPreview}</span><button class="msg-view-btn" onclick="openMsgModal(this)" data-msg="${msg.replace(/"/g, "&quot;")}">View</button>`;
 
-          table += `<tr><td><span class="session-id-pill">${row.session_id || "N/A"}</span></td><td>${row.name || "N/A"}</td><td>${row.email || "N/A"}</td><td>${msgCell}</td><td>${ts}</td></tr>`;
+          table += `<tr><td><span class="session-id-pill">${row.session_id || "N/A"}</span></td><td>${row.name || "N/A"}</td><td>${row.phone || "N/A"}</td><td>${row.email || "N/A"}</td><td>${msgCell}</td><td>${ts}</td></tr>`;
           if (idx < 5) {
             recentTable += `<tr><td>${row.name || "Unknown"}</td><td>${msgPreview}</td><td>${ts}</td></tr>`;
           }
@@ -2367,8 +2367,14 @@
         // document.getElementById("overview-msgs-count").innerText = rows.length;
 
         let table =
-          "<table><thead><tr><th>Session ID</th><th class='text-right'>Activity</th></tr></thead><tbody>";
-        Object.keys(grouped).forEach((sid, idx) => {
+          "<table><thead><tr><th>Session ID</th><th>First Question</th><th>Started on</th><th>Ended ON</th><th>Duration</th><th class='text-right'>Activity</th></tr></thead><tbody>";
+        const sortedSids = Object.keys(grouped).sort((a, b) => {
+          const timeA = new Date(grouped[a][0].created_at || grouped[a][0].timestamp || grouped[a][0].chat_day || 0);
+          const timeB = new Date(grouped[b][0].created_at || grouped[b][0].timestamp || grouped[b][0].chat_day || 0);
+          return timeB - timeA;
+        });
+
+        sortedSids.forEach((sid, idx) => {
           if (
             filterText &&
             !sid.toLowerCase().includes(filterText.toLowerCase())
@@ -2376,6 +2382,19 @@
             return;
           const msgs = grouped[sid];
           const collapseId = `collapse-session-${idx}`;
+
+          const formatDateLocal = (ts) => {
+            if (!ts) return "N/A";
+            const d = new Date(ts);
+            if (isNaN(d.getTime())) return "N/A";
+            const day = d.getDate();
+            const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+            let h = d.getHours();
+            const m = d.getMinutes();
+            const am = h >= 12 ? 'pm' : 'am';
+            h = h % 12 || 12;
+            return `${day} ${months[d.getMonth()]} ${d.getFullYear()}, ${h}:${m < 10 ? '0' + m : m}${am}`;
+          };
 
           let msgsHtml = '<ul class="message-list">';
           msgs.forEach((m) => {
@@ -2386,11 +2405,20 @@
           });
           msgsHtml += "</ul>";
 
-          table += `<tr class="session-row" onclick="const e=document.getElementById('${collapseId}'); e.style.display=e.style.display==='none'?'table-row':'none';">
-            <td><span class="session-id-pill">${sid}</span></td>
-            <td class="view-more-text text-right"><i class="fa-solid fa-layer-group"></i> ${msgs.length} events</td>
+          const firstQuestionRaw = msgs.find(m => (m.role || "").toLowerCase() === "user")?.message || "No question asked";
+          const firstQuestion = firstQuestionRaw.length > 80 ? firstQuestionRaw.substring(0, 80) + "..." : firstQuestionRaw;
+
+          const startedOn = msgs.length > 0 ? formatDateLocal(msgs[0].created_at || msgs[0].timestamp || msgs[0].chat_day) : "N/A";
+
+          table += `<tr class="session-row" onclick="const e=document.getElementById('${collapseId}'); const isClosed=e.style.display==='none'; e.style.display=isClosed?'table-row':'none'; const icon=this.querySelector('.toggle-icon'); if(icon) { icon.classList.replace(isClosed?'fa-plus':'fa-minus', isClosed?'fa-minus':'fa-plus'); }">
+            <td><i class="fa-solid fa-plus toggle-icon" style="margin-right: 12px; font-size: 12px; color: #38bdf8; opacity: 0.8; transition: transform 0.2s;"></i><span class="session-id-pill" title="${sid}">${sid.length > 8 ? sid.substring(0, 8) + '...' : sid}</span></td>
+            <td style="font-size: 13px; color: var(--ns-muted);" title="${firstQuestionRaw.replace(/"/g, '&quot;')}">${firstQuestion}</td>
+            <td style="font-size: 13px; color: var(--ns-muted);">${startedOn}</td>
+            <td style="font-size: 13px; color: var(--ns-muted);"></td>
+            <td style="font-size: 13px; color: var(--ns-muted);"></td>
+            <td class="view-more-text text-right"><i class="fa-solid fa-layer-group"></i> ${msgs.length} Interactions</td>
           </tr>
-          <tr id="${collapseId}" style="display:none;"><td colspan="2" style="background: rgba(15,23,42,0.8); padding: 24px; border-radius: 12px;">${msgsHtml}</td></tr>`;
+          <tr id="${collapseId}" style="display:none;"><td colspan="6" style="background: rgba(15,23,42,0.8); padding: 24px; border-radius: 12px;">${msgsHtml}</td></tr>`;
         });
         container.innerHTML = table + "</tbody></table>";
         // Re-sync testing report if chat logs change
