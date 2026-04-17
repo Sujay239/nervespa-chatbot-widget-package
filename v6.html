@@ -220,6 +220,52 @@
       display: block;
       margin: 0;
     }
+    
+    .ns-beta-badge {
+      font-size: 9px;
+      font-weight: 800;
+      text-transform: uppercase;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.05));
+      color: #fff;
+      padding: 2px 8px;
+      border-radius: 100px;
+      letter-spacing: 0.8px;
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      display: inline-flex;
+      align-items: center;
+      height: fit-content;
+      margin-top: 1px;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      user-select: none;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .ns-beta-badge:hover {
+      transform: scale(1.08) translateY(-1px);
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.1));
+      border-color: rgba(255, 255, 255, 0.5);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    .ns-beta-badge::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+      transition: 0.5s;
+    }
+
+    .ns-beta-badge:hover::after {
+      left: 100%;
+      transition: 0.6s;
+    }
 
     .ns-topbar-right {
       display: flex;
@@ -899,6 +945,7 @@
       <div class="ns-topbar-left">
         <img class="ns-logo"
           src="https://s3.us-east-2.amazonaws.com/cdn.hmsctl.com/publicshare/nerve-spa-logo-white.png" alt="NerveSpa" />
+        <span class="ns-beta-badge" title="This is a beta version of the NerveSpa Support Assistant.">Beta</span>
       </div>
 
       <div class="ns-topbar-right">
@@ -974,14 +1021,26 @@
     const SIZE_KEY = "ns_widget_size_v1";
     const WINDOW_STATE_KEY = "ns_widget_window_state_v1";
 
+    const RATE_LIMIT_COUNT = 30; // Max questions
+    const RATE_LIMIT_WINDOW = 60000; // 1 minute in ms
+    const BLOCK_KEY = "ns_user_blocked";
+
     function safeGetItem(key) {
-      try { return safeGetItem(key); } catch (e) { return null; }
+      try {
+        return localStorage.getItem(key);
+      } catch (e) {
+        return null;
+      }
     }
     function safeSetItem(key, value) {
-      try { safeSetItem(key, value); } catch (e) { }
+      try {
+        localStorage.setItem(key, value);
+      } catch (e) { }
     }
     function safeRemoveItem(key) {
-      try { safeRemoveItem(key); } catch (e) { }
+      try {
+        localStorage.removeItem(key);
+      } catch (e) { }
     }
 
     const CATEGORIES = [
@@ -1018,6 +1077,7 @@
     let lastUserQuery = null;
     let currentArticleId = null;
     let thread = [];
+    let queryTimestamps = [];
     let isTyping = false;
     let isFullscreen = false;
     let isMinimized = false;
@@ -2247,6 +2307,7 @@
         attachHomePromptEvents();
         const elHomePrompt = document.getElementById("homePrompt");
         if (elHomePrompt) elHomePrompt.focus();
+        checkBlockStatus();
       }, 50);
     }
 
@@ -2265,6 +2326,7 @@
         attachHomePromptEvents();
         const elHomePrompt = document.getElementById("homePrompt");
         if (elHomePrompt) elHomePrompt.focus();
+        checkBlockStatus();
       }, 50);
     }
 
@@ -2423,6 +2485,25 @@
       } catch (err) { }
     }
 
+    async function logAudit(action, metadata = {}) {
+      try {
+        const isDev = safeGetItem("is_dev") === "true";
+        await fetch(LOG_WEBHOOK_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            session_id: sessionId,
+            role: "audit",
+            action: action,
+            message: `[AUDIT] ${action}`,
+            metadata: metadata,
+            is_dev: isDev,
+            timestamp: new Date().toISOString()
+          }),
+        });
+      } catch (err) { }
+    }
+
     async function sendFeedback(wasHelpful) {
       if (!wasHelpful) {
         pushSystemCard({
@@ -2437,10 +2518,47 @@
     }
 
     async function ask(query) {
+      const isBlocked = safeGetItem(BLOCK_KEY) === "true";
+      if (isBlocked) {
+        pushSystemCard({
+          title: "Access Restricted",
+          body: "You have been temporarily blocked from sending more messages due to unusual activity. please contact support if this is a mistake.",
+          actions: [{ type: "contact", label: "Contact Support" }]
+        });
+        return;
+      }
+
       if (isTyping) return;
 
       const q = (query || "").trim();
       if (!q) return;
+
+      // Rate Limiting Logic
+      const now = Date.now();
+      queryTimestamps = queryTimestamps.filter(t => now - t < RATE_LIMIT_WINDOW);
+
+      if (queryTimestamps.length >= RATE_LIMIT_COUNT) {
+        safeSetItem(BLOCK_KEY, "true");
+        logAudit("RATE_LIMIT_EXCEEDED", {
+          query_count: queryTimestamps.length,
+          last_query: q
+        });
+
+        // Disable UI
+        if (elFreeText) elFreeText.disabled = true;
+        if (btnSend) btnSend.disabled = true;
+        const elHomePrompt = document.getElementById("homePrompt");
+        if (elHomePrompt) elHomePrompt.disabled = true;
+
+        pushSystemCard({
+          title: "Access Restricted",
+          body: "You have reached the limit of 30 questions per minute. Your access has been restricted to protect our services.",
+          actions: [{ type: "contact", label: "Contact Support" }]
+        });
+        return;
+      }
+
+      queryTimestamps.push(now);
 
       lastUserQuery = q;
       pushUserMessage(q);
@@ -2627,6 +2745,18 @@
       if (e.key === "Escape") closeWidget();
     });
 
+    function checkBlockStatus() {
+      const isBlocked = safeGetItem(BLOCK_KEY) === "true";
+      if (isBlocked) {
+        if (elFreeText) elFreeText.disabled = true;
+        if (btnSend) btnSend.disabled = true;
+        const elHomePrompt = document.getElementById("homePrompt");
+        if (elHomePrompt) elHomePrompt.disabled = true;
+        return true;
+      }
+      return false;
+    }
+
     window.nsWidgetActions = Object.assign(window.nsWidgetActions || {}, {
       ask,
       populateQuestion,
@@ -2646,6 +2776,7 @@
     });
 
     initTheme();
+    checkBlockStatus();
     thread = loadThread();
     restoreSize();
     restoreWindowState();
