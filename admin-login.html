@@ -400,6 +400,13 @@
       const pinError = document.getElementById("pin-error");
 
       pinInputs[0].focus();
+      
+      // Check for active session on load to update UI feedback
+      const isActiveSession = localStorage.getItem("isLoggedIn") === "true" && localStorage.getItem("authToken");
+      if (isActiveSession) {
+        const sub = document.querySelector("#pin-section .subtitle");
+        if (sub) sub.innerHTML = '<i class="fa-solid fa-lock-open" style="color:var(--ns-accent)"></i> Active session found. Enter PIN to unlock.';
+      }
 
       // PIN Input Logic (OTP behavior)
       pinInputs.forEach((input, index) => {
@@ -428,12 +435,19 @@
         const pin = pinInputs.map(i => i.value).join("");
         if (pin === REQUIRED_PIN) {
           sessionStorage.setItem("pinVerified", "true");
+
+          // Check for existing session - if valid, skip login form
+          if (localStorage.getItem("isLoggedIn") === "true" && localStorage.getItem("authToken")) {
+            window.location.href = "dashboard.html";
+            return;
+          }
+
           pinSection.style.opacity = "0";
           setTimeout(() => {
             pinSection.style.display = "none";
             loginSection.style.display = "block";
             loginSection.style.opacity = "0";
-            setTimeout(() => loginSection.style.opacity = "1", 50);
+            setTimeout(() => (loginSection.style.opacity = "1"), 50);
           }, 300);
         } else {
           pinError.style.display = "block";
