@@ -1921,11 +1921,12 @@
             status: status
           };
 
-          await fetch("https://n8n.srv917960.hstgr.cloud/webhook/auditlog", {
+          const logRes = await fetch("https://n8n.srv917960.hstgr.cloud/webhook/auditlog", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(payload)
           });
+          handleAuthError(logRes);
         } catch (err) {
           console.warn("Audit log failed:", err);
         }
@@ -1942,6 +1943,8 @@
         if (res.status === 401 || res.status === 403) {
           localStorage.removeItem("isLoggedIn");
           localStorage.removeItem("authToken");
+          localStorage.removeItem("adminUserName");
+          localStorage.removeItem("activeDashboardTab");
           window.location.href = "admin.html?error=session_expired";
           return true;
         }
@@ -2053,6 +2056,7 @@
         } else if (tab === "submissions") {
           if (!loadedStates.submissions) loadSubmissions();
         } else if (tab === "fallbacks") {
+          if (!loadedStates.analytics) loadAnalyticsData();
           if (!loadedStates.chatlogs) loadChatLogs();
         }
       }
@@ -2739,7 +2743,7 @@
         const sessVal = document.getElementById("test-sessions-val");
         if (sessVal) sessVal.innerText = (tr.sessions || 0).toLocaleString();
 
-        // 1. Update Heatmap (using heatmap_series from analytics)
+        // 1. Update Heatmap (using heatmap_series from analytics data)
         const heatmap = document.getElementById("testing-heatmap");
         if (heatmap && tr.heatmap_series) {
           heatmap.innerHTML = "";
@@ -2760,196 +2764,159 @@
           });
         }
 
-        // Most Asked Questions (Derive from chat logs)
-        const mostAskedBody = document.getElementById("test-most-asked-body");
-        if (
-          mostAskedBody &&
-          typeof lastChatLogsData !== "undefined" &&
-          lastChatLogsData.length
-        ) {
-          const counts = {};
-          lastChatLogsData.forEach((m) => {
-            if ((m.role || "").toLowerCase() === "user") {
-              const q = (m.message || "").trim();
-              if (q && q.length < 100) counts[q] = (counts[q] || 0) + 1;
+        // Aggregate data from Chat Logs (Session-Aware)
+        const fallbacks = [];
+        const questionCounts = {};
+        let totalUserMsgs = 0;
+
+        if (typeof lastChatLogsData !== "undefined" && lastChatLogsData.length) {
+          // Group by session to prevent interleaving issues
+          const grouped = {};
+          lastChatLogsData.forEach(m => {
+            const sid = m.session_id || "unknown";
+            if (!grouped[sid]) grouped[sid] = [];
+            grouped[sid].push(m);
+          });
+
+          // Analyze within each session
+          Object.keys(grouped).forEach(sid => {
+            const msgs = grouped[sid];
+            // Ensure chronological order within session
+            msgs.sort((a, b) => new Date(a.created_at || a.ts) - new Date(b.created_at || b.ts));
+
+            for (let i = 0; i < msgs.length; i++) {
+              const m = msgs[i];
+              const role = (m.role || "").toLowerCase();
+              const text = (m.message || "").toLowerCase();
+
+              if (role === "user") {
+                totalUserMsgs++;
+                const q = m.message.trim();
+                if (q && q.length < 150) {
+                  questionCounts[q] = (questionCounts[q] || 0) + 1;
+                }
+              } else if (role === "bot" || role === "assistant") {
+                // Bot fallback detection - must be preceded by user query in SAME session
+                const prev = i > 0 ? msgs[i-1] : null;
+                if (prev && (prev.role || "").toLowerCase() === "user") {
+                  let reason = "";
+                  let intent = "Unmatched";
+
+                  if (text.includes("specialize exclusively in nervespa-related topics")) {
+                    reason = "Out of Context"; intent = "Non-NerveSpa";
+                  } else if (text.includes("couldn't find a relevant answer")) {
+                    reason = "Unmatched Knowledge"; intent = "Knowledge Gap";
+                  } else if (text.includes("typo detected")) {
+                    reason = "Typo/Gibberish"; intent = "Invalid Input";
+                  } else if (text.includes("support@nervespa.com") || text.includes("sorry") || text.includes("unable")) {
+                    reason = "General Fallback"; intent = "Support Redirect";
+                  }
+
+                  if (reason) {
+                    fallbacks.push({ query: prev.message, intent: intent, reason: reason });
+                  }
+                }
+              }
             }
           });
-          const topQuestions = Object.entries(counts)
+        }
+
+        // 2. Most Asked Questions UI
+        const mostAskedBody = document.getElementById("test-most-asked-body");
+        if (mostAskedBody) {
+          const topQuestions = Object.entries(questionCounts)
             .sort((a, b) => b[1] - a[1])
             .slice(0, 5);
-          mostAskedBody.innerHTML =
-            topQuestions
-              .map(([q, count]) => {
+          
+          mostAskedBody.innerHTML = topQuestions.length
+            ? topQuestions.map(([q, count]) => {
                 const match = Math.floor(Math.random() * 15 + 85);
                 return `<tr><td>${q}</td><td>${count}</td><td><span class="badge badge-success">${match}%</span></td></tr>`;
-              })
-              .join("") ||
-            '<tr><td colspan="3">No user activity detected yet.</td></tr>';
+              }).join("")
+            : '<tr><td colspan="3">No user activity detected yet.</td></tr>';
         }
 
-        // Fallback Deep-Dive (Derive from chat logs)
+        // 3. Fallback Deep-Dive UI
         const fallbackBody = document.getElementById("test-fallback-body");
-        const fallbacks = [];
-        if (
-          typeof lastChatLogsData !== "undefined" &&
-          lastChatLogsData.length
-        ) {
-          for (let i = 1; i < lastChatLogsData.length; i++) {
-            const m = lastChatLogsData[i];
-            const prev = lastChatLogsData[i - 1];
-            // Detecting fallback bot response (categorized)
-            const msg = (m.message || "").toLowerCase();
-            const role = (m.role || "").toLowerCase();
-
-            let reason = "";
-            let intent = "Unmatched";
-
-            if (
-              msg.includes("specialize exclusively in nervespa-related topics")
-            ) {
-              reason = "Out of Context";
-              intent = "Non-NerveSpa";
-            } else if (msg.includes("couldn't find a relevant answer")) {
-              reason = "Unmatched Knowledge";
-              intent = "Knowledge Gap";
-            } else if (msg.includes("typo detected")) {
-              reason = "Typo/Gibberish";
-              intent = "Invalid Input";
-            } else if (
-              msg.includes("support@nervespa.com") ||
-              (role === "bot" &&
-                (msg.includes("sorry") || msg.includes("unable")))
-            ) {
-              reason = "General Fallback";
-              intent = "Support Redirect";
-            }
-
-            const isBot = role === "bot" || role === "assistant";
-
-            if (isBot && reason && (prev.role || "").toLowerCase() === "user") {
-              fallbacks.push({
-                query: prev.message,
-                intent: intent,
-                reason: reason,
-              });
-            }
-          }
+        if (fallbackBody) {
+          fallbackBody.innerHTML = fallbacks.length
+            ? fallbacks.slice(0, 5).map((f) => {
+                const fullQ = f.query.replace(/"/g, "&quot;");
+                const displayQ = f.query.length > 85 ? f.query.substring(0, 80) + "..." : f.query;
+                return `<tr>
+                  <td title="${fullQ}">"${displayQ}"</td>
+                  <td>${f.intent}</td>
+                  <td>
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                      <span class="badge ${f.reason === "Out of Context" ? "badge-success" : f.reason === "Unmatched Knowledge" ? "badge-info" : f.reason === "Typo/Gibberish" ? "badge-error" : "badge-warning"}">${f.reason}</span>
+                      <button onclick="openFallbackModal('${fullQ}', '${f.intent}', '${f.reason}')" title="View Details" style="background:none; border:none; color:var(--ns-dim); cursor:pointer; font-size:12px; padding:4px;"><i class="fa-solid fa-eye"></i></button>
+                    </div>
+                  </td>
+                </tr>`;
+              }).join("")
+            : '<tr><td colspan="3">No fallbacks detected in current logs.</td></tr>';
         }
 
+        // 4. Update Fallback KPI
         const fallVal = document.getElementById("test-fallback-val");
         if (fallVal) fallVal.innerText = fallbacks.length;
 
-        // Accurate Success Rate
-        const totalUserMsgs =
-          typeof lastChatLogsData !== "undefined"
-            ? lastChatLogsData.filter(
-                (m) => (m.role || "").toLowerCase() === "user",
-              ).length
-            : 0;
-        const successRate =
-          totalUserMsgs > 0
-            ? ((totalUserMsgs - fallbacks.length) / totalUserMsgs) * 100
-            : 94.2;
+        // 5. Accurate Success Rate KPI
+        const successRate = totalUserMsgs > 0 ? ((totalUserMsgs - fallbacks.length) / totalUserMsgs) * 100 : 94.2;
         const succVal = document.getElementById("test-success-val");
-        if (succVal)
-          succVal.innerText = Math.max(0, successRate).toFixed(1) + "%";
+        if (succVal) succVal.innerText = Math.max(0, successRate).toFixed(1) + "%";
 
-        if (fallbackBody) {
-          fallbackBody.innerHTML =
-            fallbacks
-              .slice(0, 5)
-              .map((f) => {
-                const fullQ = f.query.replace(/"/g, "&quot;");
-                const displayQ =
-                  f.query.length > 85
-                    ? f.query.substring(0, 80) + "..."
-                    : f.query;
-                return `<tr>
-              <td title="${fullQ}">"${displayQ}"</td>
-              <td>${f.intent}</td>
-              <td>
-                <div style="display:flex; justify-content:space-between; align-items:center;">
-                  <span class="badge ${
-                    f.reason === "Out of Context"
-                      ? "badge-success"
-                      : f.reason === "Unmatched Knowledge"
-                        ? "badge-info"
-                        : f.reason === "Typo/Gibberish"
-                          ? "badge-error"
-                          : "badge-warning"
-                  }">${f.reason}</span>
-                  <button onclick="openFallbackModal('${fullQ}', '${f.intent}', '${f.reason}')" title="View Details" style="background:none; border:none; color:var(--ns-dim); cursor:pointer; font-size:12px; padding:4px;"><i class="fa-solid fa-eye"></i></button>
-                </div>
-              </td>
-            </tr>`;
-              })
-              .join("") ||
-            '<tr><td colspan="3">No fallbacks detected in current logs.</td></tr>';
-        }
-
-        // Populate Fallback Management Table
+        // 6. Populate Fallback Management Table
         const mngBody = document.getElementById("fallback-management-body");
         const mngBadge = document.getElementById("fallback-count-badge");
         if (mngBadge) mngBadge.innerText = `${fallbacks.length} Active`;
         if (mngBody) {
-          mngBody.innerHTML =
-            fallbacks
-              .map((f) => {
+          mngBody.innerHTML = fallbacks.length
+            ? fallbacks.map((f) => {
                 const fullQ = f.query.replace(/"/g, "&quot;");
                 return `<tr>
-              <td>"${f.query}"</td>
-              <td>${f.intent}</td>
-              <td>
-                <div style="display:flex; justify-content:space-between; align-items:center;">
-                  <span class="badge ${
-                    f.reason === "Out of Context"
-                      ? "badge-success"
-                      : f.reason === "Unmatched Knowledge"
-                        ? "badge-info"
-                        : f.reason === "Typo/Gibberish"
-                          ? "badge-error"
-                          : "badge-warning"
-                  }">${f.reason}</span>
-                  <button onclick="openFallbackModal('${fullQ}', '${f.intent}', '${f.reason}')" title="View Details" style="background:none; border:none; color:var(--ns-dim); cursor:pointer; font-size:12px; padding:4px;"><i class="fa-solid fa-eye"></i></button>
-                </div>
-              </td>
-            </tr>`;
-              })
-              .join("") ||
-            '<tr><td colspan="3">No fallbacks detected. Your bot is performing well!</td></tr>';
+                  <td style="white-space:normal; word-wrap:break-word;">"${f.query}"</td>
+                  <td>${f.intent}</td>
+                  <td>
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                      <span class="badge ${f.reason === "Out of Context" ? "badge-success" : f.reason === "Unmatched Knowledge" ? "badge-info" : f.reason === "Typo/Gibberish" ? "badge-error" : "badge-warning"}">${f.reason}</span>
+                      <button onclick="openFallbackModal('${fullQ}', '${f.intent}', '${f.reason}')" title="View Details" style="background:none; border:none; color:var(--ns-dim); cursor:pointer; font-size:12px; padding:4px;"><i class="fa-solid fa-eye"></i></button>
+                    </div>
+                  </td>
+                </tr>`;
+              }).join("")
+            : '<tr><td colspan="3">No fallbacks detected. Your bot is performing well!</td></tr>';
         }
 
-        // 2. Interactivity Bar Chart (Derive from chat logs or use provided series)
+        // 7. Interactivity Bar Chart (Session-Aware calculation)
         let engagementSeries = tr.interactivity_series || new Array(7).fill(0);
-        
-        // If series is empty but we have chat logs, calculate it!
+
+        // If interactivity is not provided by analytics, derive from grouped session logs
         if (engagementSeries.every(v => v === 0) && typeof lastChatLogsData !== "undefined" && lastChatLogsData.length) {
-            const last7Days = [];
-            const dayMap = {};
-            for (let i = 6; i >= 0; i--) {
-                const d = new Date();
-                d.setDate(d.getDate() - i);
-                const ds = d.toISOString().split("T")[0];
-                last7Days.push(ds);
-                dayMap[ds] = { sessions: new Set(), msgs: 0 };
+          const last7Days = [];
+          const dayMap = {};
+          for (let i = 6; i >= 0; i--) {
+            const d = new Date();
+            d.setDate(d.getDate() - i);
+            const ds = d.toISOString().split("T")[0];
+            last7Days.push(ds);
+            dayMap[ds] = { sessions: new Set(), msgs: 0 };
+          }
+
+          lastChatLogsData.forEach(m => {
+            if (m.created_at) {
+              const ds = m.created_at.split("T")[0];
+              if (dayMap[ds]) {
+                dayMap[ds].msgs++;
+                if (m.session_id) dayMap[ds].sessions.add(m.session_id);
+              }
             }
-            
-            lastChatLogsData.forEach(m => {
-                if (m.created_at) {
-                    const ds = m.created_at.split("T")[0];
-                    if (dayMap[ds]) {
-                        dayMap[ds].msgs++;
-                        if (m.session_id) dayMap[ds].sessions.add(m.session_id);
-                    }
-                }
-            });
-            
-            engagementSeries = last7Days.map(ds => {
-                const day = dayMap[ds];
-                return day.sessions.size > 0 
-                    ? parseFloat((day.msgs / day.sessions.size).toFixed(1)) 
-                    : 0;
-            });
+          });
+
+          engagementSeries = last7Days.map(ds => {
+            const day = dayMap[ds];
+            return day.sessions.size > 0 ? parseFloat((day.msgs / day.sessions.size).toFixed(1)) : 0;
+          });
         }
 
         if (interactivityChart) {
@@ -2963,8 +2930,6 @@
           interactivityChart.data.datasets[0].data = engagementSeries;
           interactivityChart.update();
         }
-
-        // Hourly Heatmap handled above
 
         // Benchmarks
         const matchFill = document.getElementById("test-match-fill");
