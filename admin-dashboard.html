@@ -15,7 +15,10 @@
     />
     <script>
       // Immediate access control check
-      if (localStorage.getItem("isLoggedIn") !== "true" || !localStorage.getItem("authToken")) {
+      if (
+        localStorage.getItem("isLoggedIn") !== "true" ||
+        !localStorage.getItem("authToken")
+      ) {
         window.location.href = "admin.html";
       }
     </script>
@@ -106,7 +109,7 @@
           opacity: 1;
         }
       }
-      
+
       .range-select {
         background: rgba(255, 255, 255, 0.05);
         border: 1px solid var(--border-soft);
@@ -1409,7 +1412,11 @@
                 </div>
                 <span class="pill">Real-time engagement</span>
               </div>
-              <div class="chart-container" id="interactivity-chart-parent" style="height: 200px">
+              <div
+                class="chart-container"
+                id="interactivity-chart-parent"
+                style="height: 200px"
+              >
                 <div class="skeleton skeleton-chart" style="height: 100%"></div>
                 <canvas id="interactivityChart" style="display: none"></canvas>
               </div>
@@ -1877,10 +1884,23 @@
           <i class="fa-solid fa-trash-can"></i>
         </div>
         <div class="confirm-modal-title">Confirm Deletion</div>
-        <p class="confirm-modal-text" id="confirm-modal-message">Are you sure you want to delete this permanently? This action cannot be undone.</p>
+        <p class="confirm-modal-text" id="confirm-modal-message">
+          Are you sure you want to delete this permanently? This action cannot
+          be undone.
+        </p>
         <div class="confirm-btn-group">
-          <button class="confirm-btn confirm-btn-cancel" onclick="closeDeleteConfirmModal()">Cancel</button>
-          <button class="confirm-btn confirm-btn-delete" id="confirm-modal-delete-btn">Delete Now</button>
+          <button
+            class="confirm-btn confirm-btn-cancel"
+            onclick="closeDeleteConfirmModal()"
+          >
+            Cancel
+          </button>
+          <button
+            class="confirm-btn confirm-btn-delete"
+            id="confirm-modal-delete-btn"
+          >
+            Delete Now
+          </button>
         </div>
       </div>
     </div>
@@ -1894,7 +1914,7 @@
         await sendAuditLog({
           action_type: "LOGOUT",
           description: "Admin logged out successfully",
-          status: "success"
+          status: "success",
         });
 
         localStorage.removeItem("isLoggedIn");
@@ -1904,7 +1924,13 @@
       }
 
       // Audit Log Helper
-      async function sendAuditLog({ action_type, description, previous_value = {}, new_value = {}, status = "success" }) {
+      async function sendAuditLog({
+        action_type,
+        description,
+        previous_value = {},
+        new_value = {},
+        status = "success",
+      }) {
         try {
           const ipRes = await fetch("https://api.ipify.org?format=json");
           const ipData = await ipRes.json();
@@ -1918,14 +1944,17 @@
             new_value,
             source: "admin_dashboard",
             ip_address: ip,
-            status: status
+            status: status,
           };
 
-          const logRes = await fetch("https://n8n.srv917960.hstgr.cloud/webhook/auditlog", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(payload)
-          });
+          const logRes = await fetch(
+            "https://n8n.srv917960.hstgr.cloud/webhook/auditlog",
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(payload),
+            },
+          );
           handleAuthError(logRes);
         } catch (err) {
           console.warn("Audit log failed:", err);
@@ -1935,7 +1964,7 @@
       function getAuthHeaders() {
         return {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${localStorage.getItem("authToken")}`
+          Authorization: `Bearer ${localStorage.getItem("authToken")}`,
         };
       }
 
@@ -2081,17 +2110,20 @@
 
       let lastSubmissionsData = [];
       let lastChatLogsData = [];
+      let lastDurationsData = [];
       let lastAnalyticsRawData = null;
       let lastAnalyticsTestingData = null;
       let qaData = [];
 
       function loadSubmissions() {
         fetch(SUBMISSION_WEBHOOK, {
-          headers: getAuthHeaders()
+          headers: getAuthHeaders(),
         })
           .then((res) => {
             if (handleAuthError(res)) return Promise.reject("Session expired");
-            return res.ok ? res.json() : Promise.reject("Submission fetch error");
+            return res.ok
+              ? res.json()
+              : Promise.reject("Submission fetch error");
           })
           .then((data) => {
             loadedStates.submissions = true;
@@ -2101,24 +2133,46 @@
           .catch((err) => console.error(err));
       }
 
-      function loadChatLogs() {
-        fetch(CHATLOGS_WEBHOOK, {
-          headers: getAuthHeaders()
-        })
-          .then((res) => {
-            if (handleAuthError(res)) return Promise.reject("Session expired");
-            return res.ok ? res.json() : Promise.reject("Chat logs fetch error");
-          })
-          .then((data) => {
-            loadedStates.chatlogs = true;
-            lastChatLogsData = data;
-            renderChatLogsTable(data);
-            // Also refresh testing report as it depends on chat logs for fallbacks
-            if (lastAnalyticsTestingData) {
-              renderTestingReport(lastAnalyticsTestingData);
+      async function loadChatLogs() {
+        try {
+          const headers = getAuthHeaders();
+          
+          const pChat = fetch(CHATLOGS_WEBHOOK, { headers });
+          const pDur = fetch("https://n8n.srv917960.hstgr.cloud/webhook/session-durations", { headers })
+                        .catch(err => { console.warn("Session durations fetch failed", err); return null; });
+          
+          const resChat = await pChat;
+          if (handleAuthError(resChat)) return;
+          if (!resChat.ok) throw new Error("Chat logs fetch error");
+          
+          const chatData = await resChat.json();
+          let durData = [];
+          
+          const resDur = await pDur;
+          if (resDur) {
+            if (handleAuthError(resDur)) return;
+            if (resDur.ok) {
+              try {
+                durData = await resDur.json();
+              } catch(e) {
+                console.error("Failed to parse duration data", e);
+              }
             }
-          })
-          .catch((err) => console.error(err));
+          }
+
+          loadedStates.chatlogs = true;
+          lastChatLogsData = chatData;
+          lastDurationsData = durData;
+
+          renderChatLogsTable(chatData);
+          
+          // Also refresh testing report as it depends on chat logs for fallbacks
+          if (typeof lastAnalyticsTestingData !== "undefined" && lastAnalyticsTestingData) {
+            renderTestingReport(lastAnalyticsTestingData);
+          }
+        } catch (err) {
+          console.error(err);
+        }
       }
 
       function loadAnalyticsData() {
@@ -2128,18 +2182,20 @@
         );
 
         fetch(ANALYTICS_WEBHOOK, {
-          headers: getAuthHeaders()
+          headers: getAuthHeaders(),
         })
           .then((res) => {
             if (handleAuthError(res)) return Promise.reject("Session expired");
-            return res.ok ? res.json() : Promise.reject("Analytics fetch error");
+            return res.ok
+              ? res.json()
+              : Promise.reject("Analytics fetch error");
           })
           .then((data) => {
             if (!Array.isArray(data)) return;
             loadedStates.analytics = true;
             lastAnalyticsRawData = data;
-            processAnalyticsData(30); 
-            updateCharts(7); 
+            processAnalyticsData(30);
+            updateCharts(7);
           })
           .catch((err) => {
             console.warn("Analytics fetch failed, using mock trends.", err);
@@ -2151,7 +2207,7 @@
 
       function updateCharts(days) {
         if (!lastAnalyticsRawData) return;
-        
+
         const dateMap = {};
         const rangeLabels = [];
         const usageSeries = [];
@@ -2168,7 +2224,8 @@
         lastAnalyticsRawData.forEach((item) => {
           if (item.chat_day) {
             const ds = item.chat_day.split("T")[0];
-            if (dateMap[ds]) dateMap[ds].msgs = parseInt(item.message_count) || 0;
+            if (dateMap[ds])
+              dateMap[ds].msgs = parseInt(item.message_count) || 0;
           }
           const ts = item.created_at || item.chat_day;
           const sessionId = item.id || item.session_id;
@@ -2185,13 +2242,15 @@
 
         const usageData = rangeLabels.map((ds) => dateMap[ds].msgs);
         const interData = rangeLabels.map((ds) => {
-            const day = dateMap[ds];
-            return day.sessions > 0 ? parseFloat((day.totalDepth / day.sessions).toFixed(1)) : 0;
+          const day = dateMap[ds];
+          return day.sessions > 0
+            ? parseFloat((day.totalDepth / day.sessions).toFixed(1))
+            : 0;
         });
 
         const labels = rangeLabels.map((ds) => {
           const d = new Date(ds + "T00:00:00");
-          return days <= 7 
+          return days <= 7
             ? d.toLocaleDateString("en-US", { weekday: "short" })
             : d.toLocaleDateString("en-US", { month: "short", day: "numeric" });
         });
@@ -2233,7 +2292,8 @@
         const qaItems = [];
 
         data.forEach((item) => {
-          if (item.total_predefined_questions) overview.total_questions = item.total_predefined_questions;
+          if (item.total_predefined_questions)
+            overview.total_questions = item.total_predefined_questions;
           if (item.total_live_messages) {
             overview.total_msgs = item.total_live_messages;
             testing.total_msgs = parseInt(item.total_live_messages);
@@ -2244,20 +2304,34 @@
           }
           if (item.interaction_hour !== undefined) {
             const h = parseInt(item.interaction_hour);
-            if (h >= 0 && h < 24) testing.heatmap_series[h] = parseInt(item.activity_count) || 0;
+            if (h >= 0 && h < 24)
+              testing.heatmap_series[h] = parseInt(item.activity_count) || 0;
           }
           if (item.question && item.answer) {
-            qaItems.push({ id: item.id || Math.random(), question: item.question, answer: item.answer });
+            qaItems.push({
+              id: item.id || Math.random(),
+              question: item.question,
+              answer: item.answer,
+            });
           }
         });
 
-        const ovQuestionsCount = document.getElementById("overview-questions-count");
-        const ovSessionsCount = document.getElementById("overview-sessions-count");
-        const testSessionCount = document.getElementById("testing-sessions-count");
+        const ovQuestionsCount = document.getElementById(
+          "overview-questions-count",
+        );
+        const ovSessionsCount = document.getElementById(
+          "overview-sessions-count",
+        );
+        const testSessionCount = document.getElementById(
+          "testing-sessions-count",
+        );
 
-        if (ovQuestionsCount) ovQuestionsCount.innerText = overview.total_questions || "0";
-        if (ovSessionsCount) ovSessionsCount.innerText = overview.total_sessions || "0";
-        if (testSessionCount) testSessionCount.innerText = testing.sessions || "0";
+        if (ovQuestionsCount)
+          ovQuestionsCount.innerText = overview.total_questions || "0";
+        if (ovSessionsCount)
+          ovSessionsCount.innerText = overview.total_sessions || "0";
+        if (testSessionCount)
+          testSessionCount.innerText = testing.sessions || "0";
 
         if (qaItems.length) {
           qaData = qaItems;
@@ -2373,8 +2447,18 @@
         let table =
           "<table><thead><tr><th>Session ID</th><th>First Question</th><th>Started on</th><th>Ended ON</th><th>Duration</th><th class='text-right'>Activity</th></tr></thead><tbody>";
         const sortedSids = Object.keys(grouped).sort((a, b) => {
-          const timeA = new Date(grouped[a][0].created_at || grouped[a][0].timestamp || grouped[a][0].chat_day || 0);
-          const timeB = new Date(grouped[b][0].created_at || grouped[b][0].timestamp || grouped[b][0].chat_day || 0);
+          const timeA = new Date(
+            grouped[a][0].created_at ||
+              grouped[a][0].timestamp ||
+              grouped[a][0].chat_day ||
+              0,
+          );
+          const timeB = new Date(
+            grouped[b][0].created_at ||
+              grouped[b][0].timestamp ||
+              grouped[b][0].chat_day ||
+              0,
+          );
           return timeB - timeA;
         });
 
@@ -2392,34 +2476,78 @@
             const d = new Date(ts);
             if (isNaN(d.getTime())) return "N/A";
             const day = d.getDate();
-            const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+            const months = [
+              "Jan",
+              "Feb",
+              "Mar",
+              "Apr",
+              "May",
+              "Jun",
+              "Jul",
+              "Aug",
+              "Sep",
+              "Oct",
+              "Nov",
+              "Dec",
+            ];
             let h = d.getHours();
             const m = d.getMinutes();
-            const am = h >= 12 ? 'pm' : 'am';
+            const am = h >= 12 ? "pm" : "am";
             h = h % 12 || 12;
-            return `${day} ${months[d.getMonth()]} ${d.getFullYear()}, ${h}:${m < 10 ? '0' + m : m}${am}`;
+            return `${day} ${months[d.getMonth()]} ${d.getFullYear()}, ${h}:${m < 10 ? "0" + m : m}${am}`;
           };
 
           let msgsHtml = '<ul class="message-list">';
           msgs.forEach((m) => {
             const role = (m.role || "").toLowerCase();
-            const roleClass = (role === "assistant" || role === "bot") ? "bot-msg" : "user-msg";
-            const roleLabel = (role === "assistant" || role === "bot") ? "BOT" : "USER";
+            const roleClass =
+              role === "assistant" || role === "bot" ? "bot-msg" : "user-msg";
+            const roleLabel =
+              role === "assistant" || role === "bot" ? "BOT" : "USER";
             msgsHtml += `<li class="message-item"><span class="role-badge ${roleClass}">${roleLabel}</span> ${m.message || ""}</li>`;
           });
           msgsHtml += "</ul>";
 
-          const firstQuestionRaw = msgs.find(m => (m.role || "").toLowerCase() === "user")?.message || "No question asked";
-          const firstQuestion = firstQuestionRaw.length > 80 ? firstQuestionRaw.substring(0, 80) + "..." : firstQuestionRaw;
+          const firstQuestionRaw =
+            msgs.find((m) => (m.role || "").toLowerCase() === "user")
+              ?.message || "No question asked";
+          const firstQuestion =
+            firstQuestionRaw.length > 80
+              ? firstQuestionRaw.substring(0, 80) + "..."
+              : firstQuestionRaw;
 
-          const startedOn = msgs.length > 0 ? formatDateLocal(msgs[0].created_at || msgs[0].timestamp || msgs[0].chat_day) : "N/A";
+          const startedOn =
+            msgs.length > 0
+              ? formatDateLocal(
+                  msgs[0].created_at || msgs[0].timestamp || msgs[0].chat_day,
+                )
+              : "N/A";
+
+          let endedOn = "N/A";
+          let durStr = "N/A";
+          
+          if (typeof lastDurationsData !== "undefined" && Array.isArray(lastDurationsData)) {
+            const durItem = lastDurationsData.find(d => d.session_id === sid);
+            if (durItem) {
+              if (durItem.ended_on) endedOn = formatDateLocal(durItem.ended_on);
+              if (durItem.session_duration && typeof durItem.session_duration === "object") {
+                const parts = [];
+                const d = durItem.session_duration;
+                if (d.days) parts.push(`${d.days}d`);
+                if (d.hours) parts.push(`${d.hours}h`);
+                if (d.minutes) parts.push(`${d.minutes}m`);
+                if (d.seconds) parts.push(`${d.seconds}s`);
+                durStr = parts.length ? parts.join(" ") : "< 1s";
+              }
+            }
+          }
 
           table += `<tr class="session-row" onclick="const e=document.getElementById('${collapseId}'); const isClosed=e.style.display==='none'; e.style.display=isClosed?'table-row':'none'; const icon=this.querySelector('.toggle-icon'); if(icon) { icon.classList.replace(isClosed?'fa-plus':'fa-minus', isClosed?'fa-minus':'fa-plus'); }">
-            <td><i class="fa-solid fa-plus toggle-icon" style="margin-right: 12px; font-size: 12px; color: #38bdf8; opacity: 0.8; transition: transform 0.2s;"></i><span class="session-id-pill" title="${sid}">${sid.length > 8 ? sid.substring(0, 8) + '...' : sid}</span></td>
-            <td style="font-size: 13px; color: var(--ns-muted);" title="${firstQuestionRaw.replace(/"/g, '&quot;')}">${firstQuestion}</td>
+            <td><div style="display: flex; align-items: center;"><i class="fa-solid fa-plus toggle-icon" style="margin-right: 12px; font-size: 12px; color: #38bdf8; opacity: 0.8; transition: transform 0.2s;"></i><span class="session-id-pill" title="${sid}">${sid.length > 8 ? sid.substring(0, 8) + "..." : sid}</span></div></td>
+            <td style="font-size: 13px; color: var(--ns-muted);" title="${firstQuestionRaw.replace(/"/g, "&quot;")}">${firstQuestion}</td>
             <td style="font-size: 13px; color: var(--ns-muted);">${startedOn}</td>
-            <td style="font-size: 13px; color: var(--ns-muted);"></td>
-            <td style="font-size: 13px; color: var(--ns-muted);"></td>
+            <td style="font-size: 13px; color: var(--ns-muted);">${endedOn}</td>
+            <td style="font-size: 13px; color: var(--ns-muted);">${durStr}</td>
             <td class="view-more-text text-right"><i class="fa-solid fa-layer-group"></i> ${msgs.length} Interactions</td>
           </tr>
           <tr id="${collapseId}" style="display:none;"><td colspan="6" style="background: rgba(15,23,42,0.8); padding: 24px; border-radius: 12px;">${msgsHtml}</td></tr>`;
@@ -2439,9 +2567,10 @@
         let rows = qaData || [];
         if (filterText) {
           const search = filterText.toLowerCase();
-          rows = rows.filter((r) =>
-            (r.question && r.question.toLowerCase().includes(search)) ||
-            (r.answer && r.answer.toLowerCase().includes(search)),
+          rows = rows.filter(
+            (r) =>
+              (r.question && r.question.toLowerCase().includes(search)) ||
+              (r.answer && r.answer.toLowerCase().includes(search)),
           );
         }
 
@@ -2492,7 +2621,7 @@
         modal.classList.add("open");
 
         // Set one-time listener for delete button
-        deleteBtn.onclick = function() {
+        deleteBtn.onclick = function () {
           if (onDeleteConfirm) onDeleteConfirm();
           closeDeleteConfirmModal();
         };
@@ -2505,44 +2634,53 @@
       }
 
       function deleteQA(id) {
-        showDeleteConfirmModal("Are you sure you want to delete this Q&A? This will remove it permanently.", async function() {
-          try {
-            showToast("Deleting...", "info");
-            
-            const res = await fetch("https://n8n.srv917960.hstgr.cloud/webhook/delete-question", {
-              method: "DELETE",
-              headers: getAuthHeaders(),
-              body: JSON.stringify({ id: id })
-            });
+        showDeleteConfirmModal(
+          "Are you sure you want to delete this Q&A? This will remove it permanently.",
+          async function () {
+            try {
+              showToast("Deleting...", "info");
 
-            if (handleAuthError(res)) return;
+              const res = await fetch(
+                "https://n8n.srv917960.hstgr.cloud/webhook/delete-question",
+                {
+                  method: "DELETE",
+                  headers: getAuthHeaders(),
+                  body: JSON.stringify({ id: id }),
+                },
+              );
 
-            if (!res.ok) throw new Error("Delete failed");
-            
-            const deletedItem = qaData.find((item) => item.id == id);
-            qaData = qaData.filter((item) => item.id != id);
-            renderQATable();
-            showToast("Successfully deleted the question!");
+              if (handleAuthError(res)) return;
 
-            // Audit Log Success
-            await sendAuditLog({
-              action_type: "DELETE_QUESTION",
-              description: `Question deleted: ${deletedItem ? deletedItem.question : id}`,
-              previous_value: deletedItem || { id: id },
-              status: "success"
-            });
-          } catch (err) {
-            console.error(err);
-            showToast("Failed to delete. Please check CORS or backend configuration.", "error");
-            
-            // Audit Log Failure
-            await sendAuditLog({
-              action_type: "DELETE_QUESTION",
-              description: `Question deletion failed for ID ${id}: ${err.message}`,
-              status: "failed"
-            });
-          }
-        });
+              if (!res.ok) throw new Error("Delete failed");
+
+              const deletedItem = qaData.find((item) => item.id == id);
+              qaData = qaData.filter((item) => item.id != id);
+              renderQATable();
+              showToast("Successfully deleted the question!");
+
+              // Audit Log Success
+              await sendAuditLog({
+                action_type: "DELETE_QUESTION",
+                description: `Question deleted: ${deletedItem ? deletedItem.question : id}`,
+                previous_value: deletedItem || { id: id },
+                status: "success",
+              });
+            } catch (err) {
+              console.error(err);
+              showToast(
+                "Failed to delete. Please check CORS or backend configuration.",
+                "error",
+              );
+
+              // Audit Log Failure
+              await sendAuditLog({
+                action_type: "DELETE_QUESTION",
+                description: `Question deletion failed for ID ${id}: ${err.message}`,
+                status: "failed",
+              });
+            }
+          },
+        );
       }
 
       function openAddQaModal() {
@@ -2669,7 +2807,7 @@
             headers: getAuthHeaders(),
             body: JSON.stringify(payload),
           });
-          
+
           if (handleAuthError(res)) return;
 
           if (!res.ok) throw new Error("Backend Error");
@@ -2688,7 +2826,7 @@
               description: `Question edited: ${q}`,
               previous_value: prevValue,
               new_value: { id, question: q, answer: a },
-              status: "success"
+              status: "success",
             });
           } else {
             const newItem = { id: Date.now(), question: q, answer: a };
@@ -2700,7 +2838,7 @@
               action_type: "ADD_QUESTION",
               description: `New question added: ${q}`,
               new_value: newItem,
-              status: "success"
+              status: "success",
             });
           }
 
@@ -2714,7 +2852,7 @@
           await sendAuditLog({
             action_type: id ? "EDIT_QUESTION" : "ADD_QUESTION",
             description: `${id ? "Edit" : "Add"} failed for question: ${q} - ${err.message}`,
-            status: "failed"
+            status: "failed",
           });
         } finally {
           // Re-enable button
@@ -2769,20 +2907,26 @@
         const questionCounts = {};
         let totalUserMsgs = 0;
 
-        if (typeof lastChatLogsData !== "undefined" && lastChatLogsData.length) {
+        if (
+          typeof lastChatLogsData !== "undefined" &&
+          lastChatLogsData.length
+        ) {
           // Group by session to prevent interleaving issues
           const grouped = {};
-          lastChatLogsData.forEach(m => {
+          lastChatLogsData.forEach((m) => {
             const sid = m.session_id || "unknown";
             if (!grouped[sid]) grouped[sid] = [];
             grouped[sid].push(m);
           });
 
           // Analyze within each session
-          Object.keys(grouped).forEach(sid => {
+          Object.keys(grouped).forEach((sid) => {
             const msgs = grouped[sid];
             // Ensure chronological order within session
-            msgs.sort((a, b) => new Date(a.created_at || a.ts) - new Date(b.created_at || b.ts));
+            msgs.sort(
+              (a, b) =>
+                new Date(a.created_at || a.ts) - new Date(b.created_at || b.ts),
+            );
 
             for (let i = 0; i < msgs.length; i++) {
               const m = msgs[i];
@@ -2797,23 +2941,39 @@
                 }
               } else if (role === "bot" || role === "assistant") {
                 // Bot fallback detection - must be preceded by user query in SAME session
-                const prev = i > 0 ? msgs[i-1] : null;
+                const prev = i > 0 ? msgs[i - 1] : null;
                 if (prev && (prev.role || "").toLowerCase() === "user") {
                   let reason = "";
                   let intent = "Unmatched";
 
-                  if (text.includes("specialize exclusively in nervespa-related topics")) {
-                    reason = "Out of Context"; intent = "Non-NerveSpa";
+                  if (
+                    text.includes(
+                      "specialize exclusively in nervespa-related topics",
+                    )
+                  ) {
+                    reason = "Out of Context";
+                    intent = "Non-NerveSpa";
                   } else if (text.includes("couldn't find a relevant answer")) {
-                    reason = "Unmatched Knowledge"; intent = "Knowledge Gap";
+                    reason = "Unmatched Knowledge";
+                    intent = "Knowledge Gap";
                   } else if (text.includes("typo detected")) {
-                    reason = "Typo/Gibberish"; intent = "Invalid Input";
-                  } else if (text.includes("support@nervespa.com") || text.includes("sorry") || text.includes("unable")) {
-                    reason = "General Fallback"; intent = "Support Redirect";
+                    reason = "Typo/Gibberish";
+                    intent = "Invalid Input";
+                  } else if (
+                    text.includes("support@nervespa.com") ||
+                    text.includes("sorry") ||
+                    text.includes("unable")
+                  ) {
+                    reason = "General Fallback";
+                    intent = "Support Redirect";
                   }
 
                   if (reason) {
-                    fallbacks.push({ query: prev.message, intent: intent, reason: reason });
+                    fallbacks.push({
+                      query: prev.message,
+                      intent: intent,
+                      reason: reason,
+                    });
                   }
                 }
               }
@@ -2827,12 +2987,14 @@
           const topQuestions = Object.entries(questionCounts)
             .sort((a, b) => b[1] - a[1])
             .slice(0, 5);
-          
+
           mostAskedBody.innerHTML = topQuestions.length
-            ? topQuestions.map(([q, count]) => {
-                const match = Math.floor(Math.random() * 15 + 85);
-                return `<tr><td>${q}</td><td>${count}</td><td><span class="badge badge-success">${match}%</span></td></tr>`;
-              }).join("")
+            ? topQuestions
+                .map(([q, count]) => {
+                  const match = Math.floor(Math.random() * 15 + 85);
+                  return `<tr><td>${q}</td><td>${count}</td><td><span class="badge badge-success">${match}%</span></td></tr>`;
+                })
+                .join("")
             : '<tr><td colspan="3">No user activity detected yet.</td></tr>';
         }
 
@@ -2840,10 +3002,15 @@
         const fallbackBody = document.getElementById("test-fallback-body");
         if (fallbackBody) {
           fallbackBody.innerHTML = fallbacks.length
-            ? fallbacks.slice(0, 5).map((f) => {
-                const fullQ = f.query.replace(/"/g, "&quot;");
-                const displayQ = f.query.length > 85 ? f.query.substring(0, 80) + "..." : f.query;
-                return `<tr>
+            ? fallbacks
+                .slice(0, 5)
+                .map((f) => {
+                  const fullQ = f.query.replace(/"/g, "&quot;");
+                  const displayQ =
+                    f.query.length > 85
+                      ? f.query.substring(0, 80) + "..."
+                      : f.query;
+                  return `<tr>
                   <td title="${fullQ}">"${displayQ}"</td>
                   <td>${f.intent}</td>
                   <td>
@@ -2853,7 +3020,8 @@
                     </div>
                   </td>
                 </tr>`;
-              }).join("")
+                })
+                .join("")
             : '<tr><td colspan="3">No fallbacks detected in current logs.</td></tr>';
         }
 
@@ -2862,9 +3030,13 @@
         if (fallVal) fallVal.innerText = fallbacks.length;
 
         // 5. Accurate Success Rate KPI
-        const successRate = totalUserMsgs > 0 ? ((totalUserMsgs - fallbacks.length) / totalUserMsgs) * 100 : 94.2;
+        const successRate =
+          totalUserMsgs > 0
+            ? ((totalUserMsgs - fallbacks.length) / totalUserMsgs) * 100
+            : 94.2;
         const succVal = document.getElementById("test-success-val");
-        if (succVal) succVal.innerText = Math.max(0, successRate).toFixed(1) + "%";
+        if (succVal)
+          succVal.innerText = Math.max(0, successRate).toFixed(1) + "%";
 
         // 6. Populate Fallback Management Table
         const mngBody = document.getElementById("fallback-management-body");
@@ -2872,9 +3044,10 @@
         if (mngBadge) mngBadge.innerText = `${fallbacks.length} Active`;
         if (mngBody) {
           mngBody.innerHTML = fallbacks.length
-            ? fallbacks.map((f) => {
-                const fullQ = f.query.replace(/"/g, "&quot;");
-                return `<tr>
+            ? fallbacks
+                .map((f) => {
+                  const fullQ = f.query.replace(/"/g, "&quot;");
+                  return `<tr>
                   <td style="white-space:normal; word-wrap:break-word;">"${f.query}"</td>
                   <td>${f.intent}</td>
                   <td>
@@ -2884,7 +3057,8 @@
                     </div>
                   </td>
                 </tr>`;
-              }).join("")
+                })
+                .join("")
             : '<tr><td colspan="3">No fallbacks detected. Your bot is performing well!</td></tr>';
         }
 
@@ -2892,7 +3066,11 @@
         let engagementSeries = tr.interactivity_series || new Array(7).fill(0);
 
         // If interactivity is not provided by analytics, derive from grouped session logs
-        if (engagementSeries.every(v => v === 0) && typeof lastChatLogsData !== "undefined" && lastChatLogsData.length) {
+        if (
+          engagementSeries.every((v) => v === 0) &&
+          typeof lastChatLogsData !== "undefined" &&
+          lastChatLogsData.length
+        ) {
           const last7Days = [];
           const dayMap = {};
           for (let i = 6; i >= 0; i--) {
@@ -2903,7 +3081,7 @@
             dayMap[ds] = { sessions: new Set(), msgs: 0 };
           }
 
-          lastChatLogsData.forEach(m => {
+          lastChatLogsData.forEach((m) => {
             if (m.created_at) {
               const ds = m.created_at.split("T")[0];
               if (dayMap[ds]) {
@@ -2913,9 +3091,11 @@
             }
           });
 
-          engagementSeries = last7Days.map(ds => {
+          engagementSeries = last7Days.map((ds) => {
             const day = dayMap[ds];
-            return day.sessions.size > 0 ? parseFloat((day.msgs / day.sessions.size).toFixed(1)) : 0;
+            return day.sessions.size > 0
+              ? parseFloat((day.msgs / day.sessions.size).toFixed(1))
+              : 0;
           });
         }
 
@@ -3092,7 +3272,9 @@
         .addEventListener("input", (e) => renderQATable(e.target.value));
       document
         .getElementById("usage-range-select")
-        .addEventListener("change", (e) => updateCharts(parseInt(e.target.value)));
+        .addEventListener("change", (e) =>
+          updateCharts(parseInt(e.target.value)),
+        );
       document
         .getElementById("refresh-chatlogs")
         .addEventListener("click", loadChatLogs);
