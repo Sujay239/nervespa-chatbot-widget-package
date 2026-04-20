@@ -1,1165 +1,1263 @@
 <!doctype html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
+    />
+    <title>NerveSpa Support Widget — Premium Chat</title>
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-  <title>NerveSpa Support Widget — Premium Chat</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
 
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-
-  <style>
-    :root {
-      --ns-header-gradient: linear-gradient(120deg,
+    <style>
+      :root {
+        --ns-header-gradient: linear-gradient(
+          120deg,
           #2563eb 0%,
           #1e3a8a 50%,
-          #020617 100%);
-      --font:
-        "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-        sans-serif;
-      --ns-accent: #38bdf8;
-      --ns-primary: #2563eb;
-      --shadow-1: 0 10px 30px rgba(0, 0, 0, 0.18);
-      --shadow-2: 0 24px 80px rgba(2, 6, 23, 0.28);
-      --safe-bottom: env(safe-area-inset-bottom, 0px);
-    }
-
-    :root {
-      --ns-bg: #ffffff;
-      --ns-surface: rgba(255, 255, 255, 0.94);
-      --ns-surface-2: rgba(2, 6, 23, 0.03);
-      --ns-text: #0f172a;
-      --ns-muted: rgba(15, 23, 42, 0.72);
-      --ns-dim: rgba(15, 23, 42, 0.56);
-      --border-soft: rgba(15, 23, 42, 0.08);
-      --input-bg: rgba(255, 255, 255, 0.98);
-      --input-border: rgba(15, 23, 42, 0.12);
-      --input-focus: rgba(56, 189, 248, 0.28);
-      --chip-bg: rgba(2, 6, 23, 0.03);
-      --card-bg: rgba(2, 6, 23, 0.025);
-      --card-hover: rgba(2, 6, 23, 0.05);
-      --assistant-bubble: rgba(2, 6, 23, 0.04);
-      --user-bubble: linear-gradient(135deg, #38bdf8, #2563eb);
-      --success-bg: rgba(34, 197, 94, 0.08);
-      --warning-bg: rgba(245, 158, 11, 0.1);
-    }
-
-    body.ns-theme-dark {
-      --ns-bg: #020617;
-      --ns-surface: rgba(15, 23, 42, 0.76);
-      --ns-surface-2: rgba(255, 255, 255, 0.03);
-      --ns-text: #f3f4f6;
-      --ns-muted: rgba(229, 231, 235, 0.78);
-      --ns-dim: rgba(229, 231, 235, 0.54);
-      --border-soft: rgba(255, 255, 255, 0.08);
-      --input-bg: rgba(15, 23, 42, 0.88);
-      --input-border: rgba(148, 163, 184, 0.28);
-      --input-focus: rgba(56, 189, 248, 0.3);
-      --chip-bg: rgba(255, 255, 255, 0.04);
-      --card-bg: rgba(255, 255, 255, 0.03);
-      --card-hover: rgba(255, 255, 255, 0.06);
-      --assistant-bubble: rgba(255, 255, 255, 0.04);
-      --success-bg: rgba(34, 197, 94, 0.12);
-      --warning-bg: rgba(245, 158, 11, 0.14);
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    html,
-    body {
-      margin: 0;
-      padding: 0;
-    }
-
-    body {
-      font-family: var(--font);
-      background: transparent;
-      color: var(--ns-text);
-      -webkit-font-smoothing: antialiased;
-      text-rendering: optimizeLegibility;
-    }
-
-    .ns-launcher {
-      position: fixed;
-      right: 18px;
-      bottom: calc(18px + var(--safe-bottom));
-      z-index: 999999;
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      padding: 12px 14px;
-      border-radius: 999px;
-      border: 1px solid rgba(15, 23, 42, 0.08);
-      background: rgba(255, 255, 255, 0.92);
-      box-shadow: var(--shadow-1);
-      color: #0f172a;
-      cursor: pointer;
-      user-select: none;
-      backdrop-filter: blur(14px);
-      transition:
-        transform 0.15s ease,
-        box-shadow 0.15s ease,
-        background 0.15s ease;
-    }
-
-    body.ns-theme-dark .ns-launcher {
-      border-color: rgba(255, 255, 255, 0.1);
-      background: rgba(2, 6, 23, 0.82);
-      color: #fff;
-    }
-
-    .ns-launcher:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 14px 36px rgba(0, 0, 0, 0.22);
-    }
-
-    .ns-launcher:active {
-      transform: scale(0.99);
-    }
-
-    .ns-launcher .dot {
-      width: 10px;
-      height: 10px;
-      border-radius: 999px;
-      background: linear-gradient(135deg, var(--ns-accent), #2563eb);
-      box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.12);
-      flex: 0 0 auto;
-    }
-
-    .ns-launcher .label {
-      font-weight: 800;
-      font-size: 13px;
-      letter-spacing: 0.1px;
-      white-space: nowrap;
-    }
-
-    .ns-shell {
-      position: fixed;
-      right: 18px;
-      bottom: calc(78px + var(--safe-bottom));
-      z-index: 999999;
-      width: 430px;
-      max-width: calc(100vw - 36px);
-      height: min(82dvh, 760px);
-      min-height: 600px;
-      min-width: 340px;
-      max-height: 95dvh;
-      max-width: 95vw;
-      background: var(--ns-surface);
-      border: 1px solid var(--border-soft);
-      border-radius: 24px;
-      box-shadow: var(--shadow-2);
-      overflow: hidden;
-      display: none;
-      backdrop-filter: blur(20px);
-      container-type: inline-size;
-    }
-
-    .ns-shell.open {
-      display: block;
-    }
-
-    .ns-shell.fullscreen {
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      width: 100vw !important;
-      height: 100dvh !important;
-      max-width: none !important;
-      max-height: none !important;
-      border-radius: 0;
-      min-width: 100vw;
-      min-height: 100dvh;
-      resize: none;
-    }
-
-    .ns-shell.minimized {
-      height: 72px !important;
-      min-height: 72px !important;
-      width: 360px;
-      resize: none;
-      overflow: hidden;
-    }
-
-    .ns-shell.minimized .ns-body {
-      display: none;
-    }
-
-    .ns-shell.minimized .ns-topbar {
-      min-height: 72px;
-    }
-
-    .ns-topbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 10px 10px 10px 16px;
-      background: var(--ns-header-gradient);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-      min-height: 70px;
-    }
-
-    .ns-topbar-left {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      min-width: 0;
-      flex-shrink: 1;
-    }
-
-    .ns-logo {
-      height: 24px;
-      width: auto;
-      max-width: 100%;
-      object-fit: contain;
-      display: block;
-      margin: 0;
-    }
-    
-    .ns-beta-badge {
-      font-size: 9px;
-      font-weight: 800;
-      text-transform: uppercase;
-      background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.05));
-      color: #fff;
-      padding: 2px 8px;
-      border-radius: 100px;
-      letter-spacing: 0.8px;
-      backdrop-filter: blur(8px);
-      border: 1px solid rgba(255, 255, 255, 0.25);
-      display: inline-flex;
-      align-items: center;
-      height: fit-content;
-      margin-top: 1px;
-      cursor: pointer;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-      user-select: none;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .ns-beta-badge:hover {
-      transform: scale(1.08) translateY(-1px);
-      background: linear-gradient(135deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.1));
-      border-color: rgba(255, 255, 255, 0.5);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-    }
-
-    .ns-beta-badge::after {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
-      transition: 0.5s;
-    }
-
-    .ns-beta-badge:hover::after {
-      left: 100%;
-      transition: 0.6s;
-    }
-
-    .ns-topbar-right {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      flex-shrink: 0;
-    }
-
-    .btn-primary,
-    .btn-secondary,
-    .btn-icon {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 999px;
-      font-weight: 800;
-      cursor: pointer;
-      border: none;
-      background: none;
-      font-family: var(--font);
-      transition:
-        transform 0.15s ease,
-        box-shadow 0.15s ease,
-        opacity 0.15s ease,
-        background 0.15s ease;
-      user-select: none;
-      text-decoration: none;
-    }
-
-    .btn-primary {
-      background: linear-gradient(135deg, var(--ns-accent), #2563eb);
-      color: #fff;
-      box-shadow: 0 10px 24px rgba(37, 99, 235, 0.22);
-      padding: 10px 14px;
-      font-size: 13px;
-      white-space: nowrap;
-    }
-
-    .btn-secondary {
-      color: var(--ns-text);
-      background: var(--chip-bg);
-      border: 1px solid var(--border-soft);
-      padding: 10px 14px;
-      font-size: 13px;
-      white-space: nowrap;
-    }
-
-    .btn-icon {
-      width: 32px;
-      height: 32px;
-      border: 1px solid rgba(226, 232, 240, 0.22);
-      background: rgba(2, 6, 23, 0.18);
-      color: #fff;
-      font-size: 15px;
-      font-weight: 900;
-    }
-
-    .btn-primary:active,
-    .btn-secondary:active,
-    .btn-icon:active {
-      transform: scale(0.98);
-    }
-
-    .ns-body {
-      height: calc(100% - 70px);
-      display: flex;
-      flex-direction: column;
-      background: var(--ns-bg);
-    }
-
-    body.ns-theme-dark .ns-body {
-      background: radial-gradient(circle at top,
-          rgba(15, 23, 42, 0.92),
-          #020617 70%);
-    }
-
-    .ns-screen {
-      padding: 18px 16px 16px;
-      overflow: auto;
-      flex: 1 1 auto;
-      scroll-behavior: smooth;
-    }
-
-    .thread {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      animation: nsFadeIn 0.22s ease-out;
-    }
-
-    @keyframes nsFadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(5px);
+          #020617 100%
+        );
+        --font:
+          "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+          sans-serif;
+        --ns-accent: #38bdf8;
+        --ns-primary: #2563eb;
+        --shadow-1: 0 10px 30px rgba(0, 0, 0, 0.18);
+        --shadow-2: 0 24px 80px rgba(2, 6, 23, 0.28);
+        --safe-bottom: env(safe-area-inset-bottom, 0px);
       }
 
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    .hero {
-      border: 1px solid var(--border-soft);
-      background: var(--ns-surface-2);
-      border-radius: 22px;
-      padding: 18px 16px;
-      box-shadow: 0 10px 24px rgba(2, 6, 23, 0.06);
-    }
-
-    .heroBadge {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 6px 10px;
-      border-radius: 999px;
-      background: var(--chip-bg);
-      border: 1px solid var(--border-soft);
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 0.04em;
-      color: var(--ns-dim);
-      margin-bottom: 14px;
-    }
-
-    .heroTitle {
-      margin: 0 0 8px;
-      font-size: 28px;
-      line-height: 1.02;
-      letter-spacing: -0.045em;
-      font-weight: 800;
-      color: var(--ns-text);
-    }
-
-    .heroText {
-      margin: 0;
-      font-size: 14px;
-      line-height: 1.5;
-      color: var(--ns-muted);
-      max-width: 34ch;
-    }
-
-    .quickSectionTitle {
-      margin: 6px 2px 2px;
-      color: var(--ns-dim);
-      font-size: 11px;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-    }
-
-    .quickGrid {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-
-    .chip {
-      border: 1px solid var(--border-soft);
-      background: transparent;
-      color: var(--ns-text);
-      padding: 10px 14px;
-      border-radius: 999px;
-      font-size: 12px;
-      font-weight: 700;
-      cursor: pointer;
-      font-family: var(--font);
-      transition:
-        background 0.15s ease,
-        transform 0.15s ease,
-        border-color 0.15s ease;
-    }
-
-    .chip:hover {
-      background: var(--card-hover);
-      transform: translateY(-1px);
-    }
-
-    .cardRow {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-    }
-
-    .homeCard {
-      border: 1px solid var(--border-soft);
-      border-radius: 18px;
-      background: var(--card-bg);
-      padding: 14px;
-      cursor: pointer;
-      transition:
-        transform 0.15s ease,
-        background 0.15s ease;
-    }
-
-    .homeCard:hover {
-      background: var(--card-hover);
-      transform: translateY(-1px);
-    }
-
-    .homeCardTitle {
-      margin: 0 0 4px;
-      font-size: 13px;
-      font-weight: 800;
-      color: var(--ns-text);
-      letter-spacing: -0.01em;
-    }
-
-    .homeCardSub {
-      margin: 0;
-      font-size: 12px;
-      line-height: 1.35;
-      color: var(--ns-muted);
-    }
-
-    .ctaPanel {
-      border: 1px solid var(--border-soft);
-      border-radius: 18px;
-      padding: 14px;
-      background: linear-gradient(180deg, var(--success-bg), transparent);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .ctaPanelTitle {
-      margin: 0 0 4px;
-      font-size: 13px;
-      font-weight: 900;
-      color: var(--ns-text);
-    }
-
-    .ctaPanelText {
-      margin: 0;
-      font-size: 12px;
-      line-height: 1.4;
-      color: var(--ns-muted);
-    }
-
-    .composerMain {
-      flex: 1 1 auto;
-      display: flex;
-      align-items: flex-end;
-      gap: 10px;
-      border: 1px solid var(--input-border);
-      background: var(--input-bg);
-      border-radius: 20px;
-      padding: 10px 14px;
-    }
-
-    .composerMain:focus-within {
-      border-color: var(--ns-accent);
-      box-shadow: 0 0 0 1px var(--input-focus);
-    }
-
-    #homePrompt {
-      width: 100%;
-      min-height: 32px;
-      max-height: 120px;
-      resize: none;
-      border: none;
-      outline: none;
-      background: transparent;
-      color: var(--ns-text);
-      font-size: 13px;
-      line-height: 1.45;
-      font-family: var(--font);
-      padding: 5px 0;
-      margin: 0;
-    }
-
-    #homePrompt:disabled {
-      opacity: 0.7;
-      cursor: not-allowed;
-    }
-
-    .message {
-      display: flex;
-      width: 100%;
-      gap: 10px;
-      animation: nsFadeIn 0.18s ease-out;
-    }
-
-    .message.assistant {
-      justify-content: flex-start;
-    }
-
-    .message.user {
-      justify-content: flex-end;
-    }
-
-    .avatar {
-      width: 30px;
-      height: 30px;
-      border-radius: 999px;
-      flex: 0 0 auto;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 12px;
-      font-weight: 800;
-      color: #fff;
-      background: linear-gradient(135deg, var(--ns-accent), #2563eb);
-      box-shadow: 0 8px 20px rgba(37, 99, 235, 0.18);
-      margin-top: 2px;
-    }
-
-    .bubbleWrap {
-      max-width: min(84%, 320px);
-      display: flex;
-      flex-direction: column;
-      gap: 5px;
-    }
-
-    .ns-shell.fullscreen .bubbleWrap {
-      max-width: min(84%, 800px);
-    }
-
-    .message.user .bubbleWrap {
-      align-items: flex-end;
-    }
-
-    .bubbleLabel {
-      font-size: 11px;
-      color: var(--ns-dim);
-      font-weight: 700;
-      padding: 0 2px;
-    }
-
-    .bubble {
-      border-radius: 18px;
-      padding: 13px 14px;
-      border: 1px solid var(--border-soft);
-      background: var(--assistant-bubble);
-      color: var(--ns-text);
-      line-height: 1.55;
-      font-size: 13px;
-      overflow-wrap: anywhere;
-    }
-
-    .message.user .bubble {
-      background: var(--user-bubble);
-      color: #fff;
-      border-color: transparent;
-      box-shadow: 0 10px 28px rgba(37, 99, 235, 0.22);
-    }
-
-    .assistantActions {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      margin-top: 8px;
-    }
-
-    .microPill {
-      border-radius: 999px;
-      padding: 8px 11px;
-      border: 1px solid var(--border-soft);
-      background: var(--chip-bg);
-      color: var(--ns-text);
-      font-size: 12px;
-      font-weight: 800;
-      cursor: pointer;
-      font-family: var(--font);
-    }
-
-    .microPill:hover {
-      background: var(--card-hover);
-    }
-
-    .typingBubble {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      min-height: 18px;
-    }
-
-    .typingBubble span {
-      width: 7px;
-      height: 7px;
-      border-radius: 999px;
-      background: var(--ns-dim);
-      display: block;
-      animation: nsBlink 1.2s infinite ease-in-out;
-    }
-
-    .typingBubble span:nth-child(2) {
-      animation-delay: 0.15s;
-    }
-
-    .typingBubble span:nth-child(3) {
-      animation-delay: 0.3s;
-    }
-
-    @keyframes nsBlink {
-
-      0%,
-      80%,
-      100% {
-        opacity: 0.35;
-        transform: translateY(0);
+      :root {
+        --ns-bg: #ffffff;
+        --ns-surface: rgba(255, 255, 255, 0.94);
+        --ns-surface-2: rgba(2, 6, 23, 0.03);
+        --ns-text: #0f172a;
+        --ns-muted: rgba(15, 23, 42, 0.72);
+        --ns-dim: rgba(15, 23, 42, 0.56);
+        --border-soft: rgba(15, 23, 42, 0.08);
+        --input-bg: rgba(255, 255, 255, 0.98);
+        --input-border: rgba(15, 23, 42, 0.12);
+        --input-focus: rgba(56, 189, 248, 0.28);
+        --chip-bg: rgba(2, 6, 23, 0.03);
+        --card-bg: rgba(2, 6, 23, 0.025);
+        --card-hover: rgba(2, 6, 23, 0.05);
+        --assistant-bubble: rgba(2, 6, 23, 0.04);
+        --user-bubble: linear-gradient(135deg, #38bdf8, #2563eb);
+        --success-bg: rgba(34, 197, 94, 0.08);
+        --warning-bg: rgba(245, 158, 11, 0.1);
       }
 
-      40% {
-        opacity: 1;
+      body.ns-theme-dark {
+        --ns-bg: #020617;
+        --ns-surface: rgba(15, 23, 42, 0.76);
+        --ns-surface-2: rgba(255, 255, 255, 0.03);
+        --ns-text: #f3f4f6;
+        --ns-muted: rgba(229, 231, 235, 0.78);
+        --ns-dim: rgba(229, 231, 235, 0.54);
+        --border-soft: rgba(255, 255, 255, 0.08);
+        --input-bg: rgba(15, 23, 42, 0.88);
+        --input-border: rgba(148, 163, 184, 0.28);
+        --input-focus: rgba(56, 189, 248, 0.3);
+        --chip-bg: rgba(255, 255, 255, 0.04);
+        --card-bg: rgba(255, 255, 255, 0.03);
+        --card-hover: rgba(255, 255, 255, 0.06);
+        --assistant-bubble: rgba(255, 255, 255, 0.04);
+        --success-bg: rgba(34, 197, 94, 0.12);
+        --warning-bg: rgba(245, 158, 11, 0.14);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: var(--font);
+        background: transparent;
+        color: var(--ns-text);
+        -webkit-font-smoothing: antialiased;
+        text-rendering: optimizeLegibility;
+      }
+
+      .ns-launcher {
+        position: fixed;
+        right: 18px;
+        bottom: calc(18px + var(--safe-bottom));
+        z-index: 999999;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 12px 14px;
+        border-radius: 999px;
+        border: 1px solid rgba(15, 23, 42, 0.08);
+        background: rgba(255, 255, 255, 0.92);
+        box-shadow: var(--shadow-1);
+        color: #0f172a;
+        cursor: pointer;
+        user-select: none;
+        backdrop-filter: blur(14px);
+        transition:
+          transform 0.15s ease,
+          box-shadow 0.15s ease,
+          background 0.15s ease;
+      }
+
+      body.ns-theme-dark .ns-launcher {
+        border-color: rgba(255, 255, 255, 0.1);
+        background: rgba(2, 6, 23, 0.82);
+        color: #fff;
+      }
+
+      .ns-launcher:hover {
         transform: translateY(-1px);
+        box-shadow: 0 14px 36px rgba(0, 0, 0, 0.22);
       }
-    }
 
-    .richAnswer p {
-      margin: 0 0 10px;
-    }
-
-    .richAnswer p:last-child {
-      margin-bottom: 0;
-    }
-
-    .richAnswer ul,
-    .richAnswer ol {
-      margin: 0 0 10px 18px;
-      padding: 0;
-    }
-
-    .richAnswer li {
-      margin: 0 0 6px;
-    }
-
-    .richAnswer strong {
-      font-weight: 800;
-      color: var(--ns-text);
-    }
-
-    .message.user .richAnswer strong {
-      color: #fff;
-    }
-
-    .richAnswer .callout {
-      display: block;
-      margin: 10px 0;
-      padding: 10px 11px;
-      border-radius: 14px;
-      background: var(--warning-bg);
-      border: 1px solid var(--border-soft);
-      font-size: 12px;
-    }
-
-    .metaRow {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      margin-top: 6px;
-    }
-
-    .metaTag {
-      font-size: 11px;
-      font-weight: 800;
-      color: var(--ns-dim);
-      background: var(--chip-bg);
-      border: 1px solid var(--border-soft);
-      border-radius: 999px;
-      padding: 6px 10px;
-    }
-
-    .stuckCard {
-      margin-top: 2px;
-      border: 1px solid var(--border-soft);
-      background: var(--ns-surface-2);
-      border-radius: 18px;
-      padding: 14px;
-    }
-
-    .stuckTitle {
-      margin: 0 0 5px;
-      font-size: 13px;
-      font-weight: 900;
-      color: var(--ns-text);
-    }
-
-    .stuckText {
-      margin: 0 0 10px;
-      font-size: 12px;
-      line-height: 1.4;
-      color: var(--ns-muted);
-    }
-
-    @container (max-width: 480px) {
-      .support-btn-text {
-        display: none !important;
+      .ns-launcher:active {
+        transform: scale(0.99);
       }
-    }
 
-    @media (max-width: 520px) {
-      .support-btn-text {
-        display: none;
+      .ns-launcher .dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 999px;
+        background: linear-gradient(135deg, var(--ns-accent), #2563eb);
+        box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.12);
+        flex: 0 0 auto;
+      }
+
+      .ns-launcher .label {
+        font-weight: 800;
+        font-size: 13px;
+        letter-spacing: 0.1px;
+        white-space: nowrap;
       }
 
       .ns-shell {
-        right: 12px;
-        left: 12px;
-        width: auto;
-        bottom: calc(76px + var(--safe-bottom));
-        height: min(86dvh, 760px);
-        min-height: 540px;
-        min-width: auto;
-        max-width: calc(100vw - 24px);
+        position: fixed;
+        right: 18px;
+        bottom: calc(78px + var(--safe-bottom));
+        z-index: 999999;
+        width: 430px;
+        max-width: calc(100vw - 36px);
+        height: min(82dvh, 760px);
+        min-height: 600px;
+        min-width: 340px;
+        max-height: 95dvh;
+        max-width: 95vw;
+        background: var(--ns-surface);
+        border: 1px solid var(--border-soft);
+        border-radius: 24px;
+        box-shadow: var(--shadow-2);
+        overflow: hidden;
+        display: none;
+        backdrop-filter: blur(20px);
+        container-type: inline-size;
+      }
+
+      .ns-shell.open {
+        display: block;
+      }
+
+      .ns-shell.fullscreen {
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        width: 100vw !important;
+        height: 100dvh !important;
+        max-width: none !important;
+        max-height: none !important;
+        border-radius: 0;
+        min-width: 100vw;
+        min-height: 100dvh;
         resize: none;
       }
 
+      .ns-shell.minimized {
+        height: 72px !important;
+        min-height: 72px !important;
+        width: 360px;
+        resize: none;
+        overflow: hidden;
+      }
+
+      .ns-shell.minimized .ns-body {
+        display: none;
+      }
+
+      .ns-shell.minimized .ns-topbar {
+        min-height: 72px;
+      }
+
+      .ns-topbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 10px 10px 16px;
+        background: var(--ns-header-gradient);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        min-height: 70px;
+      }
+
+      .ns-topbar-left {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        min-width: 0;
+        flex-shrink: 1;
+      }
+
+      .ns-logo {
+        height: 24px;
+        width: auto;
+        max-width: 100%;
+        object-fit: contain;
+        display: block;
+        margin: 0;
+      }
+
+      .ns-beta-badge {
+        font-size: 9px;
+        font-weight: 800;
+        text-transform: uppercase;
+        background: linear-gradient(
+          135deg,
+          rgba(255, 255, 255, 0.2),
+          rgba(255, 255, 255, 0.05)
+        );
+        color: #fff;
+        padding: 2px 8px;
+        border-radius: 100px;
+        letter-spacing: 0.8px;
+        backdrop-filter: blur(8px);
+        border: 1px solid rgba(255, 255, 255, 0.25);
+        display: inline-flex;
+        align-items: center;
+        height: fit-content;
+        margin-top: 1px;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        user-select: none;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .ns-beta-badge:hover {
+        transform: scale(1.08) translateY(-1px);
+        background: linear-gradient(
+          135deg,
+          rgba(255, 255, 255, 0.3),
+          rgba(255, 255, 255, 0.1)
+        );
+        border-color: rgba(255, 255, 255, 0.5);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      }
+
+      .ns-beta-badge::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.4),
+          transparent
+        );
+        transition: 0.5s;
+      }
+
+      .ns-beta-badge:hover::after {
+        left: 100%;
+        transition: 0.6s;
+      }
+
+      .ns-topbar-right {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        flex-shrink: 0;
+      }
+
+      .btn-primary,
+      .btn-secondary,
+      .btn-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 999px;
+        font-weight: 800;
+        cursor: pointer;
+        border: none;
+        background: none;
+        font-family: var(--font);
+        transition:
+          transform 0.15s ease,
+          box-shadow 0.15s ease,
+          opacity 0.15s ease,
+          background 0.15s ease;
+        user-select: none;
+        text-decoration: none;
+      }
+
+      .btn-primary {
+        background: linear-gradient(135deg, var(--ns-accent), #2563eb);
+        color: #fff;
+        box-shadow: 0 10px 24px rgba(37, 99, 235, 0.22);
+        padding: 10px 14px;
+        font-size: 13px;
+        white-space: nowrap;
+      }
+
+      .btn-secondary {
+        color: var(--ns-text);
+        background: var(--chip-bg);
+        border: 1px solid var(--border-soft);
+        padding: 10px 14px;
+        font-size: 13px;
+        white-space: nowrap;
+      }
+
+      .btn-icon {
+        width: 32px;
+        height: 32px;
+        border: 1px solid rgba(226, 232, 240, 0.22);
+        background: rgba(2, 6, 23, 0.18);
+        color: #fff;
+        font-size: 15px;
+        font-weight: 900;
+      }
+
+      .btn-primary:active,
+      .btn-secondary:active,
+      .btn-icon:active {
+        transform: scale(0.98);
+      }
+
+      .ns-body {
+        height: calc(100% - 70px);
+        display: flex;
+        flex-direction: column;
+        background: var(--ns-bg);
+      }
+
+      body.ns-theme-dark .ns-body {
+        background: radial-gradient(
+          circle at top,
+          rgba(15, 23, 42, 0.92),
+          #020617 70%
+        );
+      }
+
+      .ns-screen {
+        padding: 18px 16px 16px;
+        overflow: auto;
+        flex: 1 1 auto;
+        scroll-behavior: smooth;
+      }
+
+      .thread {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        animation: nsFadeIn 0.22s ease-out;
+      }
+
+      @keyframes nsFadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(5px);
+        }
+
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .hero {
+        border: 1px solid var(--border-soft);
+        background: var(--ns-surface-2);
+        border-radius: 22px;
+        padding: 18px 16px;
+        box-shadow: 0 10px 24px rgba(2, 6, 23, 0.06);
+      }
+
+      .heroBadge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 6px 10px;
+        border-radius: 999px;
+        background: var(--chip-bg);
+        border: 1px solid var(--border-soft);
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        color: var(--ns-dim);
+        margin-bottom: 14px;
+      }
+
       .heroTitle {
-        font-size: 26px;
+        margin: 0 0 8px;
+        font-size: 28px;
+        line-height: 1.02;
+        letter-spacing: -0.045em;
+        font-weight: 800;
+        color: var(--ns-text);
+      }
+
+      .heroText {
+        margin: 0;
+        font-size: 14px;
+        line-height: 1.5;
+        color: var(--ns-muted);
+        max-width: 34ch;
+      }
+
+      .quickSectionTitle {
+        margin: 6px 2px 2px;
+        color: var(--ns-dim);
+        font-size: 11px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+
+      .quickGrid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .chip {
+        border: 1px solid var(--border-soft);
+        background: transparent;
+        color: var(--ns-text);
+        padding: 10px 14px;
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 700;
+        cursor: pointer;
+        font-family: var(--font);
+        transition:
+          background 0.15s ease,
+          transform 0.15s ease,
+          border-color 0.15s ease;
+      }
+
+      .chip:hover {
+        background: var(--card-hover);
+        transform: translateY(-1px);
       }
 
       .cardRow {
-        grid-template-columns: 1fr;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+      }
+
+      .homeCard {
+        border: 1px solid var(--border-soft);
+        border-radius: 18px;
+        background: var(--card-bg);
+        padding: 14px;
+        cursor: pointer;
+        transition:
+          transform 0.15s ease,
+          background 0.15s ease;
+      }
+
+      .homeCard:hover {
+        background: var(--card-hover);
+        transform: translateY(-1px);
+      }
+
+      .homeCardTitle {
+        margin: 0 0 4px;
+        font-size: 13px;
+        font-weight: 800;
+        color: var(--ns-text);
+        letter-spacing: -0.01em;
+      }
+
+      .homeCardSub {
+        margin: 0;
+        font-size: 12px;
+        line-height: 1.35;
+        color: var(--ns-muted);
+      }
+
+      .ctaPanel {
+        border: 1px solid var(--border-soft);
+        border-radius: 18px;
+        padding: 14px;
+        background: linear-gradient(180deg, var(--success-bg), transparent);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .ctaPanelTitle {
+        margin: 0 0 4px;
+        font-size: 13px;
+        font-weight: 900;
+        color: var(--ns-text);
+      }
+
+      .ctaPanelText {
+        margin: 0;
+        font-size: 12px;
+        line-height: 1.4;
+        color: var(--ns-muted);
+      }
+
+      .composerMain {
+        flex: 1 1 auto;
+        display: flex;
+        align-items: flex-end;
+        gap: 10px;
+        border: 1px solid var(--input-border);
+        background: var(--input-bg);
+        border-radius: 20px;
+        padding: 10px 14px;
+      }
+
+      .composerMain:focus-within {
+        border-color: var(--ns-accent);
+        box-shadow: 0 0 0 1px var(--input-focus);
+      }
+
+      #homePrompt {
+        width: 100%;
+        min-height: 32px;
+        max-height: 120px;
+        resize: none;
+        border: none;
+        outline: none;
+        background: transparent;
+        color: var(--ns-text);
+        font-size: 13px;
+        line-height: 1.45;
+        font-family: var(--font);
+        padding: 5px 0;
+        margin: 0;
+      }
+
+      #homePrompt:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+      }
+
+      .message {
+        display: flex;
+        width: 100%;
+        gap: 10px;
+        animation: nsFadeIn 0.18s ease-out;
+      }
+
+      .message.assistant {
+        justify-content: flex-start;
+      }
+
+      .message.user {
+        justify-content: flex-end;
+      }
+
+      .avatar {
+        width: 30px;
+        height: 30px;
+        border-radius: 999px;
+        flex: 0 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        font-weight: 800;
+        color: #fff;
+        background: linear-gradient(135deg, var(--ns-accent), #2563eb);
+        box-shadow: 0 8px 20px rgba(37, 99, 235, 0.18);
+        margin-top: 2px;
       }
 
       .bubbleWrap {
-        max-width: 88%;
+        max-width: min(84%, 320px);
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
       }
-    }
 
-    .ns-launcher-note {
-      position: fixed;
-      right: 18px;
-      bottom: calc(76px + var(--safe-bottom));
-      z-index: 999998;
-      background: #fff;
-      color: var(--ns-text);
-      padding: 10px 16px;
-      border-radius: 14px;
-      border: 1px solid var(--border-soft);
-      box-shadow: var(--shadow-1);
-      font-size: 13px;
-      font-weight: 600;
-      opacity: 0;
-      pointer-events: none;
-      transform: translateY(10px) scale(0.95);
-      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      transform-origin: bottom right;
-      cursor: pointer;
-    }
+      .ns-shell.fullscreen .bubbleWrap {
+        max-width: min(84%, 800px);
+      }
 
-    .ns-launcher-note.show {
-      opacity: 1;
-      pointer-events: auto;
-      transform: translateY(0) scale(1);
-    }
+      .message.user .bubbleWrap {
+        align-items: flex-end;
+      }
 
-    .ns-launcher-note::after {
-      content: "";
-      position: absolute;
-      bottom: -6px;
-      right: 24px;
-      width: 10px;
-      height: 10px;
-      background: #fff;
-      border-right: 1px solid var(--border-soft);
-      border-bottom: 1px solid var(--border-soft);
-      transform: rotate(45deg);
-    }
+      .bubbleLabel {
+        font-size: 11px;
+        color: var(--ns-dim);
+        font-weight: 700;
+        padding: 0 2px;
+      }
 
-    body.ns-theme-dark .ns-launcher-note {
-      background: rgba(2, 6, 23, 0.92);
-      color: #fff;
-      border-color: rgba(255, 255, 255, 0.1);
-    }
+      .bubble {
+        border-radius: 18px;
+        padding: 13px 14px;
+        border: 1px solid var(--border-soft);
+        background: var(--assistant-bubble);
+        color: var(--ns-text);
+        line-height: 1.55;
+        font-size: 13px;
+        overflow-wrap: anywhere;
+      }
 
-    .sr-only {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      padding: 0;
-      margin: -1px;
-      overflow: hidden;
-      clip: rect(0, 0, 0, 0);
-      white-space: nowrap;
-      border-width: 0;
-    }
+      .message.user .bubble {
+        background: var(--user-bubble);
+        color: #fff;
+        border-color: transparent;
+        box-shadow: 0 10px 28px rgba(37, 99, 235, 0.22);
+      }
 
-    .composer {
-      padding: 12px 14px 16px 14px;
-      border-top: 1px solid var(--border-soft);
-      display: flex;
-      gap: 10px;
-      align-items: flex-end;
-      background: var(--ns-surface);
-      z-index: 10;
-    }
+      .assistantActions {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-top: 8px;
+      }
 
-    .composerMain {
-      flex: 1 1 auto;
-      display: flex;
-      align-items: flex-end;
-      gap: 10px;
-      border: 1px solid var(--border-soft);
-      background: var(--ns-surface-2);
-      border-radius: 20px;
-      padding: 8px 14px;
-    }
+      .microPill {
+        border-radius: 999px;
+        padding: 8px 11px;
+        border: 1px solid var(--border-soft);
+        background: var(--chip-bg);
+        color: var(--ns-text);
+        font-size: 12px;
+        font-weight: 800;
+        cursor: pointer;
+        font-family: var(--font);
+      }
 
-    .composerMain:focus-within {
-      border-color: var(--ns-accent);
-      box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.2);
-    }
+      .microPill:hover {
+        background: var(--card-hover);
+      }
 
-    body.ns-theme-dark .composerMain:focus-within {
-      box-shadow: 0 0 0 1px var(--ns-accent);
-    }
+      .typingBubble {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        min-height: 18px;
+      }
 
-    .composer textarea {
-      width: 100%;
-      min-height: 26px;
-      max-height: 110px;
-      resize: none;
-      border: none;
-      outline: none;
-      background: transparent;
-      font-size: 13px;
-      font-family: var(--font);
-      padding: 5px 0;
-      margin: 0;
-      color: var(--ns-text);
-      line-height: 1.45;
-    }
+      .typingBubble span {
+        width: 7px;
+        height: 7px;
+        border-radius: 999px;
+        background: var(--ns-dim);
+        display: block;
+        animation: nsBlink 1.2s infinite ease-in-out;
+      }
 
-    .composer textarea:disabled {
-      opacity: 0.7;
-      cursor: not-allowed;
-    }
+      .typingBubble span:nth-child(2) {
+        animation-delay: 0.15s;
+      }
 
-    .send {
-      width: 44px;
-      height: 44px;
-      border-radius: 999px;
-      border: none;
-      cursor: pointer;
-      background: linear-gradient(135deg, var(--ns-accent), #2563eb);
-      color: #fff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition:
-        transform 0.15s ease,
-        opacity 0.15s ease;
-      flex: 0 0 auto;
-      margin-bottom: 0px;
-      box-shadow: 0 10px 24px rgba(37, 99, 235, 0.22);
-    }
+      .typingBubble span:nth-child(3) {
+        animation-delay: 0.3s;
+      }
 
-    .send:active {
-      transform: scale(0.95);
-    }
+      @keyframes nsBlink {
+        0%,
+        80%,
+        100% {
+          opacity: 0.35;
+          transform: translateY(0);
+        }
 
-    .send:disabled {
-      opacity: 0.55;
-      cursor: not-allowed;
-    }
+        40% {
+          opacity: 1;
+          transform: translateY(-1px);
+        }
+      }
 
-    .footerHint {
-      font-size: 11px;
-      color: var(--ns-dim);
-      text-align: center;
-      margin: 0 24px 12px;
-    }
-  </style>
-</head>
+      .richAnswer p {
+        margin: 0 0 10px;
+      }
 
-<body class="ns-theme-light">
-  <div class="ns-launcher-note" id="nsLauncherNote">Chat with us</div>
-  <div class="ns-launcher" id="nsLauncher" aria-label="Open NerveSpa Support">
-    <span class="dot"></span>
-    <span class="label">Support</span>
-  </div>
+      .richAnswer p:last-child {
+        margin-bottom: 0;
+      }
 
-  <div class="ns-shell" id="nsShell" role="dialog" aria-modal="true" aria-label="NerveSpa Support Widget">
-    <div class="ns-topbar">
-      <div class="ns-topbar-left">
-        <img class="ns-logo"
-          src="https://s3.us-east-2.amazonaws.com/cdn.hmsctl.com/publicshare/nerve-spa-logo-white.png" alt="NerveSpa" />
-        <span class="ns-beta-badge" title="This is a beta version of the NerveSpa Support Assistant.">Beta</span>
-      </div>
+      .richAnswer ul,
+      .richAnswer ol {
+        margin: 0 0 10px 18px;
+        padding: 0;
+      }
 
-      <div class="ns-topbar-right">
-        <button class="btn-icon" id="btnClear" aria-label="Clear chat" title="Clear chat">
-          ⌫
-        </button>
-        <button class="btn-icon" id="btnResize" aria-label="Toggle full screen" title="Toggle full screen">
-          ⤢
-        </button>
-        <button class="btn-icon" id="btnMinimize" aria-label="Minimize" title="Minimize">
-          —
-        </button>
-        <button class="btn-icon" style="
+      .richAnswer li {
+        margin: 0 0 6px;
+      }
+
+      .richAnswer strong {
+        font-weight: 800;
+        color: var(--ns-text);
+      }
+
+      .message.user .richAnswer strong {
+        color: #fff;
+      }
+
+      .richAnswer .callout {
+        display: block;
+        margin: 10px 0;
+        padding: 10px 11px;
+        border-radius: 14px;
+        background: var(--warning-bg);
+        border: 1px solid var(--border-soft);
+        font-size: 12px;
+      }
+
+      .metaRow {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-top: 6px;
+      }
+
+      .metaTag {
+        font-size: 11px;
+        font-weight: 800;
+        color: var(--ns-dim);
+        background: var(--chip-bg);
+        border: 1px solid var(--border-soft);
+        border-radius: 999px;
+        padding: 6px 10px;
+      }
+
+      .stuckCard {
+        margin-top: 2px;
+        border: 1px solid var(--border-soft);
+        background: var(--ns-surface-2);
+        border-radius: 18px;
+        padding: 14px;
+      }
+
+      .stuckTitle {
+        margin: 0 0 5px;
+        font-size: 13px;
+        font-weight: 900;
+        color: var(--ns-text);
+      }
+
+      .stuckText {
+        margin: 0 0 10px;
+        font-size: 12px;
+        line-height: 1.4;
+        color: var(--ns-muted);
+      }
+
+      @container (max-width: 480px) {
+        .support-btn-text {
+          display: none !important;
+        }
+      }
+
+      @media (max-width: 520px) {
+        .support-btn-text {
+          display: none;
+        }
+
+        .ns-shell {
+          right: 12px;
+          left: 12px;
+          width: auto;
+          bottom: calc(76px + var(--safe-bottom));
+          height: min(86dvh, 760px);
+          min-height: 540px;
+          min-width: auto;
+          max-width: calc(100vw - 24px);
+          resize: none;
+        }
+
+        .heroTitle {
+          font-size: 26px;
+        }
+
+        .cardRow {
+          grid-template-columns: 1fr;
+        }
+
+        .bubbleWrap {
+          max-width: 88%;
+        }
+      }
+
+      .ns-launcher-note {
+        position: fixed;
+        right: 18px;
+        bottom: calc(76px + var(--safe-bottom));
+        z-index: 999998;
+        background: #fff;
+        color: var(--ns-text);
+        padding: 10px 16px;
+        border-radius: 14px;
+        border: 1px solid var(--border-soft);
+        box-shadow: var(--shadow-1);
+        font-size: 13px;
+        font-weight: 600;
+        opacity: 0;
+        pointer-events: none;
+        transform: translateY(10px) scale(0.95);
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        transform-origin: bottom right;
+        cursor: pointer;
+      }
+
+      .ns-launcher-note.show {
+        opacity: 1;
+        pointer-events: auto;
+        transform: translateY(0) scale(1);
+      }
+
+      .ns-launcher-note::after {
+        content: "";
+        position: absolute;
+        bottom: -6px;
+        right: 24px;
+        width: 10px;
+        height: 10px;
+        background: #fff;
+        border-right: 1px solid var(--border-soft);
+        border-bottom: 1px solid var(--border-soft);
+        transform: rotate(45deg);
+      }
+
+      body.ns-theme-dark .ns-launcher-note {
+        background: rgba(2, 6, 23, 0.92);
+        color: #fff;
+        border-color: rgba(255, 255, 255, 0.1);
+      }
+
+      .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border-width: 0;
+      }
+
+      .composer {
+        padding: 12px 14px 16px 14px;
+        border-top: 1px solid var(--border-soft);
+        display: flex;
+        gap: 10px;
+        align-items: flex-end;
+        background: var(--ns-surface);
+        z-index: 10;
+      }
+
+      .composerMain {
+        flex: 1 1 auto;
+        display: flex;
+        align-items: flex-end;
+        gap: 10px;
+        border: 1px solid var(--border-soft);
+        background: var(--ns-surface-2);
+        border-radius: 20px;
+        padding: 8px 14px;
+      }
+
+      .composerMain:focus-within {
+        border-color: var(--ns-accent);
+        box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.2);
+      }
+
+      body.ns-theme-dark .composerMain:focus-within {
+        box-shadow: 0 0 0 1px var(--ns-accent);
+      }
+
+      .composer textarea {
+        width: 100%;
+        min-height: 26px;
+        max-height: 110px;
+        resize: none;
+        border: none;
+        outline: none;
+        background: transparent;
+        font-size: 13px;
+        font-family: var(--font);
+        padding: 5px 0;
+        margin: 0;
+        color: var(--ns-text);
+        line-height: 1.45;
+      }
+
+      .composer textarea:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+      }
+
+      .send {
+        width: 44px;
+        height: 44px;
+        border-radius: 999px;
+        border: none;
+        cursor: pointer;
+        background: linear-gradient(135deg, var(--ns-accent), #2563eb);
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition:
+          transform 0.15s ease,
+          opacity 0.15s ease;
+        flex: 0 0 auto;
+        margin-bottom: 0px;
+        box-shadow: 0 10px 24px rgba(37, 99, 235, 0.22);
+      }
+
+      .send:active {
+        transform: scale(0.95);
+      }
+
+      .send:disabled {
+        opacity: 0.55;
+        cursor: not-allowed;
+      }
+
+      .footerHint {
+        font-size: 11px;
+        color: var(--ns-dim);
+        text-align: center;
+        margin: 0 24px 12px;
+      }
+    </style>
+  </head>
+
+  <body class="ns-theme-light">
+    <div class="ns-launcher-note" id="nsLauncherNote">Chat with us</div>
+    <div class="ns-launcher" id="nsLauncher" aria-label="Open NerveSpa Support">
+      <span class="dot"></span>
+      <span class="label">Support</span>
+    </div>
+
+    <div
+      class="ns-shell"
+      id="nsShell"
+      role="dialog"
+      aria-modal="true"
+      aria-label="NerveSpa Support Widget"
+    >
+      <div class="ns-topbar">
+        <div class="ns-topbar-left">
+          <img
+            class="ns-logo"
+            src="https://s3.us-east-2.amazonaws.com/cdn.hmsctl.com/publicshare/nerve-spa-logo-white.png"
+            alt="NerveSpa"
+          />
+          <span
+            class="ns-beta-badge"
+            title="This is a beta version of the NerveSpa Support Assistant."
+            >Beta</span
+          >
+        </div>
+
+        <div class="ns-topbar-right">
+          <button
+            class="btn-icon"
+            id="btnClear"
+            aria-label="Clear chat"
+            title="Clear chat"
+          >
+            ⌫
+          </button>
+          <button
+            class="btn-icon"
+            id="btnResize"
+            aria-label="Toggle full screen"
+            title="Toggle full screen"
+          >
+            ⤢
+          </button>
+          <button
+            class="btn-icon"
+            id="btnMinimize"
+            aria-label="Minimize"
+            title="Minimize"
+          >
+            —
+          </button>
+          <button
+            class="btn-icon"
+            style="
               width: auto;
               padding: 0 12px;
               gap: 1px;
               font-size: 13px;
               font-weight: 700;
               align-items: center;
-            " onclick="window.nsWidgetActions.openContact()" aria-label="Support" title="Support">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
-            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M3 18v-6a9 9 0 0 1 18 0v6"></path>
-            <path
-              d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z">
-            </path>
-          </svg>
-          <span class="support-btn-text">Support</span>
-        </button>
-        <button class="btn-icon" id="btnTheme" aria-label="Toggle theme" title="Toggle theme">
-          ☀
-        </button>
-        <button class="btn-icon" id="btnClose" aria-label="Close" title="Close">
-          ✕
-        </button>
-      </div>
-    </div>
-
-    <div class="ns-body">
-      <div class="ns-screen" id="screen" role="log" aria-live="polite" aria-relevant="additions" aria-atomic="false">
-      </div>
-      <div class="composer">
-        <div class="composerMain">
-          <textarea id="chatInput" rows="1" placeholder="Ask a question about setup, troubleshooting,"
-            aria-label="Reply"></textarea>
+            "
+            onclick="window.nsWidgetActions.openContact()"
+            aria-label="Support"
+            title="Support"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M3 18v-6a9 9 0 0 1 18 0v6"></path>
+              <path
+                d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"
+              ></path>
+            </svg>
+            <span class="support-btn-text">Support</span>
+          </button>
+          <button
+            class="btn-icon"
+            id="btnTheme"
+            aria-label="Toggle theme"
+            title="Toggle theme"
+          >
+            ☀
+          </button>
+          <button
+            class="btn-icon"
+            id="btnClose"
+            aria-label="Close"
+            title="Close"
+          >
+            ✕
+          </button>
         </div>
-        <button class="send" id="btnSend" aria-label="Send message" title="Send message">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
-            stroke-linecap="round" stroke-linejoin="round" style="transform: translateX(-1px)">
-            <line x1="22" y1="2" x2="11" y2="13"></line>
-            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-          </svg>
-        </button>
       </div>
-      <div class="footerHint">
-        Bot can make mistakes. Always check facts before acting.
+
+      <div class="ns-body">
+        <div
+          class="ns-screen"
+          id="screen"
+          role="log"
+          aria-live="polite"
+          aria-relevant="additions"
+          aria-atomic="false"
+        ></div>
+        <div class="composer">
+          <div class="composerMain">
+            <textarea
+              id="chatInput"
+              rows="1"
+              placeholder="Ask a question about setup, troubleshooting,"
+              aria-label="Reply"
+            ></textarea>
+          </div>
+          <button
+            class="send"
+            id="btnSend"
+            aria-label="Send message"
+            title="Send message"
+          >
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              style="transform: translateX(-1px)"
+            >
+              <line x1="22" y1="2" x2="11" y2="13"></line>
+              <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+            </svg>
+          </button>
+        </div>
+        <div class="footerHint">
+          Bot can make mistakes. Always check facts before acting.
+        </div>
       </div>
     </div>
-  </div>
 
-  <script>
-    const CONTACT_URL = "https://nervespa.com/contact";
-    const WARRANTY_URL = "https://nervespa.com/warranty";
-    const WEBHOOK_URL =
-      "https://n8n.srv917960.hstgr.cloud/webhook/nervespa-chatbot";
-    const LOG_WEBHOOK_URL =
-      "https://n8n.srv917960.hstgr.cloud/webhook/create-chat-messages";
-    const SUPPORT_WEBHOOK_URL =
-      "https://n8n.srv917960.hstgr.cloud/webhook/submit-support";
+    <script>
+      const CONTACT_URL = "https://nervespa.com/contact";
+      const WARRANTY_URL = "https://nervespa.com/warranty";
+      const WEBHOOK_URL =
+        "https://n8n.srv917960.hstgr.cloud/webhook/nervespa-chatbot";
+      const LOG_WEBHOOK_URL =
+        "https://n8n.srv917960.hstgr.cloud/webhook/create-chat-messages";
+      const SUPPORT_WEBHOOK_URL =
+        "https://n8n.srv917960.hstgr.cloud/webhook/submit-support";
 
-    const THEME_KEY = "ns_widget_theme";
-    const THREAD_KEY = "ns_widget_thread_v2";
-    const SIZE_KEY = "ns_widget_size_v1";
-    const WINDOW_STATE_KEY = "ns_widget_window_state_v1";
+      const THEME_KEY = "ns_widget_theme";
+      const THREAD_KEY = "ns_widget_thread_v2";
+      const SIZE_KEY = "ns_widget_size_v1";
+      const WINDOW_STATE_KEY = "ns_widget_window_state_v1";
 
-    const RATE_LIMIT_COUNT = 30; // Max questions
-    const RATE_LIMIT_WINDOW = 60000; // 1 minute in ms
-    const BLOCK_KEY = "ns_user_blocked";
+      const RATE_LIMIT_COUNT = 30; // Max questions
+      const RATE_LIMIT_WINDOW = 60000; // 1 minute in ms
+      const BLOCK_KEY = "ns_user_blocked";
 
-    function safeGetItem(key) {
-      try {
-        return localStorage.getItem(key);
-      } catch (e) {
-        return null;
-      }
-    }
-    function safeSetItem(key, value) {
-      try {
-        localStorage.setItem(key, value);
-      } catch (e) { }
-    }
-    function safeRemoveItem(key) {
-      try {
-        localStorage.removeItem(key);
-      } catch (e) { }
-    }
-
-    const CATEGORIES = [
-      {
-        key: "setup",
-        title: "Setup & Getting Started",
-        sub: "Device setup and first-use guidance",
-      },
-      {
-        key: "protocols",
-        title: "Programs & Protocols",
-        sub: "Clinical program overviews and usage guidance",
-      },
-      {
-        key: "troubleshooting",
-        title: "Troubleshooting",
-        sub: "Power, stimulation, wraps, cables, and device issues",
-      },
-      {
-        key: "orders",
-        title: "Orders & Purchasing",
-        sub: "Buying, invoices, tracking, returns, and bulk orders",
-      },
-      {
-        key: "care",
-        title: "Care & Warranty",
-        sub: "Cleaning, maintenance, replacement, and warranty coverage",
-      },
-    ];
-
-    const sessionId =
-      crypto?.randomUUID?.() ||
-      Date.now() + "-" + Math.random().toString(16).slice(2);
-    let lastUserQuery = null;
-    let currentArticleId = null;
-    let thread = [];
-    let queryTimestamps = [];
-    let isTyping = false;
-    let isFullscreen = false;
-    let isMinimized = false;
-
-    let currentViewType = "home";
-    let currentCategoryKey = null;
-    let viewBeforeForm = "home";
-    let categoryBeforeForm = null;
-
-    function restorePreviousView() {
-      if (viewBeforeForm === "thread") renderThread();
-      else if (viewBeforeForm === "category")
-        renderCategory(categoryBeforeForm);
-      else renderHome();
-    }
-
-    const elShell = document.getElementById("nsShell");
-    const elLauncher = document.getElementById("nsLauncher");
-    const elLauncherNote = document.getElementById("nsLauncherNote");
-    const elScreen = document.getElementById("screen");
-    const elLogo = document.querySelector(".ns-logo");
-    const btnTheme = document.getElementById("btnTheme");
-    const btnResize = document.getElementById("btnResize");
-    const btnMinimize = document.getElementById("btnMinimize");
-    const btnClear = document.getElementById("btnClear");
-
-    let logoClickCount = 0;
-    let logoClickTimer = null;
-    if (elLogo) {
-      elLogo.addEventListener("click", () => {
-        logoClickCount++;
-        clearTimeout(logoClickTimer);
-        if (logoClickCount >= 5) {
-          logoClickCount = 0;
-          if (
-            window.nsWidgetActions &&
-            window.nsWidgetActions.renderDevLogin
-          ) {
-            viewBeforeForm = currentViewType;
-            categoryBeforeForm = currentCategoryKey;
-            window.nsWidgetActions.renderDevLogin();
-          }
-        } else {
-          logoClickTimer = setTimeout(() => {
-            logoClickCount = 0;
-          }, 1000);
+      function safeGetItem(key) {
+        try {
+          return localStorage.getItem(key);
+        } catch (e) {
+          return null;
         }
-      });
-    }
+      }
+      function safeSetItem(key, value) {
+        try {
+          localStorage.setItem(key, value);
+        } catch (e) {}
+      }
+      function safeRemoveItem(key) {
+        try {
+          localStorage.removeItem(key);
+        } catch (e) {}
+      }
 
-    const noteMessages = [
-      "Chat with us!",
-      "Have any questions?",
-      "Need help?",
-    ];
-    let noteIndex = 0;
+      const CATEGORIES = [
+        {
+          key: "setup",
+          title: "Setup & Getting Started",
+          sub: "Device setup and first-use guidance",
+        },
+        {
+          key: "protocols",
+          title: "Programs & Protocols",
+          sub: "Clinical program overviews and usage guidance",
+        },
+        {
+          key: "troubleshooting",
+          title: "Troubleshooting",
+          sub: "Power, stimulation, wraps, cables, and device issues",
+        },
+        {
+          key: "orders",
+          title: "Orders & Purchasing",
+          sub: "Buying, invoices, tracking, returns, and bulk orders",
+        },
+        {
+          key: "care",
+          title: "Care & Warranty",
+          sub: "Cleaning, maintenance, replacement, and warranty coverage",
+        },
+      ];
 
-    if (elLauncherNote) {
-      const showNextNote = () => {
-        if (elShell.classList.contains("open")) return;
-        elLauncherNote.textContent = noteMessages[noteIndex];
-        elLauncherNote.classList.add("show");
+      const sessionId =
+        crypto?.randomUUID?.() ||
+        Date.now() + "-" + Math.random().toString(16).slice(2);
+      let lastUserQuery = null;
+      let currentArticleId = null;
+      let thread = [];
+      let queryTimestamps = [];
+      let isTyping = false;
+      let isFullscreen = false;
+      let isMinimized = false;
+
+      let currentViewType = "home";
+      let currentCategoryKey = null;
+      let viewBeforeForm = "home";
+      let categoryBeforeForm = null;
+
+      function restorePreviousView() {
+        if (viewBeforeForm === "thread") renderThread();
+        else if (viewBeforeForm === "category")
+          renderCategory(categoryBeforeForm);
+        else renderHome();
+      }
+
+      const elShell = document.getElementById("nsShell");
+      const elLauncher = document.getElementById("nsLauncher");
+      const elLauncherNote = document.getElementById("nsLauncherNote");
+      const elScreen = document.getElementById("screen");
+      const elLogo = document.querySelector(".ns-logo");
+      const btnTheme = document.getElementById("btnTheme");
+      const btnResize = document.getElementById("btnResize");
+      const btnMinimize = document.getElementById("btnMinimize");
+      const btnClear = document.getElementById("btnClear");
+
+      let logoClickCount = 0;
+      let logoClickTimer = null;
+      if (elLogo) {
+        elLogo.addEventListener("click", () => {
+          logoClickCount++;
+          clearTimeout(logoClickTimer);
+          if (logoClickCount >= 5) {
+            logoClickCount = 0;
+            if (
+              window.nsWidgetActions &&
+              window.nsWidgetActions.renderDevLogin
+            ) {
+              viewBeforeForm = currentViewType;
+              categoryBeforeForm = currentCategoryKey;
+              window.nsWidgetActions.renderDevLogin();
+            }
+          } else {
+            logoClickTimer = setTimeout(() => {
+              logoClickCount = 0;
+            }, 1000);
+          }
+        });
+      }
+
+      const noteMessages = [
+        "Chat with us!",
+        "Have any questions?",
+        "Need help?",
+      ];
+      let noteIndex = 0;
+
+      if (elLauncherNote) {
+        const showNextNote = () => {
+          if (elShell.classList.contains("open")) return;
+          elLauncherNote.textContent = noteMessages[noteIndex];
+          elLauncherNote.classList.add("show");
+
+          setTimeout(() => {
+            elLauncherNote.classList.remove("show");
+            noteIndex = (noteIndex + 1) % noteMessages.length;
+          }, 3500);
+        };
 
         setTimeout(() => {
+          showNextNote();
+          setInterval(showNextNote, 7000);
+        }, 2000);
+
+        elLauncherNote.addEventListener("click", () => {
           elLauncherNote.classList.remove("show");
-          noteIndex = (noteIndex + 1) % noteMessages.length;
-        }, 3500);
-      };
+          openWidget();
+        });
+      }
 
-      setTimeout(() => {
-        showNextNote();
-        setInterval(showNextNote, 7000);
-      }, 2000);
-
-      elLauncherNote.addEventListener("click", () => {
-        elLauncherNote.classList.remove("show");
-        openWidget();
-      });
-    }
-
-    function renderSupportForm() {
-      const html = `
+      function renderSupportForm() {
+        const html = `
         <div class="thread">
           <div class="quickGrid" style="margin-bottom:2px;">
             <button class="chip" onclick="window.nsWidgetActions.restorePreviousView()">← Back</button>
@@ -1178,24 +1276,24 @@
           </div>
         </div>
       `;
-      elScreen.innerHTML = html;
-      elScreen.scrollTop = 0;
-    }
-
-    function renderDevLogin() {
-      const isDev = safeGetItem("is_dev") === "true";
-      if (isDev) {
-        const disable = confirm(
-          "Dev Mode is currently ON. Do you want to disable it?",
-        );
-        if (disable) {
-          safeRemoveItem("is_dev");
-          alert("Dev Mode Disabled.");
-        }
-        return;
+        elScreen.innerHTML = html;
+        elScreen.scrollTop = 0;
       }
 
-      const html = `
+      function renderDevLogin() {
+        const isDev = safeGetItem("is_dev") === "true";
+        if (isDev) {
+          const disable = confirm(
+            "Dev Mode is currently ON. Do you want to disable it?",
+          );
+          if (disable) {
+            safeRemoveItem("is_dev");
+            alert("Dev Mode Disabled.");
+          }
+          return;
+        }
+
+        const html = `
         <div class="thread">
           <div class="quickGrid" style="margin-bottom:2px;">
             <button class="chip" onclick="window.nsWidgetActions.restorePreviousView()">← Back</button>
@@ -1212,858 +1310,870 @@
           </div>
         </div>
         `;
-      elScreen.innerHTML = html;
-      elScreen.scrollTop = 0;
-    }
-
-    async function submitSupportForm() {
-      const btn = document.getElementById("support-submit");
-      const name = document.getElementById("support-name").value.trim();
-      const email = document.getElementById("support-email").value.trim();
-      const phone = document.getElementById("support-phone").value.trim();
-      const msg = document.getElementById("support-msg").value.trim();
-      const errEl = document.getElementById("support-error");
-
-      const showError = (text) => {
-        errEl.textContent = text;
-        errEl.style.display = "block";
-      };
-
-      if (errEl) errEl.style.display = "none";
-
-      if (!name) return showError("Please enter your name.");
-      if (/\d/.test(name))
-        return showError("Please enter a valid name without numbers.");
-      if (!email) return showError("Please enter your email.");
-      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
-        return showError("Please enter a valid email address.");
-      if (!phone) return showError("Please enter your phone number.");
-      if (!/^[\d+]+$/.test(phone))
-        return showError("Please enter a valid phone number.");
-      if (!msg) return showError("Please enter a message.");
-
-      const origText = btn.textContent;
-      btn.textContent = "Sending...";
-      btn.disabled = true;
-
-      try {
-        const res = await fetch(SUPPORT_WEBHOOK_URL, {
-          method: "POST",
-          headers: { "Content-Type": "application/x-www-form-urlencoded" },
-          body: new URLSearchParams({
-            session_id: sessionId,
-            name: name,
-            email: email,
-            phone: phone,
-            msg: msg,
-          }),
-        });
-
-        if (!res.ok) throw new Error("Server error");
-
-        btn.textContent = "Sent Successfully! ✅";
-        btn.style.background = "var(--success-bg)";
-        btn.style.color = "var(--ns-text)";
-
-        renderHome();
-        thread.push({
-          role: "assistant",
-          text: "Thank you! I've successfully shared your details with our support team. One of our specialists will reach out to you shortly. ✨\\n\\nIs there anything else I can help you with today?",
-        });
-        saveThread();
-        renderThread();
-      } catch (e) {
-        alert(
-          "Error sending request. Please try again or contact support directly.",
-        );
-        btn.textContent = origText;
-        btn.disabled = false;
-      }
-    }
-
-    function submitDevLogin() {
-      const em = document.getElementById("dev-email").value.trim();
-      const pwd = document.getElementById("dev-pass").value.trim();
-      const err = document.getElementById("dev-error");
-
-      if (em === "nervespa@dev.com" && pwd === "Nervespa@1800") {
-        safeSetItem("is_dev", "true");
-        err.style.display = "none";
-        renderHome();
-        thread.push({
-          role: "system",
-          title: "Developer Mode Activated",
-          body: "You are now running the chatbot in Dev Mode. 'is_dev=true' will be sent in queries.",
-        });
-        saveThread();
-        renderThread();
-      } else {
-        err.style.display = "block";
-      }
-    }
-
-    function openContact() {
-      viewBeforeForm = currentViewType;
-      categoryBeforeForm = currentCategoryKey;
-      renderSupportForm();
-    }
-
-    function openWarranty() {
-      window.open(WARRANTY_URL, "_blank");
-    }
-
-    function escapeHtml(s) {
-      return String(s ?? "")
-        .replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;")
-        .replaceAll("'", "&#039;");
-    }
-
-    function escapeJsString(s) {
-      return String(s ?? "")
-        .replaceAll("\\", "\\\\")
-        .replaceAll("'", "\\'")
-        .replaceAll("\n", "\\n")
-        .replaceAll("\r", "");
-    }
-
-    function truncate(str, max = 140) {
-      const s = String(str || "");
-      if (s.length <= max) return s;
-      return s.slice(0, max - 1) + "…";
-    }
-
-    function setTheme(theme) {
-      const isDark = theme === "dark";
-      document.body.classList.toggle("ns-theme-dark", isDark);
-      document.body.classList.toggle("ns-theme-light", !isDark);
-      safeSetItem(THEME_KEY, isDark ? "dark" : "light");
-      btnTheme.textContent = isDark ? "☾" : "☀";
-      btnTheme.title = isDark
-        ? "Switch to light mode"
-        : "Switch to dark mode";
-      btnTheme.setAttribute("aria-label", btnTheme.title);
-    }
-
-    function initTheme() {
-      const saved = safeGetItem(THEME_KEY);
-      if (saved === "dark") setTheme("dark");
-      else setTheme("light");
-    }
-
-    btnTheme.addEventListener("click", () => {
-      const next = document.body.classList.contains("ns-theme-dark")
-        ? "light"
-        : "dark";
-      setTheme(next);
-    });
-
-    async function postJSON(url, body) {
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 12000);
-
-      try {
-        const r = await fetch(url, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(body),
-          signal: controller.signal,
-        });
-
-        clearTimeout(timeoutId);
-
-        if (!r.ok) {
-          let message = `Request failed with status ${r.status}`;
-          try {
-            const errData = await r.json();
-            if (errData?.message) message = errData.message;
-          } catch (e) { }
-          throw new Error(message);
-        }
-
-        return await r.json();
-      } catch (err) {
-        clearTimeout(timeoutId);
-        if (err.name === "AbortError") {
-          throw new Error("Request timeout");
-        }
-        throw err;
-      }
-    }
-
-    function saveThread() {
-      // No need to persist old messages (kept in memory for current session only)
-    }
-
-    function loadThread() {
-      // Only return an empty array to start fresh without old messages
-      return [];
-    }
-
-    function saveWindowState() {
-      try {
-        safeSetItem(
-          WINDOW_STATE_KEY,
-          JSON.stringify({
-            fullscreen: isFullscreen,
-            minimized: isMinimized,
-          }),
-        );
-      } catch (e) { }
-    }
-
-    function restoreWindowState() {
-      try {
-        const saved = safeGetItem(WINDOW_STATE_KEY);
-        if (!saved) return;
-        const parsed = JSON.parse(saved);
-        isFullscreen = !!parsed?.fullscreen;
-        isMinimized = !!parsed?.minimized;
-
-        if (isFullscreen) elShell.classList.add("fullscreen");
-        if (isMinimized) elShell.classList.add("minimized");
-        syncWindowButtons();
-      } catch (e) { }
-    }
-
-    function saveSize() {
-      if (isFullscreen || isMinimized) return;
-      try {
-        const rect = elShell.getBoundingClientRect();
-        safeSetItem(
-          SIZE_KEY,
-          JSON.stringify({
-            width: Math.round(rect.width),
-            height: Math.round(rect.height),
-          }),
-        );
-      } catch (e) { }
-    }
-
-    function restoreSize() {
-      try {
-        const saved = safeGetItem(SIZE_KEY);
-        if (!saved) return;
-        const size = JSON.parse(saved);
-        if (!size?.width || !size?.height) return;
-
-        const maxWidth = Math.floor(window.innerWidth * 0.95);
-        const maxHeight = Math.floor(window.innerHeight * 0.95);
-        const width = Math.min(size.width, maxWidth);
-        const height = Math.min(size.height, maxHeight);
-
-        if (window.innerWidth > 520) {
-          elShell.style.width = width + "px";
-          elShell.style.height = height + "px";
-        }
-      } catch (e) { }
-    }
-
-    function syncWindowButtons() {
-      btnResize.textContent = isFullscreen ? "🗗" : "⤢";
-      btnResize.title = isFullscreen
-        ? "Exit full screen"
-        : "Enter full screen";
-      btnResize.setAttribute("aria-label", btnResize.title);
-
-      btnMinimize.textContent = isMinimized ? "▢" : "—";
-      btnMinimize.title = isMinimized ? "Restore" : "Minimize";
-      btnMinimize.setAttribute("aria-label", btnMinimize.title);
-    }
-
-    function setFullscreen(next) {
-      isFullscreen = !!next;
-      elShell.classList.toggle("fullscreen", isFullscreen);
-
-      if (isFullscreen) {
-        elShell.classList.remove("minimized");
-        isMinimized = false;
-      } else {
-        restoreSize();
+        elScreen.innerHTML = html;
+        elScreen.scrollTop = 0;
       }
 
-      syncWindowButtons();
-      saveWindowState();
-    }
+      async function submitSupportForm() {
+        const btn = document.getElementById("support-submit");
+        const name = document.getElementById("support-name").value.trim();
+        const email = document.getElementById("support-email").value.trim();
+        const phone = document.getElementById("support-phone").value.trim();
+        const msg = document.getElementById("support-msg").value.trim();
+        const errEl = document.getElementById("support-error");
 
-    function setMinimized(next) {
-      isMinimized = !!next;
-      elShell.classList.toggle("minimized", isMinimized);
+        const showError = (text) => {
+          errEl.textContent = text;
+          errEl.style.display = "block";
+        };
 
-      if (isMinimized) {
-        elShell.classList.remove("fullscreen");
-        isFullscreen = false;
+        if (errEl) errEl.style.display = "none";
+
+        if (!name) return showError("Please enter your name.");
+        if (/\d/.test(name))
+          return showError("Please enter a valid name without numbers.");
+        if (!email) return showError("Please enter your email.");
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
+          return showError("Please enter a valid email address.");
+        if (!phone) return showError("Please enter your phone number.");
+        if (!/^[\d+]+$/.test(phone))
+          return showError("Please enter a valid phone number.");
+        if (!msg) return showError("Please enter a message.");
+
+        const origText = btn.textContent;
+        btn.textContent = "Sending...";
+        btn.disabled = true;
+
+        try {
+          const res = await fetch(SUPPORT_WEBHOOK_URL, {
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: new URLSearchParams({
+              session_id: sessionId,
+              name: name,
+              email: email,
+              phone: phone,
+              msg: msg,
+            }),
+          });
+
+          if (!res.ok) throw new Error("Server error");
+
+          btn.textContent = "Sent Successfully! ✅";
+          btn.style.background = "var(--success-bg)";
+          btn.style.color = "var(--ns-text)";
+
+          renderHome();
+          thread.push({
+            role: "assistant",
+            text: "Thank you! I've successfully shared your details with our support team. One of our specialists will reach out to you shortly. ✨\\n\\nIs there anything else I can help you with today?",
+          });
+          saveThread();
+          renderThread();
+        } catch (e) {
+          alert(
+            "Error sending request. Please try again or contact support directly.",
+          );
+          btn.textContent = origText;
+          btn.disabled = false;
+        }
       }
 
-      syncWindowButtons();
-      saveWindowState();
-    }
+      function submitDevLogin() {
+        const em = document.getElementById("dev-email").value.trim();
+        const pwd = document.getElementById("dev-pass").value.trim();
+        const err = document.getElementById("dev-error");
 
-    btnResize.addEventListener("click", () => {
-      setFullscreen(!isFullscreen);
-    });
-
-    btnMinimize.addEventListener("click", () => {
-      setMinimized(!isMinimized);
-    });
-
-    btnClear.addEventListener("click", () => {
-      clearConversation();
-    });
-
-    if ("ResizeObserver" in window) {
-      const ro = new ResizeObserver(() => saveSize());
-      ro.observe(elShell);
-    }
-
-    function autoMobileFullscreen() {
-      if (window.innerWidth < 520) {
-        setFullscreen(true);
+        if (em === "nervespa@dev.com" && pwd === "Nervespa@1800") {
+          safeSetItem("is_dev", "true");
+          err.style.display = "none";
+          renderHome();
+          thread.push({
+            role: "system",
+            title: "Developer Mode Activated",
+            body: "You are now running the chatbot in Dev Mode. 'is_dev=true' will be sent in queries.",
+          });
+          saveThread();
+          renderThread();
+        } else {
+          err.style.display = "block";
+        }
       }
-    }
 
-    window.addEventListener("resize", () => {
-      autoMobileFullscreen();
-      if (!isFullscreen && !isMinimized) restoreSize();
-    });
+      function openContact() {
+        viewBeforeForm = currentViewType;
+        categoryBeforeForm = currentCategoryKey;
+        renderSupportForm();
+      }
 
-    function seedQuestionsForCategory(key) {
-      const QUESTION_BANK = {
-        setup: [
-          "How does NerveSpa work?",
-          "How quickly does NerveSpa work?",
-          "What is NerveSpa?",
-          "Should a healthy hand be able to feel the “tingle” in the glove?",
-          "What is the difference between the NerveSpa Single and the NerveSpa Dual",
-          "What is the set-up for treating both hands",
-          "Is conductive spray required for efficacy?",
-          "What conditions can NerveSpa support?",
-          "Who decides if NerveSpa is appropriate?",
-          "Can NerveSpa be used with other treatments?",
-          "How does NerveSpa compare to other nerve therapy systems?",
-          "What makes NerveSpa unique?",
-          "How does the NerveSpa family of products work together?",
-          "Is NerveSpa safe for most patients?",
-          "How do clinics contact NerveSpa for support?",
-          "Who determines if a patient is a good candidate for NerveSpa?",
-          "What is the NerveSpa Nerve Bath?",
-          "How does the NerveSpa Nerve Bath work?",
-          "How should the NerveSpa Nerve Bath be set up?",
-          "Why water-based therapy for the NerveSpa Nerve Bath?",
-          "What consumables does the NerveSpa Nerve Bath use?",
-          "What are NerveSpa conductive foot pads, socks, and gloves?",
-          "How are the NerveSpa conductive foot pads and gloves used in therapy?",
-          "Who should not use NerveSpa conductive garments?",
-          "What is the NerveSpa Quake Plate?",
-          "How do I set up and use the Quake Plate?",
-          "Who should not use the Quake Plate?",
-          "What is the NerveBeam LED Light Therapy Wrap?",
-          "How is the NerveBeam LED Wrap used?",
-          "Who should not use the NerveBeam LED Wrap?",
-          "What is the NerveBeam Cold Laser?",
-          "How is the NerveBeam Cold Laser used?",
-          "Who should not use the NerveBeam Cold Laser?",
-          "What is the Knee Pro?",
-          "How is the Knee Pro used?",
-          "Who should not use the Knee Pro?",
-          "What is the Shoulder Pro?",
-          "How is the Shoulder Pro used?",
-          "Who should not use the Shoulder Pro?",
-          "What is the PowerWrap?",
-          "How is the PowerWrap used?",
-          "Who should not use the PowerWrap?",
-          "What are the NerveSpa Performance Diabetic Socks?",
-          "How do I put on the Diabetic Socks correctly?",
-          "Can the Diabetic Socks be worn all day?",
-          "Can supplements be used alone without devices?",
-          "Can the Nerve Bath be used with other devices the same day?",
-          "Can Quake Plate be used with other neuropathy devices?",
-          "How long is an LED Wrap session?",
-          "How should the LED Wrap be positioned for treatment?",
-          "Who should not use the LED Wrap?",
-          "How should the Cold Laser be positioned during treatment?",
-          "Who should not use the Cold Laser?",
-          "Can Knee Pro be used with other joint therapies?",
-          "Can Shoulder Pro be used with other joint therapies?",
-          "Can joint supplements be used alone without devices?",
-          "What power level should I start with on PowerWrap?",
-          "How do I choose Constant vs Pulse mode on PowerWrap?",
-          "What are the key safety rules for PowerWrap use?",
-          "What intensity should NerveWave be set to?",
-          "How is NerveWave typically used for neuropathy?",
-          "How does NerveWave track usage?",
-          "Can NerveWave be used with accessory tools?",
-          "Which treatment mode should I use on the LED Wrap?",
-          "What should I avoid doing with the LED Wrap?",
-          "How do I power the Knee Pro on/off and change modes?",
-          "What should I know before using the Quake Plate?",
-          "How do I place electrodes correctly?",
-          "How do I change Knee Pro modes?",
-          "How do I change Shoulder Pro modes?",
-          "Is tingling or warmth normal during a Nerve Bath session?",
-          "What should I feel during LED wrap therapy?",
-          "What should I feel during Cold Laser therapy?",
-          "Is muscle fatigue normal after using the Quake Plate?",
-          "What should I feel during a NerveWave session?",
-          "What should providers do if a patient reports discomfort during use?",
-        ],
-        protocols: [
-          "How do I get the best results from the NerveSpa program",
-          "Are NerveSpa programs difficult to implement?",
-          "How long is a typical NerveSpa program?",
-          "Can NerveSpa be combined with in-clinic treatments?",
-          "What outcomes do patients commonly report?",
-          "How long is a typical NerveSpa Nerve Bath session?",
-          "How often should the NerveSpa Nerve Bath be used?",
-          "What improvements do patients report with the NerveSpa Nerve Bath?",
-          "How long and how often should I use the Quake Plate?",
-          "What outcomes are expected with LED wrap therapy?",
-          "What outcomes are expected with Cold Laser therapy?",
-          "What outcomes are expected with the Knee Pro?",
-          "What outcomes are expected with the Shoulder Pro?",
-          "What outcomes are expected with PowerWrap therapy?",
-          "What is the NerveSpa Neuropathy Program?",
-          "How does the Neuropathy Program work?",
-          "What devices are used in the Neuropathy Program?",
-          "Do patients need all the devices in the Neuropathy Program?",
-          "How long does the Neuropathy Program take?",
-          "Why is consistency important in the Neuropathy Program?",
-          "What happens after the initial Neuropathy Program is completed?",
-          "Can the Neuropathy Program be adjusted over time?",
-          "How do supplements fit into the Neuropathy Program?",
-          "How long is a typical Nerve Bath session?",
-          "What should patients feel during a Nerve Bath session?",
-          "How often should the Quake Plate be used?",
-          "How long should a Quake Plate session last?",
-          "What should patients feel during Quake Plate therapy?",
-          "How often should the NerveBeam LED Wrap be used?",
-          "What should patients feel during LED Wrap therapy?",
-          "How often should the NerveBeam Cold Laser be used?",
-          "How long is a Cold Laser session?",
-          "What should patients feel during Cold Laser therapy?",
-          "Can Cold Laser be combined with other neuropathy modalities?",
-          "What supplements are commonly used in the Neuropathy Program?",
-          "When should Nerve Rebuilder be taken?",
-          "When should Nerve Regeneration be taken?",
-          "When should Blood Flow Super Formula be taken?",
-          "How do supplements support the Neuropathy Program?",
-          "What is the NerveSpa Joint & Mobility Program?",
-          "How does the Joint & Mobility Program work?",
-          "What devices are used in the Joint & Mobility Program?",
-          "How long does the Joint & Mobility Program take?",
-          "Can the Joint & Mobility Program be adjusted over time?",
-          "How often should patients use the Knee Pro?",
-          "How long is a Knee Pro session?",
-          "What should patients feel during Knee Pro therapy?",
-          "How often should patients use the Shoulder Pro?",
-          "How long is a Shoulder Pro session?",
-          "What should patients feel during Shoulder Pro therapy?",
-          "What joint supplements are commonly used in the Joint & Mobility Program?",
-          "When should Super Flex Joint Formula – Rebuild + Maintain be used?",
-          "When should OA & RA Relief Cream be used?",
-          "When should Nerve Target Roll-On be used?",
-          "How do joint supplements fit into the Joint & Mobility Program?",
-          "What is the PowerWrap used for in the Clinical Program?",
-          "How long is a PowerWrap session?",
-          "How often can I use PowerWrap in a day?",
-          "Can PowerWrap be combined with other therapies?",
-          "What is NerveWave used for in the Clinical Program?",
-          "How do I start a program on NerveWave?",
-          "What is the recommended schedule for NerveWave regenerative pain control?",
-          "What is the recommended schedule for NerveWave restorative recovery?",
-          "What is the recommended schedule for NerveWave vagus nerve therapy?",
-          "How long should Vibe be used in a typical session?",
-          "How is Vibe typically used within a clinical plan?",
-          "What should patients feel during Vibe use?",
-          "When should I stop treatment and contact my provider?",
-          "How do clinics measure patient engagement with NerveSpa?",
-          "What non-diagnostic indicators can providers monitor when using NerveSpa?",
-          "How does NerveSpa support patient-reported comfort or function tracking?",
-          "Can clinics document changes in patient experience over time with NerveSpa?",
-          "Does NerveSpa provide usage or adherence data to clinics?",
-          "How can providers discuss progress with patients without making medical claims?",
-          "What types of patient feedback are most commonly reported with NerveSpa use?",
-          "How should front-desk staff explain NerveSpa to patients in simple terms?",
-          "How should staff explain home use versus in-clinic guidance?",
-          "What is the best way for staff to set expectations before a patient begins using NerveSpa?",
-          "How should staff handle common patient misconceptions about NerveSpa?",
-          "How is NerveSpa different from consumer-grade nerve stimulation devices?",
-          "What makes NerveSpa a clinic-grade system rather than a retail product?",
-          "Why do clinics choose NerveSpa over generic home wellness devices?",
-          "How does NerveSpa integrate into existing clinical workflows?",
-          "What design principles guide the NerveSpa system?",
-          "How does NerveSpa support consistency and repeatability in patient use?",
-          "When should clinics pause or discontinue use of NerveSpa?",
-          "What situations require clinical judgment before continuing NerveSpa use?",
-          "Are there any patient scenarios where NerveSpa may not be appropriate?",
-          "How does NerveSpa support safe use alongside other clinical modalities?",
-        ],
-        troubleshooting: [
-          "What should I do if my Nerve Bath device is frozen?",
-          "What if there is no stimulation or weak stimulation in the Nerve Bath?",
-          "What if the Nerve Bath device does not power on?",
-          "What if stimulation stops or the program ends short of 30 minutes?",
-          "What should I do if the LED Wrap lights are flickering or powering down early?",
-          "What if I’m having issues with stimulation on Knee Pro?",
-          "What if the Quake Plate makes a loud grinding noise?",
-          "What if the Quake Plate remote does not work?",
-          "What battery does the Quake Plate remote use?",
-          "What should I do if stimulation feels weak with conductive socks or gloves?",
-          "What should I do if the Cold Laser does not turn on?",
-          "What if the Cold Laser shuts off during treatment?",
-          "What should I do if the LED Wrap does not turn on?",
-          "What if the LED Wrap lights flicker during use?",
-          "What should I do if the LED Wrap powers down early?",
-          "What should I do if the PowerWrap does not turn on?",
-          "What should I do if my skin feels too sensitive after PowerWrap use?",
-          "What if the PowerWrap remote does not respond?",
-          "What should I do if NerveWave does not power on?",
-          "What if I feel no sensation during NerveWave use?",
-          "What should I do if NerveWave stimulation feels too strong?",
-          "What if the electrodes are not sticking properly?",
-          "What should I do if NerveWave shuts off during treatment?",
-          "What should I do if the Vibe device does not turn on?",
-          "What if the Vibe stops during a session?",
-          "What should I do if Knee Pro does not power on?",
-          "What if stimulation feels weak on Knee Pro?",
-          "What should I do if Shoulder Pro does not power on?",
-          "What if stimulation feels weak on Shoulder Pro?",
-          "What if I feel little or no sensation during a Nerve Bath session?",
-          "What should I do if the Nerve Bath unit does not turn on?",
-          "What if the LED wrap does not turn on?",
-          "What if the Cold Laser does not activate?",
-          "What if the Quake Plate feels too intense?",
-          "What if the Quake Plate does not start vibrating?",
-          "What should I do if the PowerWrap does not power on?",
-          "What if PowerWrap feels uncomfortable during use?",
-          "What if I feel little or no sensation during NerveWave use?",
-          "What if NerveWave does not turn on?",
-          "When should I contact support for device issues?",
-          "What if my device will not charge?",
-          "What if my device turns off during use?",
-          "What if stimulation feels too strong or uncomfortable?",
-          "What if stimulation feels too weak?",
-          "Can I continue treatment if I experience skin irritation?",
-          "What if my conductive socks or garments do not work properly?",
-          "What if I feel no sensation during a Nerve Bath session?",
-          "What if the water feels too hot or uncomfortable?",
-          "What if the unit does not power on?",
-          "What if stimulation feels uneven between hands or feet?",
-          "What if the PowerWrap does not turn on?",
-          "What if the wrap feels too warm?",
-          "What if I do not feel stimulation with NerveWave?",
-          "What if electrodes lose adhesion during use?",
-          "What if the NerveWave unit will not power on?",
-          "What if the Vibe device does not start?",
-          "What if vibration feels uncomfortable?",
-          "What if the Knee Pro does not deliver sensation?",
-          "What if the Knee Pro strap feels too tight or loose?",
-          "What if the Shoulder Pro feels uncomfortable during use?",
-          "What if the Shoulder Pro does not power on?",
-          "What if I don’t feel stimulation in the water?",
-          "What if stimulation feels uneven between feet or hands?",
-          "What if the unit shuts off during a session?",
-          "What if the Cold Laser does not emit light?",
-          "What if treatment feels ineffective?",
-          "What if vibration feels too intense?",
-          "What if the Quake Plate does not power on?",
-          "What if conductive socks or gloves feel dry during use?",
-          "What if stimulation cuts in and out when using conductive garments?",
-          "What if the garment no longer conducts stimulation well?",
-          "What if Knee Pro shuts off during a session?",
-          "What if the Knee Pro feels uncomfortable around the knee?",
-          "What if the Shoulder Pro shifts during use?",
-          "What if the Shoulder Pro shuts off unexpectedly?",
-          "What if the screen does not respond or freezes?",
-          "What if lead wires appear damaged?",
-          "What if a device will not power on?",
-          "What if stimulation feels weaker than expected?",
-          "What if the device becomes warm during use?",
-          "What if an error message appears on the screen?",
-          "What if the battery drains faster than expected?",
-          "What if accessories are lost or damaged?",
-          "When should I contact NerveSpa support?",
-          "What if there is no sensation during a NerveSpa Nerve Bath session?",
-          "What if the sensation feels uneven between feet or hands?",
-          "What if the water feels too warm or too cool?",
-          "What if the session stops",
-          "What if the session stops before 30 minutes?",
-          "What if the device will not power on?",
-          "What if stimulation feels too strong?",
-          "What if the wrap shuts off during a session?",
-          "What if I do not feel anything during treatment?",
-          "What if the Cold Laser does not power on?",
-          "What if the laser shuts off during treatment?",
-          "What if I do not feel any sensation from the laser?",
-          "What should I do if the device overheats?",
-          "What if the wrap does not stay secured?",
-          "What if the LEDs appear dim?",
-          "What if the Knee Pro does not power on?",
-          "What if the stimulation feels too strong?",
-          "What if the stimulation feels too weak?",
-          "When should a clinic contact NerveSpa support versus handling an issue internally?",
-        ],
-        orders: [
-          "How can clinics order NerveSpa or request a demo?",
-          "What are NerveSpa’s pricing options?",
-          "Is NerveSpa FDA-registered?",
-          "Is NerveSpa covered by insurance?",
-          "Where is NerveSpa manufactured?",
-          "How long has PMT been in business?",
-          "Where can FDA listings be verified?",
-          "What certifications does PMT hold?",
-          "Can patients purchase NerveSpa directly?",
-          "Are starter kits or bundles available for clinics?",
-          "Does NerveSpa support insurance reimbursement?",
-          "What is HCPCS code E0720?",
-          "How quickly are products shipped?",
-          "How should staff respond if a patient asks whether NerveSpa is FDA approved?",
-          "What should staff say if a patient asks about insurance coverage?",
-          "Is NerveSpa available outside the United States?",
-          "Are international certifications or markets planned for NerveSpa?",
-          "Can clinics outside the U.S. request information or express interest?",
-          "How does NerveSpa evaluate expansion into new regions or care settings?",
-        ],
-        care: [
-          "What warranty and return policy does NerveSpa offer?",
-          "Does NerveSpa replace medical care?",
-          "Does NerveSpa offer training for clinics?",
-          "Does NerveSpa replace medical treatment?",
-          "Can patients travel with NerveSpa devices?",
-          "How should the Diabetic Socks be washed or cared for?",
-          "How do I clean conductive socks, gloves, or garments?",
-          "How often should conductive garments be replaced?",
-          "How do I clean the LED Wrap?",
-          "How do I clean conductive garments?",
-          "Where can I find setup guides and manuals?",
-          "Can devices be shared between patients?",
-          "How should devices be cleaned after use?",
-          "What should staff say if a patient asks whether NerveSpa replaces medical treatment?",
-        ],
-      };
+      function openWarranty() {
+        window.open(WARRANTY_URL, "_blank");
+      }
 
-      return QUESTION_BANK[key] || [];
-    }
+      function escapeHtml(s) {
+        return String(s ?? "")
+          .replaceAll("&", "&amp;")
+          .replaceAll("<", "&lt;")
+          .replaceAll(">", "&gt;")
+          .replaceAll('"', "&quot;")
+          .replaceAll("'", "&#039;");
+      }
 
-    function formatAnswerText(raw) {
-      let text = String(raw || "").trim();
-      if (!text) return "<p>I’m here to help.</p>";
+      function escapeJsString(s) {
+        return String(s ?? "")
+          .replaceAll("\\", "\\\\")
+          .replaceAll("'", "\\'")
+          .replaceAll("\n", "\\n")
+          .replaceAll("\r", "");
+      }
 
-      text = text.replace(/\r\n/g, "\n");
+      function truncate(str, max = 140) {
+        const s = String(str || "");
+        if (s.length <= max) return s;
+        return s.slice(0, max - 1) + "…";
+      }
 
-      const lines = text.split("\n");
-      let html = "";
-      let inUl = false;
-      let inOl = false;
-      let paragraph = [];
+      function setTheme(theme) {
+        const isDark = theme === "dark";
+        document.body.classList.toggle("ns-theme-dark", isDark);
+        document.body.classList.toggle("ns-theme-light", !isDark);
+        safeSetItem(THEME_KEY, isDark ? "dark" : "light");
+        btnTheme.textContent = isDark ? "☾" : "☀";
+        btnTheme.title = isDark
+          ? "Switch to light mode"
+          : "Switch to dark mode";
+        btnTheme.setAttribute("aria-label", btnTheme.title);
+      }
 
-      const flushParagraph = () => {
-        if (!paragraph.length) return;
-        const joined = paragraph.join(" ").trim();
-        if (joined) {
-          html += `<p>${formatInline(joined)}</p>`;
-        }
-        paragraph = [];
-      };
+      function initTheme() {
+        const saved = safeGetItem(THEME_KEY);
+        if (saved === "dark") setTheme("dark");
+        else setTheme("light");
+      }
 
-      const closeLists = () => {
-        if (inUl) {
-          html += "</ul>";
-          inUl = false;
-        }
-        if (inOl) {
-          html += "</ol>";
-          inOl = false;
-        }
-      };
+      btnTheme.addEventListener("click", () => {
+        const next = document.body.classList.contains("ns-theme-dark")
+          ? "light"
+          : "dark";
+        setTheme(next);
+      });
 
-      function formatInline(str) {
-        let s = escapeHtml(str);
+      async function postJSON(url, body) {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 12000);
 
-        s = s.replace(/[“"\u201c]Contact Support[”"\u201d]/gi, (match) => {
-          return `<button class="btn-primary" onclick="window.nsWidgetActions.openContact()" style="padding: 4px 12px; font-size: 11px; vertical-align: middle; margin: 0 4px; display: inline-flex;">Contact Support</button>`;
-        });
+        try {
+          const r = await fetch(url, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(body),
+            signal: controller.signal,
+          });
 
-        s = s.replace(/&lt;br\s*\/?&gt;/gi, "<br>");
+          clearTimeout(timeoutId);
 
-        s = s.replace(/\[([^\]]+)\]\(([^)\s]+)\)/g, (match, p1, p2) => {
-          let url = p2;
-          if (url.includes("mailto:support@nervespa.com")) {
-            url =
-              "https://mail.google.com/mail/?view=cm&fs=1&to=support@nervespa.com";
-          }
-          return `<a href="${url}" target="_blank" rel="noopener" style="text-decoration:underline; font-weight:700; color:var(--ns-accent);">${p1}</a>`;
-        });
-
-        s = s.replace(
-          /(support@nervespa\.com)(?!")/g,
-          '<a href="https://mail.google.com/mail/?view=cm&fs=1&to=$1" target="_blank" rel="noopener" style="text-decoration:underline; font-weight:700; color:var(--ns-accent);">$1</a>',
-        );
-        s = s.replace(
-          /(1-800-239-7880)/g,
-          '<a href="tel:18002397880" style="text-decoration:underline; font-weight:700; color:var(--ns-accent);">$1</a>',
-        );
-
-        const urlRegex =
-          /(<a\b[^>]*>.*?<\/a>|[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})|(\b(?:https?:\/\/|www\.)[^\s<]+[^.,\s<"'])|(\b(?:[a-zA-Z0-9-]+\.)+(?:com|org|net|io|co|us|uk|ca|edu|gov|be)(?:\/[^\s<]*[^.,\s<"'])?)/gi;
-        s = s.replace(urlRegex, (match, skipGroup, p2, p3, offset, str) => {
-          if (skipGroup) return skipGroup;
-          let href = match;
-          if (!href.match(/^https?:\/\//i)) {
-            href = "https://" + href;
-          }
-
-          let linkText = "Click Here";
-          const lowerHref = href.toLowerCase();
-
-          // Helper to check for NerveBeam manual patterns
-          const isNerveBeamManual = lowerHref.includes("nervebeam") && lowerHref.includes("manual");
-
-          if (
-            lowerHref.includes("youtube.com") ||
-            lowerHref.includes("youtu.be")
-          ) {
-            linkText = "Watch Video";
-          } else if (isNerveBeamManual) {
-            if (lowerHref.includes("led-wrap") || lowerHref.includes("led_wrap")) {
-              linkText = "NerveBeam LED Wrap User Manual";
-            } else if (lowerHref.includes("power-wrap") || lowerHref.includes("power_wrap")) {
-              linkText = "NerveBeam Power Wrap User Manual";
-            } else {
-              linkText = "NerveBeam User Manual";
-            }
-          } else if (lowerHref.includes("quakeplate") && lowerHref.includes("manual")) {
-            linkText = "Quake Plate User Manual";
-          } else if (
-            lowerHref.includes("drive.google.com") ||
-            lowerHref.includes("docs.google.com")
-          ) {
-            // Check for specific NerveSpa bath guides
-            if (lowerHref.includes("1abwl8au")) linkText = "Nerve Bath Quick Guide";
-            else if (lowerHref.includes("1ieghxbo")) linkText = "Nerve Bath Full User Guide";
-            else {
-              const prefix = str
-                .slice(Math.max(0, offset - 40), offset)
-                .toLowerCase();
-              if (
-                prefix.includes("quick") ||
-                prefix.includes("setup") ||
-                prefix.includes("start")
-              ) {
-                linkText = "Quick Start Guide";
-              } else if (
-                prefix.includes("full") ||
-                prefix.includes("manual") ||
-                prefix.includes("user") ||
-                prefix.includes("complete")
-              ) {
-                linkText = "Complete User Manual";
-              } else {
-                linkText = "View Document";
-              }
-            }
-          } else if (lowerHref.includes("nervespa.com/products")) {
-            const productPath = lowerHref.split("nervespa.com/products/")[1];
-            if (productPath && productPath.includes("/")) {
-              linkText = "Buy it from our website";
-            } else {
-              linkText = "View More Products";
-            }
-          } else if (lowerHref.includes("nervespa.com/collections")) {
-            linkText = "View More Products";
-          } else if (lowerHref.includes("nervespa.com")) {
-            linkText = "Visit NerveSpa";
-          } else if (lowerHref.endsWith(".pdf")) {
-            // Generic PDF handler
-            const parts = href.split("/");
-            const fileName = parts[parts.length - 1]
-              .replace(/_|-/g, " ")
-              .replace(/\.pdf$/i, "")
-              .replace(/\sv\d+.*$/i, ""); // strip version numbers
-            linkText = fileName.charAt(0).toUpperCase() + fileName.slice(1);
-          } else {
+          if (!r.ok) {
+            let message = `Request failed with status ${r.status}`;
             try {
-              const urlObj = new URL(href);
-              linkText = urlObj.hostname.replace(/^www\./i, "");
-            } catch (e) {
-              linkText = "Click Here";
-            }
+              const errData = await r.json();
+              if (errData?.message) message = errData.message;
+            } catch (e) {}
+            throw new Error(message);
           }
-          return `<a href="${href}" target="_blank" rel="noopener" style="text-decoration:underline; font-weight:700; color:var(--ns-accent); cursor:pointer;">${linkText}</a>`;
-        });
 
-        s = s.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
-        s = s.replace(
-          /(^|[\s(])NOTE:\s*/g,
-          '$1<span class="callout"><strong>Note:</strong> ',
-        );
-        if (s.includes('<span class="callout">') && !s.endsWith("</span>")) {
-          s += "</span>";
+          return await r.json();
+        } catch (err) {
+          clearTimeout(timeoutId);
+          if (err.name === "AbortError") {
+            throw new Error("Request timeout");
+          }
+          throw err;
         }
-        return s;
       }
 
-      for (const line of lines) {
-        const trimmed = line.trim();
+      function saveThread() {
+        // No need to persist old messages (kept in memory for current session only)
+      }
 
-        if (!trimmed) {
-          flushParagraph();
-          closeLists();
-          continue;
+      function loadThread() {
+        // Only return an empty array to start fresh without old messages
+        return [];
+      }
+
+      function saveWindowState() {
+        try {
+          safeSetItem(
+            WINDOW_STATE_KEY,
+            JSON.stringify({
+              fullscreen: isFullscreen,
+              minimized: isMinimized,
+            }),
+          );
+        } catch (e) {}
+      }
+
+      function restoreWindowState() {
+        try {
+          const saved = safeGetItem(WINDOW_STATE_KEY);
+          if (!saved) return;
+          const parsed = JSON.parse(saved);
+          isFullscreen = !!parsed?.fullscreen;
+          isMinimized = !!parsed?.minimized;
+
+          if (isFullscreen) elShell.classList.add("fullscreen");
+          if (isMinimized) elShell.classList.add("minimized");
+          syncWindowButtons();
+        } catch (e) {}
+      }
+
+      function saveSize() {
+        if (isFullscreen || isMinimized) return;
+        try {
+          const rect = elShell.getBoundingClientRect();
+          safeSetItem(
+            SIZE_KEY,
+            JSON.stringify({
+              width: Math.round(rect.width),
+              height: Math.round(rect.height),
+            }),
+          );
+        } catch (e) {}
+      }
+
+      function restoreSize() {
+        try {
+          const saved = safeGetItem(SIZE_KEY);
+          if (!saved) return;
+          const size = JSON.parse(saved);
+          if (!size?.width || !size?.height) return;
+
+          const maxWidth = Math.floor(window.innerWidth * 0.95);
+          const maxHeight = Math.floor(window.innerHeight * 0.95);
+          const width = Math.min(size.width, maxWidth);
+          const height = Math.min(size.height, maxHeight);
+
+          if (window.innerWidth > 520) {
+            elShell.style.width = width + "px";
+            elShell.style.height = height + "px";
+          }
+        } catch (e) {}
+      }
+
+      function syncWindowButtons() {
+        btnResize.textContent = isFullscreen ? "🗗" : "⤢";
+        btnResize.title = isFullscreen
+          ? "Exit full screen"
+          : "Enter full screen";
+        btnResize.setAttribute("aria-label", btnResize.title);
+
+        btnMinimize.textContent = isMinimized ? "▢" : "—";
+        btnMinimize.title = isMinimized ? "Restore" : "Minimize";
+        btnMinimize.setAttribute("aria-label", btnMinimize.title);
+      }
+
+      function setFullscreen(next) {
+        isFullscreen = !!next;
+        elShell.classList.toggle("fullscreen", isFullscreen);
+
+        if (isFullscreen) {
+          elShell.classList.remove("minimized");
+          isMinimized = false;
+        } else {
+          restoreSize();
         }
 
-        const ulMatch = trimmed.match(/^[-•]\s+(.+)/);
-        const olMatch = trimmed.match(/^\d+\.\s+(.+)/);
+        syncWindowButtons();
+        saveWindowState();
+      }
 
-        if (ulMatch) {
-          flushParagraph();
-          if (inOl) {
-            html += "</ol>";
-            inOl = false;
-          }
-          if (!inUl) {
-            html += "<ul>";
-            inUl = true;
-          }
-          html += `<li>${formatInline(ulMatch[1])}</li>`;
-          continue;
+      function setMinimized(next) {
+        isMinimized = !!next;
+        elShell.classList.toggle("minimized", isMinimized);
+
+        if (isMinimized) {
+          elShell.classList.remove("fullscreen");
+          isFullscreen = false;
         }
 
-        if (olMatch) {
-          flushParagraph();
+        syncWindowButtons();
+        saveWindowState();
+      }
+
+      btnResize.addEventListener("click", () => {
+        setFullscreen(!isFullscreen);
+      });
+
+      btnMinimize.addEventListener("click", () => {
+        setMinimized(!isMinimized);
+      });
+
+      btnClear.addEventListener("click", () => {
+        clearConversation();
+      });
+
+      if ("ResizeObserver" in window) {
+        const ro = new ResizeObserver(() => saveSize());
+        ro.observe(elShell);
+      }
+
+      function autoMobileFullscreen() {
+        if (window.innerWidth < 520) {
+          setFullscreen(true);
+        }
+      }
+
+      window.addEventListener("resize", () => {
+        autoMobileFullscreen();
+        if (!isFullscreen && !isMinimized) restoreSize();
+      });
+
+      function seedQuestionsForCategory(key) {
+        const QUESTION_BANK = {
+          setup: [
+            "How does NerveSpa work?",
+            "How quickly does NerveSpa work?",
+            "What is NerveSpa?",
+            "Should a healthy hand be able to feel the “tingle” in the glove?",
+            "What is the difference between the NerveSpa Single and the NerveSpa Dual",
+            "What is the set-up for treating both hands",
+            "Is conductive spray required for efficacy?",
+            "What conditions can NerveSpa support?",
+            "Who decides if NerveSpa is appropriate?",
+            "Can NerveSpa be used with other treatments?",
+            "How does NerveSpa compare to other nerve therapy systems?",
+            "What makes NerveSpa unique?",
+            "How does the NerveSpa family of products work together?",
+            "Is NerveSpa safe for most patients?",
+            "How do clinics contact NerveSpa for support?",
+            "Who determines if a patient is a good candidate for NerveSpa?",
+            "What is the NerveSpa Nerve Bath?",
+            "How does the NerveSpa Nerve Bath work?",
+            "How should the NerveSpa Nerve Bath be set up?",
+            "Why water-based therapy for the NerveSpa Nerve Bath?",
+            "What consumables does the NerveSpa Nerve Bath use?",
+            "What are NerveSpa conductive foot pads, socks, and gloves?",
+            "How are the NerveSpa conductive foot pads and gloves used in therapy?",
+            "Who should not use NerveSpa conductive garments?",
+            "What is the NerveSpa Quake Plate?",
+            "How do I set up and use the Quake Plate?",
+            "Who should not use the Quake Plate?",
+            "What is the NerveBeam LED Light Therapy Wrap?",
+            "How is the NerveBeam LED Wrap used?",
+            "Who should not use the NerveBeam LED Wrap?",
+            "What is the NerveBeam Cold Laser?",
+            "How is the NerveBeam Cold Laser used?",
+            "Who should not use the NerveBeam Cold Laser?",
+            "What is the Knee Pro?",
+            "How is the Knee Pro used?",
+            "Who should not use the Knee Pro?",
+            "What is the Shoulder Pro?",
+            "How is the Shoulder Pro used?",
+            "Who should not use the Shoulder Pro?",
+            "What is the PowerWrap?",
+            "How is the PowerWrap used?",
+            "Who should not use the PowerWrap?",
+            "What are the NerveSpa Performance Diabetic Socks?",
+            "How do I put on the Diabetic Socks correctly?",
+            "Can the Diabetic Socks be worn all day?",
+            "Can supplements be used alone without devices?",
+            "Can the Nerve Bath be used with other devices the same day?",
+            "Can Quake Plate be used with other neuropathy devices?",
+            "How long is an LED Wrap session?",
+            "How should the LED Wrap be positioned for treatment?",
+            "Who should not use the LED Wrap?",
+            "How should the Cold Laser be positioned during treatment?",
+            "Who should not use the Cold Laser?",
+            "Can Knee Pro be used with other joint therapies?",
+            "Can Shoulder Pro be used with other joint therapies?",
+            "Can joint supplements be used alone without devices?",
+            "What power level should I start with on PowerWrap?",
+            "How do I choose Constant vs Pulse mode on PowerWrap?",
+            "What are the key safety rules for PowerWrap use?",
+            "What intensity should NerveWave be set to?",
+            "How is NerveWave typically used for neuropathy?",
+            "How does NerveWave track usage?",
+            "Can NerveWave be used with accessory tools?",
+            "Which treatment mode should I use on the LED Wrap?",
+            "What should I avoid doing with the LED Wrap?",
+            "How do I power the Knee Pro on/off and change modes?",
+            "What should I know before using the Quake Plate?",
+            "How do I place electrodes correctly?",
+            "How do I change Knee Pro modes?",
+            "How do I change Shoulder Pro modes?",
+            "Is tingling or warmth normal during a Nerve Bath session?",
+            "What should I feel during LED wrap therapy?",
+            "What should I feel during Cold Laser therapy?",
+            "Is muscle fatigue normal after using the Quake Plate?",
+            "What should I feel during a NerveWave session?",
+            "What should providers do if a patient reports discomfort during use?",
+          ],
+          protocols: [
+            "How do I get the best results from the NerveSpa program",
+            "Are NerveSpa programs difficult to implement?",
+            "How long is a typical NerveSpa program?",
+            "Can NerveSpa be combined with in-clinic treatments?",
+            "What outcomes do patients commonly report?",
+            "How long is a typical NerveSpa Nerve Bath session?",
+            "How often should the NerveSpa Nerve Bath be used?",
+            "What improvements do patients report with the NerveSpa Nerve Bath?",
+            "How long and how often should I use the Quake Plate?",
+            "What outcomes are expected with LED wrap therapy?",
+            "What outcomes are expected with Cold Laser therapy?",
+            "What outcomes are expected with the Knee Pro?",
+            "What outcomes are expected with the Shoulder Pro?",
+            "What outcomes are expected with PowerWrap therapy?",
+            "What is the NerveSpa Neuropathy Program?",
+            "How does the Neuropathy Program work?",
+            "What devices are used in the Neuropathy Program?",
+            "Do patients need all the devices in the Neuropathy Program?",
+            "How long does the Neuropathy Program take?",
+            "Why is consistency important in the Neuropathy Program?",
+            "What happens after the initial Neuropathy Program is completed?",
+            "Can the Neuropathy Program be adjusted over time?",
+            "How do supplements fit into the Neuropathy Program?",
+            "How long is a typical Nerve Bath session?",
+            "What should patients feel during a Nerve Bath session?",
+            "How often should the Quake Plate be used?",
+            "How long should a Quake Plate session last?",
+            "What should patients feel during Quake Plate therapy?",
+            "How often should the NerveBeam LED Wrap be used?",
+            "What should patients feel during LED Wrap therapy?",
+            "How often should the NerveBeam Cold Laser be used?",
+            "How long is a Cold Laser session?",
+            "What should patients feel during Cold Laser therapy?",
+            "Can Cold Laser be combined with other neuropathy modalities?",
+            "What supplements are commonly used in the Neuropathy Program?",
+            "When should Nerve Rebuilder be taken?",
+            "When should Nerve Regeneration be taken?",
+            "When should Blood Flow Super Formula be taken?",
+            "How do supplements support the Neuropathy Program?",
+            "What is the NerveSpa Joint & Mobility Program?",
+            "How does the Joint & Mobility Program work?",
+            "What devices are used in the Joint & Mobility Program?",
+            "How long does the Joint & Mobility Program take?",
+            "Can the Joint & Mobility Program be adjusted over time?",
+            "How often should patients use the Knee Pro?",
+            "How long is a Knee Pro session?",
+            "What should patients feel during Knee Pro therapy?",
+            "How often should patients use the Shoulder Pro?",
+            "How long is a Shoulder Pro session?",
+            "What should patients feel during Shoulder Pro therapy?",
+            "What joint supplements are commonly used in the Joint & Mobility Program?",
+            "When should Super Flex Joint Formula – Rebuild + Maintain be used?",
+            "When should OA & RA Relief Cream be used?",
+            "When should Nerve Target Roll-On be used?",
+            "How do joint supplements fit into the Joint & Mobility Program?",
+            "What is the PowerWrap used for in the Clinical Program?",
+            "How long is a PowerWrap session?",
+            "How often can I use PowerWrap in a day?",
+            "Can PowerWrap be combined with other therapies?",
+            "What is NerveWave used for in the Clinical Program?",
+            "How do I start a program on NerveWave?",
+            "What is the recommended schedule for NerveWave regenerative pain control?",
+            "What is the recommended schedule for NerveWave restorative recovery?",
+            "What is the recommended schedule for NerveWave vagus nerve therapy?",
+            "How long should Vibe be used in a typical session?",
+            "How is Vibe typically used within a clinical plan?",
+            "What should patients feel during Vibe use?",
+            "When should I stop treatment and contact my provider?",
+            "How do clinics measure patient engagement with NerveSpa?",
+            "What non-diagnostic indicators can providers monitor when using NerveSpa?",
+            "How does NerveSpa support patient-reported comfort or function tracking?",
+            "Can clinics document changes in patient experience over time with NerveSpa?",
+            "Does NerveSpa provide usage or adherence data to clinics?",
+            "How can providers discuss progress with patients without making medical claims?",
+            "What types of patient feedback are most commonly reported with NerveSpa use?",
+            "How should front-desk staff explain NerveSpa to patients in simple terms?",
+            "How should staff explain home use versus in-clinic guidance?",
+            "What is the best way for staff to set expectations before a patient begins using NerveSpa?",
+            "How should staff handle common patient misconceptions about NerveSpa?",
+            "How is NerveSpa different from consumer-grade nerve stimulation devices?",
+            "What makes NerveSpa a clinic-grade system rather than a retail product?",
+            "Why do clinics choose NerveSpa over generic home wellness devices?",
+            "How does NerveSpa integrate into existing clinical workflows?",
+            "What design principles guide the NerveSpa system?",
+            "How does NerveSpa support consistency and repeatability in patient use?",
+            "When should clinics pause or discontinue use of NerveSpa?",
+            "What situations require clinical judgment before continuing NerveSpa use?",
+            "Are there any patient scenarios where NerveSpa may not be appropriate?",
+            "How does NerveSpa support safe use alongside other clinical modalities?",
+          ],
+          troubleshooting: [
+            "What should I do if my Nerve Bath device is frozen?",
+            "What if there is no stimulation or weak stimulation in the Nerve Bath?",
+            "What if the Nerve Bath device does not power on?",
+            "What if stimulation stops or the program ends short of 30 minutes?",
+            "What should I do if the LED Wrap lights are flickering or powering down early?",
+            "What if I’m having issues with stimulation on Knee Pro?",
+            "What if the Quake Plate makes a loud grinding noise?",
+            "What if the Quake Plate remote does not work?",
+            "What battery does the Quake Plate remote use?",
+            "What should I do if stimulation feels weak with conductive socks or gloves?",
+            "What should I do if the Cold Laser does not turn on?",
+            "What if the Cold Laser shuts off during treatment?",
+            "What should I do if the LED Wrap does not turn on?",
+            "What if the LED Wrap lights flicker during use?",
+            "What should I do if the LED Wrap powers down early?",
+            "What should I do if the PowerWrap does not turn on?",
+            "What should I do if my skin feels too sensitive after PowerWrap use?",
+            "What if the PowerWrap remote does not respond?",
+            "What should I do if NerveWave does not power on?",
+            "What if I feel no sensation during NerveWave use?",
+            "What should I do if NerveWave stimulation feels too strong?",
+            "What if the electrodes are not sticking properly?",
+            "What should I do if NerveWave shuts off during treatment?",
+            "What should I do if the Vibe device does not turn on?",
+            "What if the Vibe stops during a session?",
+            "What should I do if Knee Pro does not power on?",
+            "What if stimulation feels weak on Knee Pro?",
+            "What should I do if Shoulder Pro does not power on?",
+            "What if stimulation feels weak on Shoulder Pro?",
+            "What if I feel little or no sensation during a Nerve Bath session?",
+            "What should I do if the Nerve Bath unit does not turn on?",
+            "What if the LED wrap does not turn on?",
+            "What if the Cold Laser does not activate?",
+            "What if the Quake Plate feels too intense?",
+            "What if the Quake Plate does not start vibrating?",
+            "What should I do if the PowerWrap does not power on?",
+            "What if PowerWrap feels uncomfortable during use?",
+            "What if I feel little or no sensation during NerveWave use?",
+            "What if NerveWave does not turn on?",
+            "When should I contact support for device issues?",
+            "What if my device will not charge?",
+            "What if my device turns off during use?",
+            "What if stimulation feels too strong or uncomfortable?",
+            "What if stimulation feels too weak?",
+            "Can I continue treatment if I experience skin irritation?",
+            "What if my conductive socks or garments do not work properly?",
+            "What if I feel no sensation during a Nerve Bath session?",
+            "What if the water feels too hot or uncomfortable?",
+            "What if the unit does not power on?",
+            "What if stimulation feels uneven between hands or feet?",
+            "What if the PowerWrap does not turn on?",
+            "What if the wrap feels too warm?",
+            "What if I do not feel stimulation with NerveWave?",
+            "What if electrodes lose adhesion during use?",
+            "What if the NerveWave unit will not power on?",
+            "What if the Vibe device does not start?",
+            "What if vibration feels uncomfortable?",
+            "What if the Knee Pro does not deliver sensation?",
+            "What if the Knee Pro strap feels too tight or loose?",
+            "What if the Shoulder Pro feels uncomfortable during use?",
+            "What if the Shoulder Pro does not power on?",
+            "What if I don’t feel stimulation in the water?",
+            "What if stimulation feels uneven between feet or hands?",
+            "What if the unit shuts off during a session?",
+            "What if the Cold Laser does not emit light?",
+            "What if treatment feels ineffective?",
+            "What if vibration feels too intense?",
+            "What if the Quake Plate does not power on?",
+            "What if conductive socks or gloves feel dry during use?",
+            "What if stimulation cuts in and out when using conductive garments?",
+            "What if the garment no longer conducts stimulation well?",
+            "What if Knee Pro shuts off during a session?",
+            "What if the Knee Pro feels uncomfortable around the knee?",
+            "What if the Shoulder Pro shifts during use?",
+            "What if the Shoulder Pro shuts off unexpectedly?",
+            "What if the screen does not respond or freezes?",
+            "What if lead wires appear damaged?",
+            "What if a device will not power on?",
+            "What if stimulation feels weaker than expected?",
+            "What if the device becomes warm during use?",
+            "What if an error message appears on the screen?",
+            "What if the battery drains faster than expected?",
+            "What if accessories are lost or damaged?",
+            "When should I contact NerveSpa support?",
+            "What if there is no sensation during a NerveSpa Nerve Bath session?",
+            "What if the sensation feels uneven between feet or hands?",
+            "What if the water feels too warm or too cool?",
+            "What if the session stops",
+            "What if the session stops before 30 minutes?",
+            "What if the device will not power on?",
+            "What if stimulation feels too strong?",
+            "What if the wrap shuts off during a session?",
+            "What if I do not feel anything during treatment?",
+            "What if the Cold Laser does not power on?",
+            "What if the laser shuts off during treatment?",
+            "What if I do not feel any sensation from the laser?",
+            "What should I do if the device overheats?",
+            "What if the wrap does not stay secured?",
+            "What if the LEDs appear dim?",
+            "What if the Knee Pro does not power on?",
+            "What if the stimulation feels too strong?",
+            "What if the stimulation feels too weak?",
+            "When should a clinic contact NerveSpa support versus handling an issue internally?",
+          ],
+          orders: [
+            "How can clinics order NerveSpa or request a demo?",
+            "What are NerveSpa’s pricing options?",
+            "Is NerveSpa FDA-registered?",
+            "Is NerveSpa covered by insurance?",
+            "Where is NerveSpa manufactured?",
+            "How long has PMT been in business?",
+            "Where can FDA listings be verified?",
+            "What certifications does PMT hold?",
+            "Can patients purchase NerveSpa directly?",
+            "Are starter kits or bundles available for clinics?",
+            "Does NerveSpa support insurance reimbursement?",
+            "What is HCPCS code E0720?",
+            "How quickly are products shipped?",
+            "How should staff respond if a patient asks whether NerveSpa is FDA approved?",
+            "What should staff say if a patient asks about insurance coverage?",
+            "Is NerveSpa available outside the United States?",
+            "Are international certifications or markets planned for NerveSpa?",
+            "Can clinics outside the U.S. request information or express interest?",
+            "How does NerveSpa evaluate expansion into new regions or care settings?",
+          ],
+          care: [
+            "What warranty and return policy does NerveSpa offer?",
+            "Does NerveSpa replace medical care?",
+            "Does NerveSpa offer training for clinics?",
+            "Does NerveSpa replace medical treatment?",
+            "Can patients travel with NerveSpa devices?",
+            "How should the Diabetic Socks be washed or cared for?",
+            "How do I clean conductive socks, gloves, or garments?",
+            "How often should conductive garments be replaced?",
+            "How do I clean the LED Wrap?",
+            "How do I clean conductive garments?",
+            "Where can I find setup guides and manuals?",
+            "Can devices be shared between patients?",
+            "How should devices be cleaned after use?",
+            "What should staff say if a patient asks whether NerveSpa replaces medical treatment?",
+          ],
+        };
+
+        return QUESTION_BANK[key] || [];
+      }
+
+      function formatAnswerText(raw) {
+        let text = String(raw || "").trim();
+        if (!text) return "<p>I’m here to help.</p>";
+
+        text = text.replace(/\r\n/g, "\n");
+
+        const lines = text.split("\n");
+        let html = "";
+        let inUl = false;
+        let inOl = false;
+        let paragraph = [];
+
+        const flushParagraph = () => {
+          if (!paragraph.length) return;
+          const joined = paragraph.join(" ").trim();
+          if (joined) {
+            html += `<p>${formatInline(joined)}</p>`;
+          }
+          paragraph = [];
+        };
+
+        const closeLists = () => {
           if (inUl) {
             html += "</ul>";
             inUl = false;
           }
-          if (!inOl) {
-            html += "<ol>";
-            inOl = true;
+          if (inOl) {
+            html += "</ol>";
+            inOl = false;
           }
-          html += `<li>${formatInline(olMatch[1])}</li>`;
-          continue;
+        };
+
+        function formatInline(str) {
+          let s = escapeHtml(str);
+
+          s = s.replace(/[“"\u201c]Contact Support[”"\u201d]/gi, (match) => {
+            return `<button class="btn-primary" onclick="window.nsWidgetActions.openContact()" style="padding: 4px 12px; font-size: 11px; vertical-align: middle; margin: 0 4px; display: inline-flex;">Contact Support</button>`;
+          });
+
+          s = s.replace(/&lt;br\s*\/?&gt;/gi, "<br>");
+
+          s = s.replace(/\[([^\]]+)\]\(([^)\s]+)\)/g, (match, p1, p2) => {
+            let url = p2;
+            if (url.includes("mailto:support@nervespa.com")) {
+              url =
+                "https://mail.google.com/mail/?view=cm&fs=1&to=support@nervespa.com";
+            }
+            return `<a href="${url}" target="_blank" rel="noopener" style="text-decoration:underline; font-weight:700; color:var(--ns-accent);">${p1}</a>`;
+          });
+
+          s = s.replace(
+            /(support@nervespa\.com)(?!")/g,
+            '<a href="https://mail.google.com/mail/?view=cm&fs=1&to=$1" target="_blank" rel="noopener" style="text-decoration:underline; font-weight:700; color:var(--ns-accent);">$1</a>',
+          );
+          s = s.replace(
+            /(1-800-239-7880)/g,
+            '<a href="tel:18002397880" style="text-decoration:underline; font-weight:700; color:var(--ns-accent);">$1</a>',
+          );
+
+          const urlRegex =
+            /(<a\b[^>]*>.*?<\/a>|[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})|(\b(?:https?:\/\/|www\.)[^\s<]+[^.,\s<"'])|(\b(?:[a-zA-Z0-9-]+\.)+(?:com|org|net|io|co|us|uk|ca|edu|gov|be)(?:\/[^\s<]*[^.,\s<"'])?)/gi;
+          s = s.replace(urlRegex, (match, skipGroup, p2, p3, offset, str) => {
+            if (skipGroup) return skipGroup;
+            let href = match;
+            if (!href.match(/^https?:\/\//i)) {
+              href = "https://" + href;
+            }
+
+            let linkText = "Click Here";
+            const lowerHref = href.toLowerCase();
+
+            // Helper to check for NerveBeam manual patterns
+            const isNerveBeamManual =
+              lowerHref.includes("nervebeam") && lowerHref.includes("manual");
+
+            if (
+              lowerHref.includes("youtube.com") ||
+              lowerHref.includes("youtu.be")
+            ) {
+              linkText = "Watch Video";
+            } else if (isNerveBeamManual) {
+              if (
+                lowerHref.includes("led-wrap") ||
+                lowerHref.includes("led_wrap")
+              ) {
+                linkText = "NerveBeam LED Wrap User Manual";
+              } else if (
+                lowerHref.includes("power-wrap") ||
+                lowerHref.includes("power_wrap")
+              ) {
+                linkText = "NerveBeam Power Wrap User Manual";
+              } else {
+                linkText = "NerveBeam User Manual";
+              }
+            } else if (
+              lowerHref.includes("quakeplate") &&
+              lowerHref.includes("manual")
+            ) {
+              linkText = "Quake Plate User Manual";
+            } else if (
+              lowerHref.includes("drive.google.com") ||
+              lowerHref.includes("docs.google.com")
+            ) {
+              // Check for specific NerveSpa bath guides
+              if (lowerHref.includes("1abwl8au"))
+                linkText = "Nerve Bath Quick Guide";
+              else if (lowerHref.includes("1ieghxbo"))
+                linkText = "Nerve Bath Full User Guide";
+              else {
+                const prefix = str
+                  .slice(Math.max(0, offset - 40), offset)
+                  .toLowerCase();
+                if (
+                  prefix.includes("quick") ||
+                  prefix.includes("setup") ||
+                  prefix.includes("start")
+                ) {
+                  linkText = "Quick Start Guide";
+                } else if (
+                  prefix.includes("full") ||
+                  prefix.includes("manual") ||
+                  prefix.includes("user") ||
+                  prefix.includes("complete")
+                ) {
+                  linkText = "Complete User Manual";
+                } else {
+                  linkText = "View Document";
+                }
+              }
+            } else if (lowerHref.includes("nervespa.com/products")) {
+              const productPath = lowerHref.split("nervespa.com/products/")[1];
+              if (productPath && productPath.includes("/")) {
+                linkText = "Buy it from our website";
+              } else {
+                linkText = "View More Products";
+              }
+            } else if (lowerHref.includes("nervespa.com/collections")) {
+              linkText = "View More Products";
+            } else if (lowerHref.includes("nervespa.com")) {
+              linkText = "Visit NerveSpa";
+            } else if (lowerHref.endsWith(".pdf")) {
+              // Generic PDF handler
+              const parts = href.split("/");
+              const fileName = parts[parts.length - 1]
+                .replace(/_|-/g, " ")
+                .replace(/\.pdf$/i, "")
+                .replace(/\sv\d+.*$/i, ""); // strip version numbers
+              linkText = fileName.charAt(0).toUpperCase() + fileName.slice(1);
+            } else {
+              try {
+                const urlObj = new URL(href);
+                linkText = urlObj.hostname.replace(/^www\./i, "");
+              } catch (e) {
+                linkText = "Click Here";
+              }
+            }
+            return `<a href="${href}" target="_blank" rel="noopener" style="text-decoration:underline; font-weight:700; color:var(--ns-accent); cursor:pointer;">${linkText}</a>`;
+          });
+
+          s = s.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
+          s = s.replace(
+            /(^|[\s(])NOTE:\s*/g,
+            '$1<span class="callout"><strong>Note:</strong> ',
+          );
+          if (s.includes('<span class="callout">') && !s.endsWith("</span>")) {
+            s += "</span>";
+          }
+          return s;
         }
 
-        if (trimmed.toLowerCase().startsWith("note:")) {
-          flushParagraph();
+        for (const line of lines) {
+          const trimmed = line.trim();
+
+          if (!trimmed) {
+            flushParagraph();
+            closeLists();
+            continue;
+          }
+
+          const ulMatch = trimmed.match(/^[-•]\s+(.+)/);
+          const olMatch = trimmed.match(/^\d+\.\s+(.+)/);
+
+          if (ulMatch) {
+            flushParagraph();
+            if (inOl) {
+              html += "</ol>";
+              inOl = false;
+            }
+            if (!inUl) {
+              html += "<ul>";
+              inUl = true;
+            }
+            html += `<li>${formatInline(ulMatch[1])}</li>`;
+            continue;
+          }
+
+          if (olMatch) {
+            flushParagraph();
+            if (inUl) {
+              html += "</ul>";
+              inUl = false;
+            }
+            if (!inOl) {
+              html += "<ol>";
+              inOl = true;
+            }
+            html += `<li>${formatInline(olMatch[1])}</li>`;
+            continue;
+          }
+
+          if (trimmed.toLowerCase().startsWith("note:")) {
+            flushParagraph();
+            closeLists();
+            html += `<div class="callout"><strong>Note:</strong> ${formatInline(trimmed.slice(5).trim())}</div>`;
+            continue;
+          }
+
           closeLists();
-          html += `<div class="callout"><strong>Note:</strong> ${formatInline(trimmed.slice(5).trim())}</div>`;
-          continue;
+          paragraph.push(trimmed);
         }
 
+        flushParagraph();
         closeLists();
-        paragraph.push(trimmed);
+
+        return html || `<p>${formatInline(text)}</p>`;
       }
 
-      flushParagraph();
-      closeLists();
-
-      return html || `<p>${formatInline(text)}</p>`;
-    }
-
-    function createAskBoxMarkup() {
-      return `
+      function createAskBoxMarkup() {
+        return `
         <div class="hero" style="padding:14px;">
           <div style="display:flex; flex-direction:column; gap:10px;">
 
@@ -2082,10 +2192,10 @@
           </div>
         </div>
       `;
-    }
+      }
 
-    function createHomeMarkup() {
-      return `
+      function createHomeMarkup() {
+        return `
         <div class="thread">
           <div class="hero">
 
@@ -2098,24 +2208,24 @@
           <div class="quickSectionTitle">Browse support</div>
           <div class="cardRow">
             ${CATEGORIES.map(
-        (c) => `
+              (c) => `
               <div class="homeCard" onclick="window.nsWidgetActions.renderCategory('${escapeHtml(c.key)}')">
                 <div class="homeCardTitle">${escapeHtml(c.title)}</div>
                 <p class="homeCardSub">${escapeHtml(c.sub)}</p>
               </div>
             `,
-      ).join("")}
+            ).join("")}
           </div>
         </div>
       `;
-    }
+      }
 
-    function createCategoryMarkup(key) {
-      const category = CATEGORIES.find((x) => x.key === key);
-      const label = category?.title || "Support";
-      const prompts = seedQuestionsForCategory(key);
+      function createCategoryMarkup(key) {
+        const category = CATEGORIES.find((x) => x.key === key);
+        const label = category?.title || "Support";
+        const prompts = seedQuestionsForCategory(key);
 
-      return `
+        return `
         <div class="thread">
           <div class="quickGrid" style="margin-bottom:2px;">
             <button class="chip" onclick="window.nsWidgetActions.renderHome()">← Back</button>
@@ -2132,12 +2242,12 @@
 
           <div class="quickGrid">
             ${prompts
-          .map(
-            (q) => `
-              <button class="chip" onclick="window.nsWidgetActions.populateQuestion('${escapeJsString(q)}')">${escapeHtml(q)}</button>
+              .map(
+                (q) => `
+              <button class="chip" onclick="window.nsWidgetActions.ask('${escapeJsString(q)}')">${escapeHtml(q)}</button>
             `,
-          )
-          .join("")}
+              )
+              .join("")}
           </div>
 
           <div class="ctaPanel">
@@ -2149,10 +2259,10 @@
           </div>
         </div>
       `;
-    }
+      }
 
-    function createUserMessageHtml(text) {
-      return `
+      function createUserMessageHtml(text) {
+        return `
         <div class="message user">
           <div class="bubbleWrap">
             <div class="bubbleLabel">You</div>
@@ -2162,100 +2272,102 @@
           </div>
         </div>
       `;
-    }
+      }
 
-    function createAssistantMessageHtml(message) {
-      const meta = [];
-      if (message.category) meta.push(message.category);
-      if (message.subcategory) meta.push(message.subcategory);
+      function createAssistantMessageHtml(message) {
+        const meta = [];
+        if (message.category) meta.push(message.category);
+        if (message.subcategory) meta.push(message.subcategory);
 
-      let text = message.answer || message.text || "";
-      let extraActions = "";
+        let text = message.answer || message.text || "";
+        let extraActions = "";
 
-      if (
-        text.includes("To provide the best recommendation") &&
-        text.includes("category")
-      ) {
-        // Strip bulleted lines from the text so they don't show as bullets
-        text = text.replace(/^[•\-\*]\s*([^<\n\r]+)(?:\n|$)/gm, "");
+        if (
+          text.includes("To provide the best recommendation") &&
+          text.includes("category")
+        ) {
+          // Strip bulleted lines from the text so they don't show as bullets
+          text = text.replace(/^[•\-\*]\s*([^<\n\r]+)(?:\n|$)/gm, "");
 
-        const cats = [
-          "Nerve & Neuropathy",
-          "Joint & Mobility",
-          "Advanced Supplementation",
-          "Clinical Devices",
-        ];
-        extraActions = `
+          const cats = [
+            "Nerve & Neuropathy",
+            "Joint & Mobility",
+            "Advanced Supplementation",
+            "Clinical Devices",
+          ];
+          extraActions = `
                     <div class="assistantActions" style="margin-top: 10px;">
                         ${cats.map((c) => `<button class="microPill" onclick="window.nsWidgetActions.ask('suggests me some products of ${escapeJsString(c)}?')">${escapeHtml(c)}</button>`).join("")}
                     </div>
                 `;
-      }
+        }
 
-      return `
+        return `
         <div class="message assistant">
           <div class="avatar">NS</div>
           <div class="bubbleWrap">
             <div class="bubbleLabel">NerveSpa Support</div>
             <div class="bubble">
               <div class="richAnswer">${formatAnswerText(text)}</div>
-              ${meta.length
-          ? `
+              ${
+                meta.length
+                  ? `
                 <div class="metaRow">
                   ${meta.map((m) => `<span class="metaTag">${escapeHtml(m)}</span>`).join("")}
                 </div>
               `
-          : ""
-        }
+                  : ""
+              }
               ${extraActions || ""}
-              ${message.candidates?.length
-          ? `
+              ${
+                message.candidates?.length
+                  ? `
                 <div class="assistantActions">
                   ${message.candidates
-            .slice(0, 3)
-            .map(
-              (c) => `
+                    .slice(0, 3)
+                    .map(
+                      (c) => `
                     <button class="microPill" onclick="window.nsWidgetActions.ask('${escapeJsString(c.question)}')">${escapeHtml(truncate(c.question, 42))}</button>
                   `,
-            )
-            .join("")}
+                    )
+                    .join("")}
                 </div>
               `
-          : ""
-        }
+                  : ""
+              }
             </div>
           </div>
         </div>
       `;
-    }
+      }
 
-    function createSystemCardHtml(title, body, actions = []) {
-      return `
+      function createSystemCardHtml(title, body, actions = []) {
+        return `
         <div class="stuckCard">
           <div class="stuckTitle">${escapeHtml(title)}</div>
           <div class="stuckText">${escapeHtml(body)}</div>
           <div class="assistantActions">
             ${actions
-          .map((action) => {
-            if (action.type === "contact") {
-              return `<button class="microPill" onclick="window.nsWidgetActions.openContact()">${escapeHtml(action.label)}</button>`;
-            }
-            if (action.type === "home") {
-              return `<button class="microPill" onclick="window.nsWidgetActions.renderHome()">${escapeHtml(action.label)}</button>`;
-            }
-            if (action.type === "warranty") {
-              return `<button class="microPill" onclick="window.nsWidgetActions.openWarranty()">${escapeHtml(action.label)}</button>`;
-            }
-            return "";
-          })
-          .join("")}
+              .map((action) => {
+                if (action.type === "contact") {
+                  return `<button class="microPill" onclick="window.nsWidgetActions.openContact()">${escapeHtml(action.label)}</button>`;
+                }
+                if (action.type === "home") {
+                  return `<button class="microPill" onclick="window.nsWidgetActions.renderHome()">${escapeHtml(action.label)}</button>`;
+                }
+                if (action.type === "warranty") {
+                  return `<button class="microPill" onclick="window.nsWidgetActions.openWarranty()">${escapeHtml(action.label)}</button>`;
+                }
+                return "";
+              })
+              .join("")}
           </div>
         </div>
       `;
-    }
+      }
 
-    function createTypingHtml() {
-      return `
+      function createTypingHtml() {
+        return `
         <div class="message assistant" id="typingIndicator">
           <div class="avatar">NS</div>
           <div class="bubbleWrap">
@@ -2268,523 +2380,559 @@
           </div>
         </div>
       `;
-    }
+      }
 
-    function autoGrowHomePrompt() {
-      const elHomePrompt = document.getElementById("homePrompt");
-      if (!elHomePrompt) return;
-      elHomePrompt.style.height = "32px";
-      elHomePrompt.style.height =
-        Math.min(elHomePrompt.scrollHeight, 120) + "px";
-    }
-
-    function attachHomePromptEvents() {
-      const elHomePrompt = document.getElementById("homePrompt");
-      if (!elHomePrompt) return;
-
-      elHomePrompt.addEventListener("input", autoGrowHomePrompt);
-      elHomePrompt.addEventListener("keydown", (e) => {
-        if (e.key === "Enter" && !e.shiftKey) {
-          e.preventDefault();
-          submitHomePrompt();
-        }
-      });
-
-      autoGrowHomePrompt();
-    }
-
-    function renderHome() {
-      currentViewType = "home";
-      const comp = document.querySelector(".composer");
-      if (comp) comp.style.display = "none";
-      const hint = document.querySelector(".footerHint");
-      if (hint) hint.style.display = "none";
-
-      elScreen.innerHTML = createHomeMarkup();
-      elScreen.scrollTop = 0;
-
-      setTimeout(() => {
-        attachHomePromptEvents();
+      function autoGrowHomePrompt() {
         const elHomePrompt = document.getElementById("homePrompt");
-        if (elHomePrompt) elHomePrompt.focus();
-        checkBlockStatus();
-      }, 50);
-    }
+        if (!elHomePrompt) return;
+        elHomePrompt.style.height = "32px";
+        elHomePrompt.style.height =
+          Math.min(elHomePrompt.scrollHeight, 120) + "px";
+      }
 
-    function renderCategory(key) {
-      currentViewType = "category";
-      currentCategoryKey = key;
-      const comp = document.querySelector(".composer");
-      if (comp) comp.style.display = "none";
-      const hint = document.querySelector(".footerHint");
-      if (hint) hint.style.display = "none";
-
-      elScreen.innerHTML = createCategoryMarkup(key);
-      elScreen.scrollTop = 0;
-
-      setTimeout(() => {
-        attachHomePromptEvents();
+      function attachHomePromptEvents() {
         const elHomePrompt = document.getElementById("homePrompt");
-        if (elHomePrompt) elHomePrompt.focus();
-        checkBlockStatus();
-      }, 50);
-    }
+        if (!elHomePrompt) return;
 
-    function renderThread() {
-      currentViewType = "thread";
-      const comp = document.querySelector(".composer");
-      if (comp) comp.style.display = "flex";
-      const hint = document.querySelector(".footerHint");
-      if (hint) hint.style.display = "block";
+        elHomePrompt.addEventListener("input", autoGrowHomePrompt);
+        elHomePrompt.addEventListener("keydown", (e) => {
+          if (e.key === "Enter" && !e.shiftKey) {
+            e.preventDefault();
+            submitHomePrompt();
+          }
+        });
 
-      const html = `
+        autoGrowHomePrompt();
+      }
+
+      function renderHome() {
+        currentViewType = "home";
+        const comp = document.querySelector(".composer");
+        if (comp) comp.style.display = "none";
+        const hint = document.querySelector(".footerHint");
+        if (hint) hint.style.display = "none";
+
+        elScreen.innerHTML = createHomeMarkup();
+        elScreen.scrollTop = 0;
+
+        setTimeout(() => {
+          attachHomePromptEvents();
+          const elHomePrompt = document.getElementById("homePrompt");
+          if (elHomePrompt) elHomePrompt.focus();
+          checkBlockStatus();
+        }, 50);
+      }
+
+      function renderCategory(key) {
+        currentViewType = "category";
+        currentCategoryKey = key;
+        const comp = document.querySelector(".composer");
+        if (comp) comp.style.display = "none";
+        const hint = document.querySelector(".footerHint");
+        if (hint) hint.style.display = "none";
+
+        elScreen.innerHTML = createCategoryMarkup(key);
+        elScreen.scrollTop = 0;
+
+        setTimeout(() => {
+          attachHomePromptEvents();
+          const elHomePrompt = document.getElementById("homePrompt");
+          if (elHomePrompt) elHomePrompt.focus();
+          checkBlockStatus();
+        }, 50);
+      }
+
+      function renderThread() {
+        currentViewType = "thread";
+        const comp = document.querySelector(".composer");
+        if (comp) comp.style.display = "flex";
+        const hint = document.querySelector(".footerHint");
+        if (hint) hint.style.display = "block";
+
+        const html = `
         <div class="thread">
           ${thread
-          .map((item) => {
-            if (item.role === "user") return createUserMessageHtml(item.text);
-            if (item.role === "assistant")
-              return createAssistantMessageHtml(item);
-            if (item.role === "system")
-              return createSystemCardHtml(
-                item.title,
-                item.body,
-                item.actions || [],
-              );
-            return "";
-          })
-          .join("")}
+            .map((item) => {
+              if (item.role === "user") return createUserMessageHtml(item.text);
+              if (item.role === "assistant")
+                return createAssistantMessageHtml(item);
+              if (item.role === "system")
+                return createSystemCardHtml(
+                  item.title,
+                  item.body,
+                  item.actions || [],
+                );
+              return "";
+            })
+            .join("")}
           ${isTyping ? createTypingHtml() : ""}
         </div>
       `;
-      elScreen.innerHTML = html;
-      scrollToBottom();
-    }
-
-    function pushSystemCard(card) {
-      const last = thread[thread.length - 1];
-      if (
-        last?.role === "system" &&
-        last.title === card.title &&
-        last.body === card.body
-      )
-        return;
-
-      thread.push({
-        role: "system",
-        title: card.title,
-        body: card.body,
-        actions: card.actions || [],
-      });
-      saveThread();
-      renderThread();
-    }
-
-    function renderNetworkError(error) {
-      const msg = String(error?.message || "").toLowerCase();
-      let title = "Connection issue";
-      let body =
-        "We couldn’t reach support right now. Please check your internet connection and try again.";
-
-      if (msg.includes("timeout")) {
-        title = "Request timed out";
-        body =
-          "Support is taking longer than expected to respond. Please try again in a moment.";
-      } else if (
-        msg.includes("500") ||
-        msg.includes("502") ||
-        msg.includes("503") ||
-        msg.includes("504")
-      ) {
-        title = "Support is temporarily unavailable";
-        body =
-          "Our support service is having trouble right now. Please try again shortly, or contact our team directly.";
+        elScreen.innerHTML = html;
+        scrollToBottom();
       }
 
-      pushSystemCard({
-        title,
-        body,
-        actions: [
-          { type: "contact", label: "Contact Support" },
-          { type: "home", label: "Home" },
-        ],
-      });
-    }
+      function pushSystemCard(card) {
+        const last = thread[thread.length - 1];
+        if (
+          last?.role === "system" &&
+          last.title === card.title &&
+          last.body === card.body
+        )
+          return;
 
-    function renderFallback(candidates = []) {
-      thread.push({
-        role: "assistant",
-        text: "I don’t see that exact detail in the current knowledge base. Please contact our team so we can provide the most accurate guidance.",
-        answer:
-          "I don’t see that exact detail in the current knowledge base.\n\n" +
-          "Please contact our team so we can provide the most accurate guidance.",
-        candidates,
-      });
-
-      saveThread();
-      renderThread();
-
-      pushSystemCard({
-        title: "Want direct help?",
-        body: "Our team can follow up with personalized support for your device, order, or warranty question.",
-        actions: [
-          { type: "contact", label: "Contact Support" },
-          { type: "home", label: "Back Home" },
-        ],
-      });
-    }
-
-    function pushUserMessage(text) {
-      // Remove previous helpfulness system cards from history so they don't clutter the chat log
-      thread = thread.filter(
-        (item) =>
-          !(item.role === "system" && item.title === "Was this helpful?"),
-      );
-
-      thread.push({ role: "user", text });
-      saveThread();
-      renderThread();
-    }
-
-    const elFreeText = document.getElementById("chatInput");
-    const btnSend = document.getElementById("btnSend");
-
-    function showTyping() {
-      isTyping = true;
-      if (elFreeText) elFreeText.disabled = true;
-      if (btnSend) btnSend.disabled = true;
-      renderThread();
-    }
-
-    function hideTyping() {
-      isTyping = false;
-      if (elFreeText) elFreeText.disabled = false;
-      if (btnSend) btnSend.disabled = false;
-      renderThread();
-    }
-
-    function scrollToBottom() {
-      elScreen.scrollTo({
-        top: elScreen.scrollHeight,
-        behavior: thread.length > 1 ? "smooth" : "auto",
-      });
-    }
-
-    async function logToMessagesWebhook(role, message) {
-      try {
-        const isDev = safeGetItem("is_dev") === "true";
-        await fetch(LOG_WEBHOOK_URL, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            session_id: sessionId,
-            role: role,
-            message: message,
-            is_dev: isDev,
-          }),
+        thread.push({
+          role: "system",
+          title: card.title,
+          body: card.body,
+          actions: card.actions || [],
         });
-      } catch (err) { }
-    }
+        saveThread();
+        renderThread();
+      }
 
-    async function logAudit(action, metadata = {}) {
-      try {
-        const isDev = safeGetItem("is_dev") === "true";
-        await fetch(LOG_WEBHOOK_URL, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            session_id: sessionId,
-            role: "audit",
-            action: action,
-            message: `[AUDIT] ${action}`,
-            metadata: metadata,
-            is_dev: isDev,
-            timestamp: new Date().toISOString()
-          }),
-        });
-      } catch (err) { }
-    }
+      function renderNetworkError(error) {
+        const msg = String(error?.message || "").toLowerCase();
+        let title = "Connection issue";
+        let body =
+          "We couldn’t reach support right now. Please check your internet connection and try again.";
 
-    async function sendFeedback(wasHelpful) {
-      if (!wasHelpful) {
+        if (msg.includes("timeout")) {
+          title = "Request timed out";
+          body =
+            "Support is taking longer than expected to respond. Please try again in a moment.";
+        } else if (
+          msg.includes("500") ||
+          msg.includes("502") ||
+          msg.includes("503") ||
+          msg.includes("504")
+        ) {
+          title = "Support is temporarily unavailable";
+          body =
+            "Our support service is having trouble right now. Please try again shortly, or contact our team directly.";
+        }
+
         pushSystemCard({
-          title: "We can help directly",
-          body: "If the answer didn’t fully solve it, contact our team for personalized guidance.",
+          title,
+          body,
+          actions: [
+            { type: "contact", label: "Contact Support" },
+            { type: "home", label: "Home" },
+          ],
+        });
+      }
+
+      function renderFallback(candidates = []) {
+        thread.push({
+          role: "assistant",
+          text: "I don’t see that exact detail in the current knowledge base. Please contact our team so we can provide the most accurate guidance.",
+          answer:
+            "I don’t see that exact detail in the current knowledge base.\n\n" +
+            "Please contact our team so we can provide the most accurate guidance.",
+          candidates,
+        });
+
+        saveThread();
+        renderThread();
+
+        pushSystemCard({
+          title: "Want direct help?",
+          body: "Our team can follow up with personalized support for your device, order, or warranty question.",
           actions: [
             { type: "contact", label: "Contact Support" },
             { type: "home", label: "Back Home" },
           ],
         });
       }
-    }
 
-    async function ask(query) {
-      const isBlocked = safeGetItem(BLOCK_KEY) === "true";
-      if (isBlocked) {
-        pushSystemCard({
-          title: "Access Restricted",
-          body: "You have been temporarily blocked from sending more messages due to unusual activity. please contact support if this is a mistake.",
-          actions: [{ type: "contact", label: "Contact Support" }]
-        });
-        return;
-      }
-
-      if (isTyping) return;
-
-      const q = (query || "").trim();
-      if (!q) return;
-
-      // Rate Limiting Logic
-      const now = Date.now();
-      queryTimestamps = queryTimestamps.filter(t => now - t < RATE_LIMIT_WINDOW);
-
-      if (queryTimestamps.length >= RATE_LIMIT_COUNT) {
-        safeSetItem(BLOCK_KEY, "true");
-        logAudit("RATE_LIMIT_EXCEEDED", {
-          query_count: queryTimestamps.length,
-          last_query: q
-        });
-
-        // Disable UI
-        if (elFreeText) elFreeText.disabled = true;
-        if (btnSend) btnSend.disabled = true;
-        const elHomePrompt = document.getElementById("homePrompt");
-        if (elHomePrompt) elHomePrompt.disabled = true;
-
-        pushSystemCard({
-          title: "Access Restricted",
-          body: "You have reached the limit of 30 questions per minute. Your access has been restricted to protect our services.",
-          actions: [{ type: "contact", label: "Contact Support" }]
-        });
-        return;
-      }
-
-      queryTimestamps.push(now);
-
-      lastUserQuery = q;
-      pushUserMessage(q);
-      logToMessagesWebhook("user", q);
-
-      const isEnglishOnly =
-        /^[\x00-\x7F\u2013\u2014\u2018\u2019\u201C\u201D\u2026\u00A3\u20AC]*$/.test(
-          q,
+      function pushUserMessage(text) {
+        // Remove previous helpfulness system cards from history so they don't clutter the chat log
+        thread = thread.filter(
+          (item) =>
+            !(item.role === "system" && item.title === "Was this helpful?"),
         );
-      if (!isEnglishOnly) {
-        pushSystemCard({
-          title: "Language Not Supported",
-          body: "I can only process questions in English. Please write your question in English and try again.",
-          actions: [
-            { type: "contact", label: "Talk to Human" },
-            { type: "home", label: "Home" },
-          ],
-        });
-        return;
-      }
 
-      const hasAlphaNumeric = /[a-zA-Z0-9]/.test(q);
-      if (!hasAlphaNumeric) {
-        pushSystemCard({
-          title: "Typo detected",
-          body: "Please check your question and try again.",
-          actions: [
-            { type: "contact", label: "Contact Support" },
-            { type: "home", label: "Home" },
-          ],
-        });
-        return;
-      }
-
-      showTyping();
-
-      try {
-        const isDev = safeGetItem("is_dev") === "true";
-        const url = `${WEBHOOK_URL}?chatInput=${encodeURIComponent(
-          q,
-        )}&sessionId=${encodeURIComponent(sessionId)}&is_dev=${isDev}`;
-
-        const res = await fetch(url, {
-          method: "GET",
-          headers: { Accept: "application/json" },
-        });
-        hideTyping();
-        if (!res.ok) throw new Error("HTTP " + res.status);
-        const data = await res.json();
-        let answer = "";
-        if (Array.isArray(data) && data.length > 0 && data[0].output)
-          answer = data[0].output;
-        else if (data && data.text) answer = data.text;
-        else
-          answer =
-            "I received a response but couldn't parse it. Please try again.";
-
-        thread.push({ role: "assistant", text: answer, answer: answer });
-        logToMessagesWebhook("bot", answer);
+        thread.push({ role: "user", text });
         saveThread();
         renderThread();
+      }
 
-        pushSystemCard({
-          title: "Was this helpful?",
-          body: "You can ask a follow-up, choose a related question, or contact support directly.",
-          actions: [
-            { type: "home", label: "Home" },
-            { type: "contact", label: "Talk to Human" },
-          ],
+      const elFreeText = document.getElementById("chatInput");
+      const btnSend = document.getElementById("btnSend");
+
+      function showTyping() {
+        isTyping = true;
+        if (elFreeText) elFreeText.disabled = true;
+        if (btnSend) btnSend.disabled = true;
+        renderThread();
+      }
+
+      function hideTyping() {
+        isTyping = false;
+        if (elFreeText) elFreeText.disabled = false;
+        if (btnSend) btnSend.disabled = false;
+        renderThread();
+      }
+
+      function scrollToBottom() {
+        elScreen.scrollTo({
+          top: elScreen.scrollHeight,
+          behavior: thread.length > 1 ? "smooth" : "auto",
         });
-      } catch (e) {
-        hideTyping();
-        renderNetworkError(e);
-      }
-    }
-
-    function populateQuestion(text) {
-      const elHome = document.getElementById("homePrompt");
-      if (elHome && elHome.offsetParent !== null) {
-        elHome.value = text || "";
-        elHome.focus();
-        if (typeof autoGrowHomePrompt === "function") autoGrowHomePrompt();
-        return;
       }
 
-      if (!elFreeText) return;
-      elFreeText.value = text || "";
-      elFreeText.focus();
-    }
-
-    function submitHomePrompt() {
-      if (isTyping) return;
-      let val = "";
-
-      const elHome = document.getElementById("homePrompt");
-      if (elHome && elHome.offsetParent !== null) {
-        val = elHome.value || "";
-        if (!val.trim()) return;
-        elHome.value = "";
-        if (typeof autoGrowHomePrompt === "function") autoGrowHomePrompt();
-      } else if (elFreeText && elFreeText.offsetParent !== null) {
-        val = elFreeText.value || "";
-        if (!val.trim()) return;
-        elFreeText.value = "";
-        if (window.autoGrowTextarea) window.autoGrowTextarea();
+      async function logToMessagesWebhook(role, message) {
+        try {
+          const isDev = safeGetItem("is_dev") === "true";
+          await fetch(LOG_WEBHOOK_URL, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              session_id: sessionId,
+              role: role,
+              message: message,
+              is_dev: isDev,
+            }),
+          });
+        } catch (err) {}
       }
 
-      if (val.trim()) ask(val);
-    }
-
-    function askHomePrompt() {
-      const elHome = document.getElementById("homePrompt");
-      if (elHome && elHome.offsetParent !== null) {
-        elHome.focus();
-        elHome.setSelectionRange(elHome.value.length, elHome.value.length);
-        return;
+      async function logAudit(action, metadata = {}) {
+        try {
+          const isDev = safeGetItem("is_dev") === "true";
+          await fetch(LOG_WEBHOOK_URL, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              session_id: sessionId,
+              role: "audit",
+              action: action,
+              message: `[AUDIT] ${action}`,
+              metadata: metadata,
+              is_dev: isDev,
+              timestamp: new Date().toISOString(),
+            }),
+          });
+        } catch (err) {}
       }
-      if (elFreeText) {
-        elFreeText.focus();
-        elFreeText.setSelectionRange(
-          elFreeText.value.length,
-          elFreeText.value.length,
+
+      async function sendFeedback(wasHelpful) {
+        if (!wasHelpful) {
+          pushSystemCard({
+            title: "We can help directly",
+            body: "If the answer didn’t fully solve it, contact our team for personalized guidance.",
+            actions: [
+              { type: "contact", label: "Contact Support" },
+              { type: "home", label: "Back Home" },
+            ],
+          });
+        }
+      }
+
+      async function ask(query) {
+        const isBlocked = safeGetItem(BLOCK_KEY) === "true";
+        if (isBlocked) {
+          pushSystemCard({
+            title: "Access Restricted",
+            body: "You have been temporarily blocked from sending more messages due to unusual activity. please contact support if this is a mistake.",
+            actions: [{ type: "contact", label: "Contact Support" }],
+          });
+          return;
+        }
+
+        if (isTyping) return;
+
+        const q = (query || "").trim();
+        if (!q) return;
+
+        // Rate Limiting Logic
+        const now = Date.now();
+        queryTimestamps = queryTimestamps.filter(
+          (t) => now - t < RATE_LIMIT_WINDOW,
         );
+
+        if (queryTimestamps.length >= RATE_LIMIT_COUNT) {
+          safeSetItem(BLOCK_KEY, "true");
+          logAudit("RATE_LIMIT_EXCEEDED", {
+            query_count: queryTimestamps.length,
+            last_query: q,
+          });
+
+          // Disable UI
+          if (elFreeText) elFreeText.disabled = true;
+          if (btnSend) btnSend.disabled = true;
+          const elHomePrompt = document.getElementById("homePrompt");
+          if (elHomePrompt) elHomePrompt.disabled = true;
+
+          pushSystemCard({
+            title: "Access Restricted",
+            body: "You have reached the limit of 30 questions per minute. Your access has been restricted to protect our services.",
+            actions: [{ type: "contact", label: "Contact Support" }],
+          });
+          return;
+        }
+
+        queryTimestamps.push(now);
+
+        lastUserQuery = q;
+        pushUserMessage(q);
+        logToMessagesWebhook("user", q);
+
+        const isEnglishOnly =
+          /^[\x00-\x7F\u2013\u2014\u2018\u2019\u201C\u201D\u2026\u00A3\u20AC]*$/.test(
+            q,
+          );
+        if (!isEnglishOnly) {
+          pushSystemCard({
+            title: "Language Not Supported",
+            body: "I can only process questions in English. Please write your question in English and try again.",
+            actions: [
+              { type: "contact", label: "Talk to Human" },
+              { type: "home", label: "Home" },
+            ],
+          });
+          return;
+        }
+
+        const hasAlphaNumeric = /[a-zA-Z0-9]/.test(q);
+        if (!hasAlphaNumeric) {
+          pushSystemCard({
+            title: "Typo detected",
+            body: "Please check your question and try again.",
+            actions: [
+              { type: "contact", label: "Contact Support" },
+              { type: "home", label: "Home" },
+            ],
+          });
+          return;
+        }
+
+        showTyping();
+
+        try {
+          const isDev = safeGetItem("is_dev") === "true";
+          const url = `${WEBHOOK_URL}?chatInput=${encodeURIComponent(
+            q,
+          )}&sessionId=${encodeURIComponent(sessionId)}&is_dev=${isDev}`;
+
+          const res = await fetch(url, {
+            method: "GET",
+            headers: { Accept: "application/json" },
+          });
+          hideTyping();
+          if (!res.ok) throw new Error("HTTP " + res.status);
+          const data = await res.json();
+          let answer = "";
+          if (Array.isArray(data) && data.length > 0 && data[0].output)
+            answer = data[0].output;
+          else if (data && data.text) answer = data.text;
+          else
+            answer =
+              "I received a response but couldn't parse it. Please try again.";
+
+          thread.push({ role: "assistant", text: answer, answer: answer });
+          logToMessagesWebhook("bot", answer);
+          saveThread();
+          renderThread();
+
+          pushSystemCard({
+            title: "Was this helpful?",
+            body: "You can ask a follow-up, choose a related question, or contact support directly.",
+            actions: [
+              { type: "home", label: "Home" },
+              { type: "contact", label: "Talk to Human" },
+            ],
+          });
+        } catch (e) {
+          hideTyping();
+          renderNetworkError(e);
+        }
       }
-    }
 
-    function clearConversation() {
-      const confirmed = window.confirm("Clear this conversation?");
-      if (!confirmed) return;
+      function populateQuestion(text) {
+        const elHome = document.getElementById("homePrompt");
+        if (elHome && elHome.offsetParent !== null) {
+          elHome.value = text || "";
+          elHome.focus();
+          if (typeof autoGrowHomePrompt === "function") autoGrowHomePrompt();
+          return;
+        }
 
-      thread = [];
-      saveThread();
-      renderHome();
-    }
-
-    function openWidget() {
-      elShell.classList.add("open");
-
-      if (isMinimized) {
-        setMinimized(false);
+        if (!elFreeText) return;
+        elFreeText.value = text || "";
+        elFreeText.focus();
       }
 
-      renderHome();
-    }
+      function submitHomePrompt() {
+        if (isTyping) return;
+        let val = "";
 
-    function closeWidget() {
-      elShell.classList.remove("open");
-    }
+        const elHome = document.getElementById("homePrompt");
+        if (elHome && elHome.offsetParent !== null) {
+          val = elHome.value || "";
+          if (!val.trim()) return;
+          elHome.value = "";
+          if (typeof autoGrowHomePrompt === "function") autoGrowHomePrompt();
+        } else if (elFreeText && elFreeText.offsetParent !== null) {
+          val = elFreeText.value || "";
+          if (!val.trim()) return;
+          elFreeText.value = "";
+          if (window.autoGrowTextarea) window.autoGrowTextarea();
+        }
 
-    document
-      .getElementById("btnClose")
-      .addEventListener("click", closeWidget);
+        if (val.trim()) ask(val);
+      }
 
-    if (btnSend) btnSend.addEventListener("click", submitHomePrompt);
-    if (elFreeText) {
-      elFreeText.addEventListener("keydown", (e) => {
-        if (e.key === "Enter" && !e.shiftKey) {
-          e.preventDefault();
-          submitHomePrompt();
+      function askHomePrompt() {
+        const elHome = document.getElementById("homePrompt");
+        if (elHome && elHome.offsetParent !== null) {
+          elHome.focus();
+          elHome.setSelectionRange(elHome.value.length, elHome.value.length);
+          return;
+        }
+        if (elFreeText) {
+          elFreeText.focus();
+          elFreeText.setSelectionRange(
+            elFreeText.value.length,
+            elFreeText.value.length,
+          );
+        }
+      }
+
+      function clearConversation() {
+        const confirmed = window.confirm("Clear this conversation?");
+        if (!confirmed) return;
+
+        thread = [];
+        saveThread();
+        renderHome();
+      }
+
+      function openWidget() {
+        elShell.classList.add("open");
+
+        if (isMinimized) {
+          setMinimized(false);
+        }
+
+        renderHome();
+      }
+
+      function closeWidget() {
+        elShell.classList.remove("open");
+      }
+
+      document
+        .getElementById("btnClose")
+        .addEventListener("click", closeWidget);
+
+      if (btnSend) btnSend.addEventListener("click", submitHomePrompt);
+      if (elFreeText) {
+        elFreeText.addEventListener("keydown", (e) => {
+          if (e.key === "Enter" && !e.shiftKey) {
+            e.preventDefault();
+            submitHomePrompt();
+          }
+        });
+
+        function autoGrowTextarea() {
+          elFreeText.style.height = "26px";
+          elFreeText.style.height =
+            Math.min(elFreeText.scrollHeight, 110) + "px";
+        }
+        elFreeText.addEventListener("input", autoGrowTextarea);
+
+        // Expose globally so submitHomePrompt can trigger a reset
+        window.autoGrowTextarea = autoGrowTextarea;
+      }
+
+      elLauncher.addEventListener("click", () => {
+        if (elLauncherNote) elLauncherNote.classList.remove("show");
+        if (elShell.classList.contains("open")) {
+          closeWidget();
+        } else {
+          openWidget();
         }
       });
 
-      function autoGrowTextarea() {
-        elFreeText.style.height = "26px";
-        elFreeText.style.height =
-          Math.min(elFreeText.scrollHeight, 110) + "px";
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") closeWidget();
+      });
+
+      function checkBlockStatus() {
+        const isBlocked = safeGetItem(BLOCK_KEY) === "true";
+        if (isBlocked) {
+          if (elFreeText) elFreeText.disabled = true;
+          if (btnSend) btnSend.disabled = true;
+          const elHomePrompt = document.getElementById("homePrompt");
+          if (elHomePrompt) elHomePrompt.disabled = true;
+          return true;
+        }
+        return false;
       }
-      elFreeText.addEventListener("input", autoGrowTextarea);
 
-      // Expose globally so submitHomePrompt can trigger a reset
-      window.autoGrowTextarea = autoGrowTextarea;
-    }
+      window.nsWidgetActions = Object.assign(window.nsWidgetActions || {}, {
+        ask,
+        populateQuestion,
+        renderHome,
+        renderCategory,
+        openContact,
+        openWarranty,
+        askHomePrompt,
+        submitHomePrompt,
+        clearConversation,
+        sendFeedback,
+        renderDevLogin,
+        submitDevLogin,
+        submitSupportForm,
+        renderSupportForm,
+        restorePreviousView,
+      });
 
-    elLauncher.addEventListener("click", () => {
-      if (elLauncherNote) elLauncherNote.classList.remove("show");
-      if (elShell.classList.contains("open")) {
-        closeWidget();
-      } else {
-        openWidget();
+      let sessionEndSent = false;
+      function sendSessionEnd() {
+        if (sessionEndSent) return;
+        
+        // Only track session if the user actually sent at least one message
+        const hasUserMessaged = thread.some(msg => msg.role === "user");
+        if (!hasUserMessaged) return;
+
+        sessionEndSent = true;
+        
+        const data = JSON.stringify({
+          sessionId: sessionId,
+          endedon: new Date().toISOString(),
+          ended_on: new Date().toISOString()
+        });
+        const url = "https://n8n.srv917960.hstgr.cloud/webhook/save-duration";
+
+        try {
+          fetch(url, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: data,
+            keepalive: true,
+          }).catch((err) => console.log("Session end error:", err));
+        } catch (e) {}
       }
-    });
 
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape") closeWidget();
-    });
+      window.addEventListener("beforeunload", sendSessionEnd);
+      window.addEventListener("pagehide", sendSessionEnd);
+      document.addEventListener("visibilitychange", () => {
+         if (document.visibilityState === "hidden") {
+            sendSessionEnd();
+         }
+      });
 
-    function checkBlockStatus() {
-      const isBlocked = safeGetItem(BLOCK_KEY) === "true";
-      if (isBlocked) {
-        if (elFreeText) elFreeText.disabled = true;
-        if (btnSend) btnSend.disabled = true;
-        const elHomePrompt = document.getElementById("homePrompt");
-        if (elHomePrompt) elHomePrompt.disabled = true;
-        return true;
-      }
-      return false;
-    }
-
-    window.nsWidgetActions = Object.assign(window.nsWidgetActions || {}, {
-      ask,
-      populateQuestion,
-      renderHome,
-      renderCategory,
-      openContact,
-      openWarranty,
-      askHomePrompt,
-      submitHomePrompt,
-      clearConversation,
-      sendFeedback,
-      renderDevLogin,
-      submitDevLogin,
-      submitSupportForm,
-      renderSupportForm,
-      restorePreviousView,
-    });
-
-    initTheme();
-    checkBlockStatus();
-    thread = loadThread();
-    restoreSize();
-    restoreWindowState();
-    autoMobileFullscreen();
-    syncWindowButtons();
-    if (window.autoGrowTextarea) window.autoGrowTextarea();
-    renderHome();
-  </script>
-</body>
-
+      initTheme();
+      checkBlockStatus();
+      thread = loadThread();
+      restoreSize();
+      restoreWindowState();
+      autoMobileFullscreen();
+      syncWindowButtons();
+      if (window.autoGrowTextarea) window.autoGrowTextarea();
+      renderHome();
+    </script>
+  </body>
 </html>
