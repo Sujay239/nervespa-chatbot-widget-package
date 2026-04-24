@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html lang="en">
   <head>
@@ -454,7 +455,6 @@
         font-weight: 700;
         cursor: pointer;
         font-family: var(--font);
-        text-align: left;
         transition:
           background 0.15s ease,
           transform 0.15s ease,
@@ -653,7 +653,6 @@
         font-weight: 800;
         cursor: pointer;
         font-family: var(--font);
-        text-align: left;
       }
 
       .microPill:hover {
@@ -1184,11 +1183,14 @@
 
       let currentViewType = "home";
       let currentCategoryKey = null;
+      let currentSubcategoryKey = null;
       let viewBeforeForm = "home";
       let categoryBeforeForm = null;
 
       function restorePreviousView() {
         if (viewBeforeForm === "thread") renderThread();
+        else if (viewBeforeForm === "subcategory" && categoryBeforeForm?.categoryKey && categoryBeforeForm?.subcategoryKey)
+          renderSubcategory(categoryBeforeForm.categoryKey, categoryBeforeForm.subcategoryKey);
         else if (viewBeforeForm === "category")
           renderCategory(categoryBeforeForm);
         else renderHome();
@@ -1260,24 +1262,24 @@
 
       function renderSupportForm() {
         const html = `
-<div class="thread">
-<div class="quickGrid" style="margin-bottom:2px;">
-<button class="chip" onclick="window.nsWidgetActions.restorePreviousView()">← Back</button>
-</div>
-<div class="hero">
-<h1 class="heroTitle" style="font-size:24px;">Contact Support</h1>
-<p class="heroText">We'll get back to you as soon as possible.</p>
-</div>
-<div class="stuckCard" style="display:flex; flex-direction:column; gap:12px;">
-<input type="text" id="support-name" placeholder="Your name" style="padding:12px; border-radius:12px; border:1px solid var(--border-soft); background:var(--input-bg); color:var(--ns-text); font-family:var(--font);" />
-<input type="email" id="support-email" placeholder="Your email" style="padding:12px; border-radius:12px; border:1px solid var(--border-soft); background:var(--input-bg); color:var(--ns-text); font-family:var(--font);" />
-<input type="tel" id="support-phone" placeholder="Your phone number" oninput="this.value = this.value.replace(/[^0-9+]/g, '').replace(/(?!^)[+](?!$)/g, '')" style="padding:12px; border-radius:12px; border:1px solid var(--border-soft); background:var(--input-bg); color:var(--ns-text); font-family:var(--font);" />
-<textarea id="support-msg" placeholder="How can we help you?" style="padding:12px; border-radius:12px; border:1px solid var(--border-soft); background:var(--input-bg); color:var(--ns-text); font-family:var(--font); min-height:100px; resize:vertical;"></textarea>
-<div id="support-error" style="color:#ef4444; font-size:13px; display:none; padding-left:4px; font-weight:500;"></div>
-<button class="btn-primary" id="support-submit" onclick="window.nsWidgetActions.submitSupportForm()" style="margin-top:4px;">Submit Request</button>
-</div>
-</div>
-`;
+        <div class="thread">
+          <div class="quickGrid" style="margin-bottom:2px;">
+            <button class="chip" onclick="window.nsWidgetActions.restorePreviousView()">← Back</button>
+          </div>
+          <div class="hero">
+            <h1 class="heroTitle" style="font-size:24px;">Contact Support</h1>
+            <p class="heroText">We'll get back to you as soon as possible.</p>
+          </div>
+          <div class="stuckCard" style="display:flex; flex-direction:column; gap:12px;">
+            <input type="text" id="support-name" placeholder="Your name" style="padding:12px; border-radius:12px; border:1px solid var(--border-soft); background:var(--input-bg); color:var(--ns-text); font-family:var(--font);" />
+            <input type="email" id="support-email" placeholder="Your email" style="padding:12px; border-radius:12px; border:1px solid var(--border-soft); background:var(--input-bg); color:var(--ns-text); font-family:var(--font);" />
+            <input type="tel" id="support-phone" placeholder="Your phone number" oninput="this.value = this.value.replace(/[^0-9+]/g, '').replace(/(?!^)[+](?!$)/g, '')" style="padding:12px; border-radius:12px; border:1px solid var(--border-soft); background:var(--input-bg); color:var(--ns-text); font-family:var(--font);" />
+            <textarea id="support-msg" placeholder="How can we help you?" style="padding:12px; border-radius:12px; border:1px solid var(--border-soft); background:var(--input-bg); color:var(--ns-text); font-family:var(--font); min-height:100px; resize:vertical;"></textarea>
+            <div id="support-error" style="color:#ef4444; font-size:13px; display:none; padding-left:4px; font-weight:500;"></div>
+            <button class="btn-primary" id="support-submit" onclick="window.nsWidgetActions.submitSupportForm()" style="margin-top:4px;">Submit Request</button>
+          </div>
+        </div>
+      `;
         elScreen.innerHTML = html;
         elScreen.scrollTop = 0;
       }
@@ -1296,22 +1298,22 @@
         }
 
         const html = `
-<div class="thread">
-<div class="quickGrid" style="margin-bottom:2px;">
-<button class="chip" onclick="window.nsWidgetActions.restorePreviousView()">← Back</button>
-</div>
-<div class="hero">
-<div class="heroBadge" style="background: rgba(168, 85, 247, 0.15); color: #c084fc; border-color: transparent;">Developer Access</div>
-<h1 class="heroTitle" style="font-size:24px;">Restricted Area</h1>
-</div>
-<div class="stuckCard" style="display:flex; flex-direction:column; gap:12px;">
-<input type="email" id="dev-email" placeholder="Developer Email" style="padding:12px; border-radius:12px; border:1px solid var(--border-soft); background:var(--input-bg); color:var(--ns-text); font-family:var(--font);" />
-<input type="password" id="dev-pass" placeholder="Password" style="padding:12px; border-radius:12px; border:1px solid var(--border-soft); background:var(--input-bg); color:var(--ns-text); font-family:var(--font);" />
-<div id="dev-error" style="color:#ef4444; font-size:13px; display:none; padding-left:4px; font-weight:500;">Invalid credentials</div>
-<button class="btn-primary" onclick="window.nsWidgetActions.submitDevLogin()" style="margin-top:4px; background: linear-gradient(135deg, #a855f7, #6b21a8);">Authenticate</button>
-</div>
-</div>
-`;
+        <div class="thread">
+          <div class="quickGrid" style="margin-bottom:2px;">
+            <button class="chip" onclick="window.nsWidgetActions.restorePreviousView()">← Back</button>
+          </div>
+          <div class="hero">
+            <div class="heroBadge" style="background: rgba(168, 85, 247, 0.15); color: #c084fc; border-color: transparent;">Developer Access</div>
+            <h1 class="heroTitle" style="font-size:24px;">Restricted Area</h1>
+          </div>
+          <div class="stuckCard" style="display:flex; flex-direction:column; gap:12px;">
+            <input type="email" id="dev-email" placeholder="Developer Email" style="padding:12px; border-radius:12px; border:1px solid var(--border-soft); background:var(--input-bg); color:var(--ns-text); font-family:var(--font);" />
+            <input type="password" id="dev-pass" placeholder="Password" style="padding:12px; border-radius:12px; border:1px solid var(--border-soft); background:var(--input-bg); color:var(--ns-text); font-family:var(--font);" />
+            <div id="dev-error" style="color:#ef4444; font-size:13px; display:none; padding-left:4px; font-weight:500;">Invalid credentials</div>
+            <button class="btn-primary" onclick="window.nsWidgetActions.submitDevLogin()" style="margin-top:4px; background: linear-gradient(135deg, #a855f7, #6b21a8);">Authenticate</button>
+          </div>
+        </div>
+        `;
         elScreen.innerHTML = html;
         elScreen.scrollTop = 0;
       }
@@ -1404,7 +1406,10 @@
 
       function openContact() {
         viewBeforeForm = currentViewType;
-        categoryBeforeForm = currentCategoryKey;
+        categoryBeforeForm =
+          currentViewType === "subcategory"
+            ? { categoryKey: currentCategoryKey, subcategoryKey: currentSubcategoryKey }
+            : currentCategoryKey;
         renderSupportForm();
       }
 
@@ -1947,6 +1952,163 @@
         return QUESTION_BANK[key] || [];
       }
 
+      const CATEGORY_SUBCATEGORIES = {
+        setup: [
+          { key: "general", title: "General", sub: "NerveSpa overview, candidacy, and system basics" },
+          { key: "nerve-bath", title: "Nerve Bath", sub: "Setup, consumables, and first-use guidance" },
+          { key: "conductive-accessories", title: "Conductive Accessories", sub: "Pads, socks, gloves, and garments" },
+          { key: "nervewave", title: "NerveWave", sub: "Intensity, accessories, and device basics" },
+          { key: "quake-plate", title: "Quake Plate", sub: "Setup, positioning, and vibration basics" },
+          { key: "led-wrap", title: "LED Wrap", sub: "Positioning, modes, and first-use guidance" },
+          { key: "cold-laser", title: "Cold Laser", sub: "Setup, positioning, and safe use" },
+          { key: "knee-pro", title: "Knee Pro", sub: "Wear, modes, and treatment setup" },
+          { key: "shoulder-pro", title: "Shoulder Pro", sub: "Wear, modes, and treatment setup" },
+          { key: "powerwrap", title: "PowerWrap", sub: "Mode selection, power, and use basics" },
+          { key: "vibe", title: "Vibe", sub: "Session basics and typical use" },
+          { key: "supplements", title: "Supplements", sub: "How supplements fit with device use" },
+          { key: "diabetic-socks", title: "Diabetic Socks", sub: "Fit, wear guidance, and daily use" },
+        ],
+        protocols: [
+          { key: "general", title: "General", sub: "Program structure, expectations, and outcomes" },
+          { key: "neuropathy-program", title: "Neuropathy Program", sub: "Devices, timing, and supplement support" },
+          { key: "joint-mobility-program", title: "Joint & Mobility Program", sub: "Joint-focused treatment plans and support" },
+          { key: "nerve-bath", title: "Nerve Bath", sub: "Session length, frequency, and expected experience" },
+          { key: "nervewave", title: "NerveWave", sub: "Schedules, programs, and clinical use" },
+          { key: "quake-plate", title: "Quake Plate", sub: "Frequency, duration, and expected experience" },
+          { key: "led-wrap", title: "LED Wrap", sub: "Session timing and expected experience" },
+          { key: "cold-laser", title: "Cold Laser", sub: "Treatment timing and combination use" },
+          { key: "knee-pro", title: "Knee Pro", sub: "Usage frequency, session length, and feel" },
+          { key: "shoulder-pro", title: "Shoulder Pro", sub: "Usage frequency, session length, and feel" },
+          { key: "powerwrap", title: "PowerWrap", sub: "Protocol timing and combination use" },
+          { key: "vibe", title: "Vibe", sub: "Session timing and role in care plans" },
+          { key: "supplements", title: "Supplements", sub: "Timing, fit, and support within programs" },
+        ],
+        troubleshooting: [
+          { key: "general-power", title: "General Power & Charging", sub: "Charging, overheating, battery, and screen issues" },
+          { key: "nerve-bath", title: "Nerve Bath", sub: "Power, stimulation, temperature, and session issues" },
+          { key: "conductive-accessories", title: "Conductive Accessories", sub: "Weak conduction, dryness, and garment issues" },
+          { key: "nervewave", title: "NerveWave", sub: "Power, intensity, electrodes, and shutdown issues" },
+          { key: "quake-plate", title: "Quake Plate", sub: "Noise, remote, vibration, and power issues" },
+          { key: "led-wrap", title: "LED Wrap", sub: "Lights, flicker, warmth, and shutdown issues" },
+          { key: "cold-laser", title: "Cold Laser", sub: "Power, light output, and treatment issues" },
+          { key: "knee-pro", title: "Knee Pro", sub: "Power, fit, shutdown, and stimulation issues" },
+          { key: "shoulder-pro", title: "Shoulder Pro", sub: "Power, fit, shutdown, and stimulation issues" },
+          { key: "powerwrap", title: "PowerWrap", sub: "Power, comfort, warmth, and remote issues" },
+          { key: "vibe", title: "Vibe", sub: "Start, stop, and vibration comfort issues" },
+        ],
+        orders: [
+          { key: "ordering-demos", title: "Ordering & Demos", sub: "Purchasing, demos, and direct sales questions" },
+          { key: "pricing-bundles", title: "Pricing & Bundles", sub: "Pricing options, kits, and bundles" },
+          { key: "shipping-tracking", title: "Shipping & Tracking", sub: "Delivery timing and order status" },
+          { key: "insurance-hcpcs", title: "Insurance & HCPCS", sub: "Coverage, coding, and reimbursement questions" },
+          { key: "fda-compliance", title: "FDA & Compliance", sub: "Listings, certifications, and manufacturing" },
+          { key: "international", title: "International", sub: "Availability outside the U.S. and expansion" },
+        ],
+        care: [
+          { key: "cleaning-maintenance", title: "Cleaning & Maintenance", sub: "Cleaning steps and regular upkeep" },
+          { key: "conductive-care", title: "Conductive Accessories Care", sub: "Socks, gloves, garments, and replacement" },
+          { key: "storage-travel", title: "Storage & Travel", sub: "Traveling with devices and storage best practices" },
+          { key: "warranty-returns", title: "Warranty & Returns", sub: "Coverage, replacements, and return policy" },
+          { key: "manuals-training", title: "Manuals & Training", sub: "Guides, setup help, and clinic training" },
+          { key: "general-safety", title: "General Safety / Medical Care", sub: "Medical disclaimers and treatment expectations" },
+        ],
+      };
+
+      function matchesAny(text, patterns) {
+        return patterns.some((pattern) => text.includes(pattern));
+      }
+
+      function classifyQuestion(categoryKey, question) {
+        const q = String(question || "").toLowerCase();
+
+        if (categoryKey === "setup") {
+          if (matchesAny(q, ["nervewave"])) return "nervewave";
+          if (matchesAny(q, ["nerve bath", "water-based", "water feels", "in the water"])) return "nerve-bath";
+          if (matchesAny(q, ["conductive foot pads", "conductive garments", "conductive socks", "glove", "gloves", "pads"])) return "conductive-accessories";
+          if (matchesAny(q, ["quake plate"])) return "quake-plate";
+          if (matchesAny(q, ["led wrap", "led wrap therapy", "led light therapy wrap"])) return "led-wrap";
+          if (matchesAny(q, ["cold laser", "laser"])) return "cold-laser";
+          if (matchesAny(q, ["knee pro"])) return "knee-pro";
+          if (matchesAny(q, ["shoulder pro"])) return "shoulder-pro";
+          if (matchesAny(q, ["powerwrap"])) return "powerwrap";
+          if (matchesAny(q, ["vibe"])) return "vibe";
+          if (matchesAny(q, ["supplement", "joint supplements"])) return "supplements";
+          if (matchesAny(q, ["diabetic socks"])) return "diabetic-socks";
+          return "general";
+        }
+
+        if (categoryKey === "protocols") {
+          if (matchesAny(q, ["neuropathy program"])) return "neuropathy-program";
+          if (matchesAny(q, ["joint & mobility program", "joint and mobility program"])) return "joint-mobility-program";
+          if (matchesAny(q, ["nervewave"])) return "nervewave";
+          if (matchesAny(q, ["nerve bath"])) return "nerve-bath";
+          if (matchesAny(q, ["quake plate"])) return "quake-plate";
+          if (matchesAny(q, ["led wrap"])) return "led-wrap";
+          if (matchesAny(q, ["cold laser"])) return "cold-laser";
+          if (matchesAny(q, ["knee pro"])) return "knee-pro";
+          if (matchesAny(q, ["shoulder pro"])) return "shoulder-pro";
+          if (matchesAny(q, ["powerwrap"])) return "powerwrap";
+          if (matchesAny(q, ["vibe"])) return "vibe";
+          if (matchesAny(q, ["supplement", "nervе rebuild", "nerve rebuilder", "blood flow super formula", "super flex joint formula", "oa & ra relief cream", "nerve target roll-on", "nervе regeneration", "nerve regeneration"])) return "supplements";
+          return "general";
+        }
+
+        if (categoryKey === "troubleshooting") {
+          if (matchesAny(q, ["charge", "battery", "screen", "freezes", "overheats", "error message", "device becomes warm", "device will not power on", "device turns off during use"])) return "general-power";
+          if (matchesAny(q, ["nervewave", "electrode"])) return "nervewave";
+          if (matchesAny(q, ["nerve bath", "in the water", "water feels", "session stops before 30 minutes"])) return "nerve-bath";
+          if (matchesAny(q, ["conductive socks", "conductive garments", "conductive gloves", "garment", "gloves", "socks"])) return "conductive-accessories";
+          if (matchesAny(q, ["quake plate"])) return "quake-plate";
+          if (matchesAny(q, ["led wrap", "leds", "lights flicker", "lights are flickering", "wrap shuts off"])) return "led-wrap";
+          if (matchesAny(q, ["cold laser", "laser"])) return "cold-laser";
+          if (matchesAny(q, ["knee pro"])) return "knee-pro";
+          if (matchesAny(q, ["shoulder pro"])) return "shoulder-pro";
+          if (matchesAny(q, ["powerwrap"])) return "powerwrap";
+          if (matchesAny(q, ["vibe"])) return "vibe";
+          return "general-power";
+        }
+
+        if (categoryKey === "orders") {
+          if (matchesAny(q, ["demo", "purchase directly", "order ", "bulk order", "starter kits"])) return "ordering-demos";
+          if (matchesAny(q, ["pricing", "bundle", "kits"])) return "pricing-bundles";
+          if (matchesAny(q, ["ship", "tracking", "delivered"])) return "shipping-tracking";
+          if (matchesAny(q, ["insurance", "reimbursement", "hcpcs", "coverage"])) return "insurance-hcpcs";
+          if (matchesAny(q, ["fda", "certification", "certifications", "manufactured", "pmt", "listings", "verify"])) return "fda-compliance";
+          if (matchesAny(q, ["outside the united states", "international", "outside the u.s.", "regions"])) return "international";
+          return "ordering-demos";
+        }
+
+        if (categoryKey === "care") {
+          if (matchesAny(q, ["warranty", "return policy", "returns"])) return "warranty-returns";
+          if (matchesAny(q, ["travel", "storage"])) return "storage-travel";
+          if (matchesAny(q, ["manuals", "guides", "training"])) return "manuals-training";
+          if (matchesAny(q, ["replace medical care", "replace medical treatment", "medical treatment"])) return "general-safety";
+          if (matchesAny(q, ["conductive socks", "gloves", "garments", "replaced"])) return "conductive-care";
+          if (matchesAny(q, ["clean", "cleaning", "washed", "devices be shared", "cleaned after use", "maintenance"])) return "cleaning-maintenance";
+          return "cleaning-maintenance";
+        }
+
+        return "general";
+      }
+
+      function getSubcategoriesForCategory(categoryKey) {
+        return CATEGORY_SUBCATEGORIES[categoryKey] || [];
+      }
+
+      function getQuestionsForSubcategory(categoryKey, subcategoryKey) {
+        return seedQuestionsForCategory(categoryKey).filter((question) =>
+          classifyQuestion(categoryKey, question) === subcategoryKey,
+        );
+      }
+
+      function getCategoryQuestionCount(categoryKey) {
+        return seedQuestionsForCategory(categoryKey).length;
+      }
+
+      function getSubcategoryQuestionCount(categoryKey, subcategoryKey) {
+        return getQuestionsForSubcategory(categoryKey, subcategoryKey).length;
+      }
+
       function formatAnswerText(raw) {
         let text = String(raw || "").trim();
         if (!text) return "<p>I’m here to help.</p>";
@@ -2176,113 +2338,161 @@
 
       function createAskBoxMarkup() {
         return `
-<div class="hero" style="padding:14px;">
-<div style="display:flex; flex-direction:column; gap:10px;">
+        <div class="hero" style="padding:14px;">
+          <div style="display:flex; flex-direction:column; gap:10px;">
 
+            <div class="composerMain">
+              <textarea
+                id="homePrompt"
+                rows="1"
+                placeholder="Type your question here…"
+              ></textarea>
+            </div>
 
-<div class="composerMain">
-<textarea
-id="homePrompt"
-rows="1"
-placeholder="Type your question here…"
-></textarea>
-</div>
-
-
-<div style="display:flex; gap:10px; flex-wrap:wrap;">
-<button class="btn-primary" onclick="window.nsWidgetActions.submitHomePrompt()">Send</button>
-<button class="btn-secondary" onclick="window.nsWidgetActions.openContact()">Talk to a Human</button>
-</div>
-</div>
-</div>
-`;
+            <div style="display:flex; gap:10px; flex-wrap:wrap;">
+              <button class="btn-primary" onclick="window.nsWidgetActions.submitHomePrompt()">Send</button>
+              <button class="btn-secondary" onclick="window.nsWidgetActions.openContact()">Talk to a Human</button>
+            </div>
+          </div>
+        </div>
+      `;
       }
 
       function createHomeMarkup() {
         return `
-<div class="thread">
-<div class="hero">
+        <div class="thread">
+          <div class="hero">
+            <div class="heroBadge">NerveSpa Support Beta</div>
+            <h1 class="heroTitle">How can we help?</h1>
+            <p class="heroText">Get instant answers for setup, troubleshooting, care, warranty, and orders — or reach a human quickly.</p>
+          </div>
 
+          ${createAskBoxMarkup()}
 
-<h1 class="heroTitle">How can we help?</h1>
-<p class="heroText">Get instant answers for setup, troubleshooting, care, warranty, and orders — or reach a human quickly.</p>
-</div>
-
-
-${createAskBoxMarkup()}
-
-
-<div class="quickSectionTitle">Browse support</div>
-<div class="cardRow">
-${CATEGORIES.map(
-  (c) => `
-<div class="homeCard" onclick="window.nsWidgetActions.renderCategory('${escapeHtml(c.key)}')">
-<div class="homeCardTitle">${escapeHtml(c.title)}</div>
-<p class="homeCardSub">${escapeHtml(c.sub)}</p>
-</div>
-`,
-).join("")}
-</div>
-</div>
-`;
+          <div class="quickSectionTitle">Browse support</div>
+          <div class="cardRow">
+            ${CATEGORIES.map(
+              (c) => `
+              <div class="homeCard" onclick="window.nsWidgetActions.renderCategory('${escapeHtml(c.key)}')">
+                <div class="homeCardTitle">${escapeHtml(c.title)}</div>
+                <p class="homeCardSub">${escapeHtml(c.sub)}</p>
+                <div class="metaRow" style="margin-top:10px;">
+                  <span class="metaTag">${getSubcategoriesForCategory(c.key).length} sections</span>
+                  <span class="metaTag">${getCategoryQuestionCount(c.key)} questions</span>
+                </div>
+              </div>
+            `,
+            ).join("")}
+          </div>
+        </div>
+      `;
       }
 
       function createCategoryMarkup(key) {
         const category = CATEGORIES.find((x) => x.key === key);
         const label = category?.title || "Support";
-        const prompts = seedQuestionsForCategory(key);
+        const subcategories = getSubcategoriesForCategory(key);
 
         return `
-<div class="thread">
-<div class="quickGrid" style="margin-bottom:2px;">
-<button class="chip" onclick="window.nsWidgetActions.renderHome()">← Back</button>
-<button class="chip" onclick="window.nsWidgetActions.renderHome()">Home</button>
-</div>
+        <div class="thread">
+          <div class="quickGrid" style="margin-bottom:2px;">
+            <button class="chip" onclick="window.nsWidgetActions.renderHome()">← Back</button>
+            <button class="chip" onclick="window.nsWidgetActions.renderHome()">Home</button>
+          </div>
 
+          <div class="hero">
+            <div class="heroBadge">${escapeHtml(label)} · Beta</div>
+            <h1 class="heroTitle" style="font-size:24px;">${escapeHtml(label)}</h1>
+            <p class="heroText">Choose a subcategory to browse more focused questions by product or workflow.</p>
+          </div>
 
-<div class="hero">
-<div class="heroBadge">${escapeHtml(label)}</div>
-<h1 class="heroTitle" style="font-size:24px;">${escapeHtml(label)}</h1>
-<p class="heroText">Choose a common question below, or ask in your own words.</p>
-</div>
+          ${createAskBoxMarkup()}
 
+          <div class="quickSectionTitle">Subcategories</div>
+          <div class="cardRow">
+            ${subcategories
+              .map(
+                (subcat) => `
+              <div class="homeCard" onclick="window.nsWidgetActions.renderSubcategory('${escapeHtml(key)}', '${escapeHtml(subcat.key)}')">
+                <div class="homeCardTitle">${escapeHtml(subcat.title)}</div>
+                <p class="homeCardSub">${escapeHtml(subcat.sub)}</p>
+                <div class="metaRow" style="margin-top:10px;">
+                  <span class="metaTag">${getSubcategoryQuestionCount(key, subcat.key)} questions</span>
+                </div>
+              </div>
+            `,
+              )
+              .join("")}
+          </div>
 
-${createAskBoxMarkup()}
+          <div class="ctaPanel">
+            <div>
+              <div class="ctaPanelTitle">Need a human?</div>
+              <p class="ctaPanelText">If this requires personalized guidance, our team can follow up directly.</p>
+            </div>
+            <button class="btn-primary" onclick="window.nsWidgetActions.openContact()">Talk to Support</button>
+          </div>
+        </div>
+      `;
+      }
 
+      function createSubcategoryMarkup(categoryKey, subcategoryKey) {
+        const category = CATEGORIES.find((x) => x.key === categoryKey);
+        const subcategory = getSubcategoriesForCategory(categoryKey).find((x) => x.key === subcategoryKey);
+        const categoryLabel = category?.title || "Support";
+        const subcategoryLabel = subcategory?.title || "Questions";
+        const prompts = getQuestionsForSubcategory(categoryKey, subcategoryKey);
 
-<div class="quickGrid">
-${prompts
-  .map(
-    (q) => `
-<button class="chip" onclick="window.nsWidgetActions.ask('${escapeJsString(q)}')">${escapeHtml(q)}</button>
-`,
-  )
-  .join("")}
-</div>
+        return `
+        <div class="thread">
+          <div class="quickGrid" style="margin-bottom:2px;">
+            <button class="chip" onclick="window.nsWidgetActions.renderCategory('${escapeHtml(categoryKey)}')">← Back</button>
+            <button class="chip" onclick="window.nsWidgetActions.renderHome()">Home</button>
+          </div>
 
+          <div class="hero">
+            <div class="heroBadge">${escapeHtml(categoryLabel)} · ${escapeHtml(subcategoryLabel)} · Beta</div>
+            <h1 class="heroTitle" style="font-size:24px;">${escapeHtml(subcategoryLabel)}</h1>
+            <p class="heroText">Choose a common question below, or ask in your own words.</p>
+          </div>
 
-<div class="ctaPanel">
-<div>
-<div class="ctaPanelTitle">Need a human?</div>
-<p class="ctaPanelText">If this requires personalized guidance, our team can follow up directly.</p>
-</div>
-<button class="btn-primary" onclick="window.nsWidgetActions.openContact()">Talk to Support</button>
-</div>
-</div>
-`;
+          ${createAskBoxMarkup()}
+
+          <div class="quickSectionTitle">Questions</div>
+          <div class="quickGrid">
+            ${prompts.length
+              ? prompts
+                  .map(
+                    (q) => `
+              <button class="chip" onclick="window.nsWidgetActions.ask('${escapeJsString(q)}')">${escapeHtml(q)}</button>
+            `,
+                  )
+                  .join("")
+              : `<div class="stuckCard"><p class="stuckTitle">Questions coming soon</p><p class="stuckText">This subcategory is ready in the navigation, but we still need to map more common questions into it.</p></div>`}
+          </div>
+
+          <div class="ctaPanel">
+            <div>
+              <div class="ctaPanelTitle">Need a human?</div>
+              <p class="ctaPanelText">If this requires personalized guidance, our team can follow up directly.</p>
+            </div>
+            <button class="btn-primary" onclick="window.nsWidgetActions.openContact()">Talk to Support</button>
+          </div>
+        </div>
+      `;
       }
 
       function createUserMessageHtml(text) {
         return `
-<div class="message user">
-<div class="bubbleWrap">
-<div class="bubbleLabel">You</div>
-<div class="bubble richAnswer">
-<p>${escapeHtml(text)}</p>
-</div>
-</div>
-</div>
-`;
+        <div class="message user">
+          <div class="bubbleWrap">
+            <div class="bubbleLabel">You</div>
+            <div class="bubble richAnswer">
+              <p>${escapeHtml(text)}</p>
+            </div>
+          </div>
+        </div>
+      `;
       }
 
       function createAssistantMessageHtml(message) {
@@ -2307,90 +2517,90 @@ ${prompts
             "Clinical Devices",
           ];
           extraActions = `
-<div class="assistantActions" style="margin-top: 10px;">
-${cats.map((c) => `<button class="microPill" onclick="window.nsWidgetActions.ask('suggests me some products of ${escapeJsString(c)}?')">${escapeHtml(c)}</button>`).join("")}
-</div>
-`;
+                    <div class="assistantActions" style="margin-top: 10px;">
+                        ${cats.map((c) => `<button class="microPill" onclick="window.nsWidgetActions.ask('suggests me some products of ${escapeJsString(c)}?')">${escapeHtml(c)}</button>`).join("")}
+                    </div>
+                `;
         }
 
         return `
-<div class="message assistant">
-<div class="avatar">NS</div>
-<div class="bubbleWrap">
-<div class="bubbleLabel">NerveSpa Support</div>
-<div class="bubble">
-<div class="richAnswer">${formatAnswerText(text)}</div>
-${
-  meta.length
-    ? `
-<div class="metaRow">
-${meta.map((m) => `<span class="metaTag">${escapeHtml(m)}</span>`).join("")}
-</div>
-`
-    : ""
-}
-${extraActions || ""}
-${
-  message.candidates?.length
-    ? `
-<div class="assistantActions">
-${message.candidates
-  .slice(0, 3)
-  .map(
-    (c) => `
-<button class="microPill" onclick="window.nsWidgetActions.ask('${escapeJsString(c.question)}')">${escapeHtml(truncate(c.question, 42))}</button>
-`,
-  )
-  .join("")}
-</div>
-`
-    : ""
-}
-</div>
-</div>
-</div>
-`;
+        <div class="message assistant">
+          <div class="avatar">NS</div>
+          <div class="bubbleWrap">
+            <div class="bubbleLabel">NerveSpa Support</div>
+            <div class="bubble">
+              <div class="richAnswer">${formatAnswerText(text)}</div>
+              ${
+                meta.length
+                  ? `
+                <div class="metaRow">
+                  ${meta.map((m) => `<span class="metaTag">${escapeHtml(m)}</span>`).join("")}
+                </div>
+              `
+                  : ""
+              }
+              ${extraActions || ""}
+              ${
+                message.candidates?.length
+                  ? `
+                <div class="assistantActions">
+                  ${message.candidates
+                    .slice(0, 3)
+                    .map(
+                      (c) => `
+                    <button class="microPill" onclick="window.nsWidgetActions.ask('${escapeJsString(c.question)}')">${escapeHtml(truncate(c.question, 42))}</button>
+                  `,
+                    )
+                    .join("")}
+                </div>
+              `
+                  : ""
+              }
+            </div>
+          </div>
+        </div>
+      `;
       }
 
       function createSystemCardHtml(title, body, actions = []) {
         return `
-<div class="stuckCard">
-<div class="stuckTitle">${escapeHtml(title)}</div>
-<div class="stuckText">${escapeHtml(body)}</div>
-<div class="assistantActions">
-${actions
-  .map((action) => {
-    if (action.type === "contact") {
-      return `<button class="microPill" onclick="window.nsWidgetActions.openContact()">${escapeHtml(action.label)}</button>`;
-    }
-    if (action.type === "home") {
-      return `<button class="microPill" onclick="window.nsWidgetActions.renderHome()">${escapeHtml(action.label)}</button>`;
-    }
-    if (action.type === "warranty") {
-      return `<button class="microPill" onclick="window.nsWidgetActions.openWarranty()">${escapeHtml(action.label)}</button>`;
-    }
-    return "";
-  })
-  .join("")}
-</div>
-</div>
-`;
+        <div class="stuckCard">
+          <div class="stuckTitle">${escapeHtml(title)}</div>
+          <div class="stuckText">${escapeHtml(body)}</div>
+          <div class="assistantActions">
+            ${actions
+              .map((action) => {
+                if (action.type === "contact") {
+                  return `<button class="microPill" onclick="window.nsWidgetActions.openContact()">${escapeHtml(action.label)}</button>`;
+                }
+                if (action.type === "home") {
+                  return `<button class="microPill" onclick="window.nsWidgetActions.renderHome()">${escapeHtml(action.label)}</button>`;
+                }
+                if (action.type === "warranty") {
+                  return `<button class="microPill" onclick="window.nsWidgetActions.openWarranty()">${escapeHtml(action.label)}</button>`;
+                }
+                return "";
+              })
+              .join("")}
+          </div>
+        </div>
+      `;
       }
 
       function createTypingHtml() {
         return `
-<div class="message assistant" id="typingIndicator">
-<div class="avatar">NS</div>
-<div class="bubbleWrap">
-<div class="bubbleLabel">NerveSpa Support</div>
-<div class="bubble">
-<div class="typingBubble">
-<span></span><span></span><span></span>
-</div>
-</div>
-</div>
-</div>
-`;
+        <div class="message assistant" id="typingIndicator">
+          <div class="avatar">NS</div>
+          <div class="bubbleWrap">
+            <div class="bubbleLabel">NerveSpa Support</div>
+            <div class="bubble">
+              <div class="typingBubble">
+                <span></span><span></span><span></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
       }
 
       function autoGrowHomePrompt() {
@@ -2437,12 +2647,33 @@ ${actions
       function renderCategory(key) {
         currentViewType = "category";
         currentCategoryKey = key;
+        currentSubcategoryKey = null;
         const comp = document.querySelector(".composer");
         if (comp) comp.style.display = "none";
         const hint = document.querySelector(".footerHint");
         if (hint) hint.style.display = "none";
 
         elScreen.innerHTML = createCategoryMarkup(key);
+        elScreen.scrollTop = 0;
+
+        setTimeout(() => {
+          attachHomePromptEvents();
+          const elHomePrompt = document.getElementById("homePrompt");
+          if (elHomePrompt) elHomePrompt.focus();
+          checkBlockStatus();
+        }, 50);
+      }
+
+      function renderSubcategory(categoryKey, subcategoryKey) {
+        currentViewType = "subcategory";
+        currentCategoryKey = categoryKey;
+        currentSubcategoryKey = subcategoryKey;
+        const comp = document.querySelector(".composer");
+        if (comp) comp.style.display = "none";
+        const hint = document.querySelector(".footerHint");
+        if (hint) hint.style.display = "none";
+
+        elScreen.innerHTML = createSubcategoryMarkup(categoryKey, subcategoryKey);
         elScreen.scrollTop = 0;
 
         setTimeout(() => {
@@ -2461,19 +2692,24 @@ ${actions
         if (hint) hint.style.display = "block";
 
         const html = `
-<div class="thread">
-${thread
-  .map((item) => {
-    if (item.role === "user") return createUserMessageHtml(item.text);
-    if (item.role === "assistant") return createAssistantMessageHtml(item);
-    if (item.role === "system")
-      return createSystemCardHtml(item.title, item.body, item.actions || []);
-    return "";
-  })
-  .join("")}
-${isTyping ? createTypingHtml() : ""}
-</div>
-`;
+        <div class="thread">
+          ${thread
+            .map((item) => {
+              if (item.role === "user") return createUserMessageHtml(item.text);
+              if (item.role === "assistant")
+                return createAssistantMessageHtml(item);
+              if (item.role === "system")
+                return createSystemCardHtml(
+                  item.title,
+                  item.body,
+                  item.actions || [],
+                );
+              return "";
+            })
+            .join("")}
+          ${isTyping ? createTypingHtml() : ""}
+        </div>
+      `;
         elScreen.innerHTML = html;
         scrollToBottom();
       }
@@ -2882,6 +3118,7 @@ ${isTyping ? createTypingHtml() : ""}
         populateQuestion,
         renderHome,
         renderCategory,
+        renderSubcategory,
         openContact,
         openWarranty,
         askHomePrompt,
@@ -2898,17 +3135,17 @@ ${isTyping ? createTypingHtml() : ""}
       let sessionEndSent = false;
       function sendSessionEnd() {
         if (sessionEndSent) return;
-
+        
         // Only track session if the user actually sent at least one message
-        const hasUserMessaged = thread.some((msg) => msg.role === "user");
+        const hasUserMessaged = thread.some(msg => msg.role === "user");
         if (!hasUserMessaged) return;
 
         sessionEndSent = true;
-
+        
         const data = JSON.stringify({
           sessionId: sessionId,
           endedon: new Date().toISOString(),
-          ended_on: new Date().toISOString(),
+          ended_on: new Date().toISOString()
         });
         const url = "https://n8n.srv917960.hstgr.cloud/webhook/save-duration";
 
@@ -2925,9 +3162,9 @@ ${isTyping ? createTypingHtml() : ""}
       window.addEventListener("beforeunload", sendSessionEnd);
       window.addEventListener("pagehide", sendSessionEnd);
       document.addEventListener("visibilitychange", () => {
-        if (document.visibilityState === "hidden") {
-          sendSessionEnd();
-        }
+         if (document.visibilityState === "hidden") {
+            sendSessionEnd();
+         }
       });
 
       initTheme();
