@@ -454,6 +454,7 @@
         font-weight: 700;
         cursor: pointer;
         font-family: var(--font);
+        text-align: left;
         transition:
           background 0.15s ease,
           transform 0.15s ease,
@@ -652,6 +653,7 @@
         font-weight: 800;
         cursor: pointer;
         font-family: var(--font);
+        text-align: left;
       }
 
       .microPill:hover {
@@ -1258,24 +1260,24 @@
 
       function renderSupportForm() {
         const html = `
-        <div class="thread">
-          <div class="quickGrid" style="margin-bottom:2px;">
-            <button class="chip" onclick="window.nsWidgetActions.restorePreviousView()">← Back</button>
-          </div>
-          <div class="hero">
-            <h1 class="heroTitle" style="font-size:24px;">Contact Support</h1>
-            <p class="heroText">We'll get back to you as soon as possible.</p>
-          </div>
-          <div class="stuckCard" style="display:flex; flex-direction:column; gap:12px;">
-            <input type="text" id="support-name" placeholder="Your name" style="padding:12px; border-radius:12px; border:1px solid var(--border-soft); background:var(--input-bg); color:var(--ns-text); font-family:var(--font);" />
-            <input type="email" id="support-email" placeholder="Your email" style="padding:12px; border-radius:12px; border:1px solid var(--border-soft); background:var(--input-bg); color:var(--ns-text); font-family:var(--font);" />
-            <input type="tel" id="support-phone" placeholder="Your phone number" oninput="this.value = this.value.replace(/[^0-9+]/g, '').replace(/(?!^)[+](?!$)/g, '')" style="padding:12px; border-radius:12px; border:1px solid var(--border-soft); background:var(--input-bg); color:var(--ns-text); font-family:var(--font);" />
-            <textarea id="support-msg" placeholder="How can we help you?" style="padding:12px; border-radius:12px; border:1px solid var(--border-soft); background:var(--input-bg); color:var(--ns-text); font-family:var(--font); min-height:100px; resize:vertical;"></textarea>
-            <div id="support-error" style="color:#ef4444; font-size:13px; display:none; padding-left:4px; font-weight:500;"></div>
-            <button class="btn-primary" id="support-submit" onclick="window.nsWidgetActions.submitSupportForm()" style="margin-top:4px;">Submit Request</button>
-          </div>
-        </div>
-      `;
+<div class="thread">
+<div class="quickGrid" style="margin-bottom:2px;">
+<button class="chip" onclick="window.nsWidgetActions.restorePreviousView()">← Back</button>
+</div>
+<div class="hero">
+<h1 class="heroTitle" style="font-size:24px;">Contact Support</h1>
+<p class="heroText">We'll get back to you as soon as possible.</p>
+</div>
+<div class="stuckCard" style="display:flex; flex-direction:column; gap:12px;">
+<input type="text" id="support-name" placeholder="Your name" style="padding:12px; border-radius:12px; border:1px solid var(--border-soft); background:var(--input-bg); color:var(--ns-text); font-family:var(--font);" />
+<input type="email" id="support-email" placeholder="Your email" style="padding:12px; border-radius:12px; border:1px solid var(--border-soft); background:var(--input-bg); color:var(--ns-text); font-family:var(--font);" />
+<input type="tel" id="support-phone" placeholder="Your phone number" oninput="this.value = this.value.replace(/[^0-9+]/g, '').replace(/(?!^)[+](?!$)/g, '')" style="padding:12px; border-radius:12px; border:1px solid var(--border-soft); background:var(--input-bg); color:var(--ns-text); font-family:var(--font);" />
+<textarea id="support-msg" placeholder="How can we help you?" style="padding:12px; border-radius:12px; border:1px solid var(--border-soft); background:var(--input-bg); color:var(--ns-text); font-family:var(--font); min-height:100px; resize:vertical;"></textarea>
+<div id="support-error" style="color:#ef4444; font-size:13px; display:none; padding-left:4px; font-weight:500;"></div>
+<button class="btn-primary" id="support-submit" onclick="window.nsWidgetActions.submitSupportForm()" style="margin-top:4px;">Submit Request</button>
+</div>
+</div>
+`;
         elScreen.innerHTML = html;
         elScreen.scrollTop = 0;
       }
@@ -1294,22 +1296,22 @@
         }
 
         const html = `
-        <div class="thread">
-          <div class="quickGrid" style="margin-bottom:2px;">
-            <button class="chip" onclick="window.nsWidgetActions.restorePreviousView()">← Back</button>
-          </div>
-          <div class="hero">
-            <div class="heroBadge" style="background: rgba(168, 85, 247, 0.15); color: #c084fc; border-color: transparent;">Developer Access</div>
-            <h1 class="heroTitle" style="font-size:24px;">Restricted Area</h1>
-          </div>
-          <div class="stuckCard" style="display:flex; flex-direction:column; gap:12px;">
-            <input type="email" id="dev-email" placeholder="Developer Email" style="padding:12px; border-radius:12px; border:1px solid var(--border-soft); background:var(--input-bg); color:var(--ns-text); font-family:var(--font);" />
-            <input type="password" id="dev-pass" placeholder="Password" style="padding:12px; border-radius:12px; border:1px solid var(--border-soft); background:var(--input-bg); color:var(--ns-text); font-family:var(--font);" />
-            <div id="dev-error" style="color:#ef4444; font-size:13px; display:none; padding-left:4px; font-weight:500;">Invalid credentials</div>
-            <button class="btn-primary" onclick="window.nsWidgetActions.submitDevLogin()" style="margin-top:4px; background: linear-gradient(135deg, #a855f7, #6b21a8);">Authenticate</button>
-          </div>
-        </div>
-        `;
+<div class="thread">
+<div class="quickGrid" style="margin-bottom:2px;">
+<button class="chip" onclick="window.nsWidgetActions.restorePreviousView()">← Back</button>
+</div>
+<div class="hero">
+<div class="heroBadge" style="background: rgba(168, 85, 247, 0.15); color: #c084fc; border-color: transparent;">Developer Access</div>
+<h1 class="heroTitle" style="font-size:24px;">Restricted Area</h1>
+</div>
+<div class="stuckCard" style="display:flex; flex-direction:column; gap:12px;">
+<input type="email" id="dev-email" placeholder="Developer Email" style="padding:12px; border-radius:12px; border:1px solid var(--border-soft); background:var(--input-bg); color:var(--ns-text); font-family:var(--font);" />
+<input type="password" id="dev-pass" placeholder="Password" style="padding:12px; border-radius:12px; border:1px solid var(--border-soft); background:var(--input-bg); color:var(--ns-text); font-family:var(--font);" />
+<div id="dev-error" style="color:#ef4444; font-size:13px; display:none; padding-left:4px; font-weight:500;">Invalid credentials</div>
+<button class="btn-primary" onclick="window.nsWidgetActions.submitDevLogin()" style="margin-top:4px; background: linear-gradient(135deg, #a855f7, #6b21a8);">Authenticate</button>
+</div>
+</div>
+`;
         elScreen.innerHTML = html;
         elScreen.scrollTop = 0;
       }
@@ -2174,50 +2176,55 @@
 
       function createAskBoxMarkup() {
         return `
-        <div class="hero" style="padding:14px;">
-          <div style="display:flex; flex-direction:column; gap:10px;">
+<div class="hero" style="padding:14px;">
+<div style="display:flex; flex-direction:column; gap:10px;">
 
-            <div class="composerMain">
-              <textarea
-                id="homePrompt"
-                rows="1"
-                placeholder="Type your question here…"
-              ></textarea>
-            </div>
 
-            <div style="display:flex; gap:10px; flex-wrap:wrap;">
-              <button class="btn-primary" onclick="window.nsWidgetActions.submitHomePrompt()">Send</button>
-              <button class="btn-secondary" onclick="window.nsWidgetActions.openContact()">Talk to a Human</button>
-            </div>
-          </div>
-        </div>
-      `;
+<div class="composerMain">
+<textarea
+id="homePrompt"
+rows="1"
+placeholder="Type your question here…"
+></textarea>
+</div>
+
+
+<div style="display:flex; gap:10px; flex-wrap:wrap;">
+<button class="btn-primary" onclick="window.nsWidgetActions.submitHomePrompt()">Send</button>
+<button class="btn-secondary" onclick="window.nsWidgetActions.openContact()">Talk to a Human</button>
+</div>
+</div>
+</div>
+`;
       }
 
       function createHomeMarkup() {
         return `
-        <div class="thread">
-          <div class="hero">
+<div class="thread">
+<div class="hero">
 
-            <h1 class="heroTitle">How can we help?</h1>
-            <p class="heroText">Get instant answers for setup, troubleshooting, care, warranty, and orders — or reach a human quickly.</p>
-          </div>
 
-          ${createAskBoxMarkup()}
+<h1 class="heroTitle">How can we help?</h1>
+<p class="heroText">Get instant answers for setup, troubleshooting, care, warranty, and orders — or reach a human quickly.</p>
+</div>
 
-          <div class="quickSectionTitle">Browse support</div>
-          <div class="cardRow">
-            ${CATEGORIES.map(
-              (c) => `
-              <div class="homeCard" onclick="window.nsWidgetActions.renderCategory('${escapeHtml(c.key)}')">
-                <div class="homeCardTitle">${escapeHtml(c.title)}</div>
-                <p class="homeCardSub">${escapeHtml(c.sub)}</p>
-              </div>
-            `,
-            ).join("")}
-          </div>
-        </div>
-      `;
+
+${createAskBoxMarkup()}
+
+
+<div class="quickSectionTitle">Browse support</div>
+<div class="cardRow">
+${CATEGORIES.map(
+  (c) => `
+<div class="homeCard" onclick="window.nsWidgetActions.renderCategory('${escapeHtml(c.key)}')">
+<div class="homeCardTitle">${escapeHtml(c.title)}</div>
+<p class="homeCardSub">${escapeHtml(c.sub)}</p>
+</div>
+`,
+).join("")}
+</div>
+</div>
+`;
       }
 
       function createCategoryMarkup(key) {
@@ -2226,52 +2233,56 @@
         const prompts = seedQuestionsForCategory(key);
 
         return `
-        <div class="thread">
-          <div class="quickGrid" style="margin-bottom:2px;">
-            <button class="chip" onclick="window.nsWidgetActions.renderHome()">← Back</button>
-            <button class="chip" onclick="window.nsWidgetActions.renderHome()">Home</button>
-          </div>
+<div class="thread">
+<div class="quickGrid" style="margin-bottom:2px;">
+<button class="chip" onclick="window.nsWidgetActions.renderHome()">← Back</button>
+<button class="chip" onclick="window.nsWidgetActions.renderHome()">Home</button>
+</div>
 
-          <div class="hero">
-            <div class="heroBadge">${escapeHtml(label)}</div>
-            <h1 class="heroTitle" style="font-size:24px;">${escapeHtml(label)}</h1>
-            <p class="heroText">Choose a common question below, or ask in your own words.</p>
-          </div>
 
-          ${createAskBoxMarkup()}
+<div class="hero">
+<div class="heroBadge">${escapeHtml(label)}</div>
+<h1 class="heroTitle" style="font-size:24px;">${escapeHtml(label)}</h1>
+<p class="heroText">Choose a common question below, or ask in your own words.</p>
+</div>
 
-          <div class="quickGrid">
-            ${prompts
-              .map(
-                (q) => `
-              <button class="chip" onclick="window.nsWidgetActions.ask('${escapeJsString(q)}')">${escapeHtml(q)}</button>
-            `,
-              )
-              .join("")}
-          </div>
 
-          <div class="ctaPanel">
-            <div>
-              <div class="ctaPanelTitle">Need a human?</div>
-              <p class="ctaPanelText">If this requires personalized guidance, our team can follow up directly.</p>
-            </div>
-            <button class="btn-primary" onclick="window.nsWidgetActions.openContact()">Talk to Support</button>
-          </div>
-        </div>
-      `;
+${createAskBoxMarkup()}
+
+
+<div class="quickGrid">
+${prompts
+  .map(
+    (q) => `
+<button class="chip" onclick="window.nsWidgetActions.ask('${escapeJsString(q)}')">${escapeHtml(q)}</button>
+`,
+  )
+  .join("")}
+</div>
+
+
+<div class="ctaPanel">
+<div>
+<div class="ctaPanelTitle">Need a human?</div>
+<p class="ctaPanelText">If this requires personalized guidance, our team can follow up directly.</p>
+</div>
+<button class="btn-primary" onclick="window.nsWidgetActions.openContact()">Talk to Support</button>
+</div>
+</div>
+`;
       }
 
       function createUserMessageHtml(text) {
         return `
-        <div class="message user">
-          <div class="bubbleWrap">
-            <div class="bubbleLabel">You</div>
-            <div class="bubble richAnswer">
-              <p>${escapeHtml(text)}</p>
-            </div>
-          </div>
-        </div>
-      `;
+<div class="message user">
+<div class="bubbleWrap">
+<div class="bubbleLabel">You</div>
+<div class="bubble richAnswer">
+<p>${escapeHtml(text)}</p>
+</div>
+</div>
+</div>
+`;
       }
 
       function createAssistantMessageHtml(message) {
@@ -2296,90 +2307,90 @@
             "Clinical Devices",
           ];
           extraActions = `
-                    <div class="assistantActions" style="margin-top: 10px;">
-                        ${cats.map((c) => `<button class="microPill" onclick="window.nsWidgetActions.ask('suggests me some products of ${escapeJsString(c)}?')">${escapeHtml(c)}</button>`).join("")}
-                    </div>
-                `;
+<div class="assistantActions" style="margin-top: 10px;">
+${cats.map((c) => `<button class="microPill" onclick="window.nsWidgetActions.ask('suggests me some products of ${escapeJsString(c)}?')">${escapeHtml(c)}</button>`).join("")}
+</div>
+`;
         }
 
         return `
-        <div class="message assistant">
-          <div class="avatar">NS</div>
-          <div class="bubbleWrap">
-            <div class="bubbleLabel">NerveSpa Support</div>
-            <div class="bubble">
-              <div class="richAnswer">${formatAnswerText(text)}</div>
-              ${
-                meta.length
-                  ? `
-                <div class="metaRow">
-                  ${meta.map((m) => `<span class="metaTag">${escapeHtml(m)}</span>`).join("")}
-                </div>
-              `
-                  : ""
-              }
-              ${extraActions || ""}
-              ${
-                message.candidates?.length
-                  ? `
-                <div class="assistantActions">
-                  ${message.candidates
-                    .slice(0, 3)
-                    .map(
-                      (c) => `
-                    <button class="microPill" onclick="window.nsWidgetActions.ask('${escapeJsString(c.question)}')">${escapeHtml(truncate(c.question, 42))}</button>
-                  `,
-                    )
-                    .join("")}
-                </div>
-              `
-                  : ""
-              }
-            </div>
-          </div>
-        </div>
-      `;
+<div class="message assistant">
+<div class="avatar">NS</div>
+<div class="bubbleWrap">
+<div class="bubbleLabel">NerveSpa Support</div>
+<div class="bubble">
+<div class="richAnswer">${formatAnswerText(text)}</div>
+${
+  meta.length
+    ? `
+<div class="metaRow">
+${meta.map((m) => `<span class="metaTag">${escapeHtml(m)}</span>`).join("")}
+</div>
+`
+    : ""
+}
+${extraActions || ""}
+${
+  message.candidates?.length
+    ? `
+<div class="assistantActions">
+${message.candidates
+  .slice(0, 3)
+  .map(
+    (c) => `
+<button class="microPill" onclick="window.nsWidgetActions.ask('${escapeJsString(c.question)}')">${escapeHtml(truncate(c.question, 42))}</button>
+`,
+  )
+  .join("")}
+</div>
+`
+    : ""
+}
+</div>
+</div>
+</div>
+`;
       }
 
       function createSystemCardHtml(title, body, actions = []) {
         return `
-        <div class="stuckCard">
-          <div class="stuckTitle">${escapeHtml(title)}</div>
-          <div class="stuckText">${escapeHtml(body)}</div>
-          <div class="assistantActions">
-            ${actions
-              .map((action) => {
-                if (action.type === "contact") {
-                  return `<button class="microPill" onclick="window.nsWidgetActions.openContact()">${escapeHtml(action.label)}</button>`;
-                }
-                if (action.type === "home") {
-                  return `<button class="microPill" onclick="window.nsWidgetActions.renderHome()">${escapeHtml(action.label)}</button>`;
-                }
-                if (action.type === "warranty") {
-                  return `<button class="microPill" onclick="window.nsWidgetActions.openWarranty()">${escapeHtml(action.label)}</button>`;
-                }
-                return "";
-              })
-              .join("")}
-          </div>
-        </div>
-      `;
+<div class="stuckCard">
+<div class="stuckTitle">${escapeHtml(title)}</div>
+<div class="stuckText">${escapeHtml(body)}</div>
+<div class="assistantActions">
+${actions
+  .map((action) => {
+    if (action.type === "contact") {
+      return `<button class="microPill" onclick="window.nsWidgetActions.openContact()">${escapeHtml(action.label)}</button>`;
+    }
+    if (action.type === "home") {
+      return `<button class="microPill" onclick="window.nsWidgetActions.renderHome()">${escapeHtml(action.label)}</button>`;
+    }
+    if (action.type === "warranty") {
+      return `<button class="microPill" onclick="window.nsWidgetActions.openWarranty()">${escapeHtml(action.label)}</button>`;
+    }
+    return "";
+  })
+  .join("")}
+</div>
+</div>
+`;
       }
 
       function createTypingHtml() {
         return `
-        <div class="message assistant" id="typingIndicator">
-          <div class="avatar">NS</div>
-          <div class="bubbleWrap">
-            <div class="bubbleLabel">NerveSpa Support</div>
-            <div class="bubble">
-              <div class="typingBubble">
-                <span></span><span></span><span></span>
-              </div>
-            </div>
-          </div>
-        </div>
-      `;
+<div class="message assistant" id="typingIndicator">
+<div class="avatar">NS</div>
+<div class="bubbleWrap">
+<div class="bubbleLabel">NerveSpa Support</div>
+<div class="bubble">
+<div class="typingBubble">
+<span></span><span></span><span></span>
+</div>
+</div>
+</div>
+</div>
+`;
       }
 
       function autoGrowHomePrompt() {
@@ -2450,24 +2461,19 @@
         if (hint) hint.style.display = "block";
 
         const html = `
-        <div class="thread">
-          ${thread
-            .map((item) => {
-              if (item.role === "user") return createUserMessageHtml(item.text);
-              if (item.role === "assistant")
-                return createAssistantMessageHtml(item);
-              if (item.role === "system")
-                return createSystemCardHtml(
-                  item.title,
-                  item.body,
-                  item.actions || [],
-                );
-              return "";
-            })
-            .join("")}
-          ${isTyping ? createTypingHtml() : ""}
-        </div>
-      `;
+<div class="thread">
+${thread
+  .map((item) => {
+    if (item.role === "user") return createUserMessageHtml(item.text);
+    if (item.role === "assistant") return createAssistantMessageHtml(item);
+    if (item.role === "system")
+      return createSystemCardHtml(item.title, item.body, item.actions || []);
+    return "";
+  })
+  .join("")}
+${isTyping ? createTypingHtml() : ""}
+</div>
+`;
         elScreen.innerHTML = html;
         scrollToBottom();
       }
@@ -2892,17 +2898,17 @@
       let sessionEndSent = false;
       function sendSessionEnd() {
         if (sessionEndSent) return;
-        
+
         // Only track session if the user actually sent at least one message
-        const hasUserMessaged = thread.some(msg => msg.role === "user");
+        const hasUserMessaged = thread.some((msg) => msg.role === "user");
         if (!hasUserMessaged) return;
 
         sessionEndSent = true;
-        
+
         const data = JSON.stringify({
           sessionId: sessionId,
           endedon: new Date().toISOString(),
-          ended_on: new Date().toISOString()
+          ended_on: new Date().toISOString(),
         });
         const url = "https://n8n.srv917960.hstgr.cloud/webhook/save-duration";
 
@@ -2919,9 +2925,9 @@
       window.addEventListener("beforeunload", sendSessionEnd);
       window.addEventListener("pagehide", sendSessionEnd);
       document.addEventListener("visibilitychange", () => {
-         if (document.visibilityState === "hidden") {
-            sendSessionEnd();
-         }
+        if (document.visibilityState === "hidden") {
+          sendSessionEnd();
+        }
       });
 
       initTheme();
