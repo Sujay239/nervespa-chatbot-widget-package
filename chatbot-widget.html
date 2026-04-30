@@ -455,6 +455,7 @@
         font-weight: 700;
         cursor: pointer;
         font-family: var(--font);
+        text-align: left;
         transition:
           background 0.15s ease,
           transform 0.15s ease,
@@ -653,6 +654,7 @@
         font-weight: 800;
         cursor: pointer;
         font-family: var(--font);
+        text-align: left;
       }
 
       .microPill:hover {
@@ -1303,7 +1305,6 @@
             <button class="chip" onclick="window.nsWidgetActions.restorePreviousView()">← Back</button>
           </div>
           <div class="hero">
-            <div class="heroBadge" style="background: rgba(168, 85, 247, 0.15); color: #c084fc; border-color: transparent;">Developer Access</div>
             <h1 class="heroTitle" style="font-size:24px;">Restricted Area</h1>
           </div>
           <div class="stuckCard" style="display:flex; flex-direction:column; gap:12px;">
@@ -2362,7 +2363,6 @@
         return `
         <div class="thread">
           <div class="hero">
-            <div class="heroBadge">NerveSpa Support Beta</div>
             <h1 class="heroTitle">How can we help?</h1>
             <p class="heroText">Get instant answers for setup, troubleshooting, care, warranty, and orders — or reach a human quickly.</p>
           </div>
@@ -2401,7 +2401,6 @@
           </div>
 
           <div class="hero">
-            <div class="heroBadge">${escapeHtml(label)} · Beta</div>
             <h1 class="heroTitle" style="font-size:24px;">${escapeHtml(label)}</h1>
             <p class="heroText">Choose a subcategory to browse more focused questions by product or workflow.</p>
           </div>
@@ -2451,7 +2450,6 @@
           </div>
 
           <div class="hero">
-            <div class="heroBadge">${escapeHtml(categoryLabel)} · ${escapeHtml(subcategoryLabel)} · Beta</div>
             <h1 class="heroTitle" style="font-size:24px;">${escapeHtml(subcategoryLabel)}</h1>
             <p class="heroText">Choose a common question below, or ask in your own words.</p>
           </div>
