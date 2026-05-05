@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html lang="en">
   <head>
@@ -8,14 +7,12 @@
       content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
     />
     <title>NerveSpa Support Widget — Premium Chat</title>
-
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
       rel="stylesheet"
     />
-
     <style>
       :root {
         --ns-header-gradient: linear-gradient(
@@ -33,7 +30,6 @@
         --shadow-2: 0 24px 80px rgba(2, 6, 23, 0.28);
         --safe-bottom: env(safe-area-inset-bottom, 0px);
       }
-
       :root {
         --ns-bg: #ffffff;
         --ns-surface: rgba(255, 255, 255, 0.94);
@@ -53,7 +49,6 @@
         --success-bg: rgba(34, 197, 94, 0.08);
         --warning-bg: rgba(245, 158, 11, 0.1);
       }
-
       body.ns-theme-dark {
         --ns-bg: #020617;
         --ns-surface: rgba(15, 23, 42, 0.76);
@@ -72,17 +67,14 @@
         --success-bg: rgba(34, 197, 94, 0.12);
         --warning-bg: rgba(245, 158, 11, 0.14);
       }
-
       * {
         box-sizing: border-box;
       }
-
       html,
       body {
         margin: 0;
         padding: 0;
       }
-
       body {
         font-family: var(--font);
         background: transparent;
@@ -90,7 +82,6 @@
         -webkit-font-smoothing: antialiased;
         text-rendering: optimizeLegibility;
       }
-
       .ns-launcher {
         position: fixed;
         right: 18px;
@@ -113,22 +104,18 @@
           box-shadow 0.15s ease,
           background 0.15s ease;
       }
-
       body.ns-theme-dark .ns-launcher {
         border-color: rgba(255, 255, 255, 0.1);
         background: rgba(2, 6, 23, 0.82);
         color: #fff;
       }
-
       .ns-launcher:hover {
         transform: translateY(-1px);
         box-shadow: 0 14px 36px rgba(0, 0, 0, 0.22);
       }
-
       .ns-launcher:active {
         transform: scale(0.99);
       }
-
       .ns-launcher .dot {
         width: 10px;
         height: 10px;
@@ -137,14 +124,12 @@
         box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.12);
         flex: 0 0 auto;
       }
-
       .ns-launcher .label {
         font-weight: 800;
         font-size: 13px;
         letter-spacing: 0.1px;
         white-space: nowrap;
       }
-
       .ns-shell {
         position: fixed;
         right: 18px;
@@ -156,7 +141,6 @@
         min-height: 600px;
         min-width: 340px;
         max-height: 95dvh;
-        max-width: 95vw;
         background: var(--ns-surface);
         border: 1px solid var(--border-soft);
         border-radius: 24px;
@@ -166,11 +150,9 @@
         backdrop-filter: blur(20px);
         container-type: inline-size;
       }
-
       .ns-shell.open {
         display: block;
       }
-
       .ns-shell.fullscreen {
         top: 0;
         left: 0;
@@ -183,25 +165,19 @@
         border-radius: 0;
         min-width: 100vw;
         min-height: 100dvh;
-        resize: none;
       }
-
       .ns-shell.minimized {
         height: 72px !important;
         min-height: 72px !important;
         width: 360px;
-        resize: none;
         overflow: hidden;
       }
-
       .ns-shell.minimized .ns-body {
         display: none;
       }
-
       .ns-shell.minimized .ns-topbar {
         min-height: 72px;
       }
-
       .ns-topbar {
         display: flex;
         justify-content: space-between;
@@ -211,7 +187,6 @@
         border-bottom: 1px solid rgba(255, 255, 255, 0.08);
         min-height: 70px;
       }
-
       .ns-topbar-left {
         display: flex;
         align-items: center;
@@ -219,7 +194,6 @@
         min-width: 0;
         flex-shrink: 1;
       }
-
       .ns-logo {
         height: 24px;
         width: auto;
@@ -227,8 +201,8 @@
         object-fit: contain;
         display: block;
         margin: 0;
+        cursor: pointer;
       }
-
       .ns-beta-badge {
         font-size: 9px;
         font-weight: 800;
@@ -250,51 +224,19 @@
         margin-top: 1px;
         cursor: pointer;
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         user-select: none;
         position: relative;
         overflow: hidden;
       }
-
       .ns-beta-badge:hover {
         transform: scale(1.08) translateY(-1px);
-        background: linear-gradient(
-          135deg,
-          rgba(255, 255, 255, 0.3),
-          rgba(255, 255, 255, 0.1)
-        );
-        border-color: rgba(255, 255, 255, 0.5);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
       }
-
-      .ns-beta-badge::after {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: -100%;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(
-          90deg,
-          transparent,
-          rgba(255, 255, 255, 0.4),
-          transparent
-        );
-        transition: 0.5s;
-      }
-
-      .ns-beta-badge:hover::after {
-        left: 100%;
-        transition: 0.6s;
-      }
-
       .ns-topbar-right {
         display: flex;
         align-items: center;
         gap: 4px;
         flex-shrink: 0;
       }
-
       .btn-primary,
       .btn-secondary,
       .btn-icon {
@@ -309,13 +251,11 @@
         font-family: var(--font);
         transition:
           transform 0.15s ease,
-          box-shadow 0.15s ease,
           opacity 0.15s ease,
           background 0.15s ease;
         user-select: none;
         text-decoration: none;
       }
-
       .btn-primary {
         background: linear-gradient(135deg, var(--ns-accent), #2563eb);
         color: #fff;
@@ -324,7 +264,6 @@
         font-size: 13px;
         white-space: nowrap;
       }
-
       .btn-secondary {
         color: var(--ns-text);
         background: var(--chip-bg);
@@ -333,7 +272,6 @@
         font-size: 13px;
         white-space: nowrap;
       }
-
       .btn-icon {
         width: 32px;
         height: 32px;
@@ -343,20 +281,17 @@
         font-size: 15px;
         font-weight: 900;
       }
-
       .btn-primary:active,
       .btn-secondary:active,
       .btn-icon:active {
         transform: scale(0.98);
       }
-
       .ns-body {
         height: calc(100% - 70px);
         display: flex;
         flex-direction: column;
         background: var(--ns-bg);
       }
-
       body.ns-theme-dark .ns-body {
         background: radial-gradient(
           circle at top,
@@ -364,33 +299,28 @@
           #020617 70%
         );
       }
-
       .ns-screen {
         padding: 18px 16px 16px;
         overflow: auto;
         flex: 1 1 auto;
         scroll-behavior: smooth;
       }
-
       .thread {
         display: flex;
         flex-direction: column;
         gap: 12px;
         animation: nsFadeIn 0.22s ease-out;
       }
-
       @keyframes nsFadeIn {
         from {
           opacity: 0;
           transform: translateY(5px);
         }
-
         to {
           opacity: 1;
           transform: translateY(0);
         }
       }
-
       .hero {
         border: 1px solid var(--border-soft);
         background: var(--ns-surface-2);
@@ -398,7 +328,6 @@
         padding: 18px 16px;
         box-shadow: 0 10px 24px rgba(2, 6, 23, 0.06);
       }
-
       .heroBadge {
         display: inline-flex;
         align-items: center;
@@ -413,7 +342,6 @@
         color: var(--ns-dim);
         margin-bottom: 14px;
       }
-
       .heroTitle {
         margin: 0 0 8px;
         font-size: 28px;
@@ -422,7 +350,6 @@
         font-weight: 800;
         color: var(--ns-text);
       }
-
       .heroText {
         margin: 0;
         font-size: 14px;
@@ -430,7 +357,6 @@
         color: var(--ns-muted);
         max-width: 34ch;
       }
-
       .quickSectionTitle {
         margin: 6px 2px 2px;
         color: var(--ns-dim);
@@ -438,13 +364,11 @@
         letter-spacing: 0.14em;
         text-transform: uppercase;
       }
-
       .quickGrid {
         display: flex;
         flex-wrap: wrap;
         gap: 10px;
       }
-
       .chip {
         border: 1px solid var(--border-soft);
         background: transparent;
@@ -455,24 +379,22 @@
         font-weight: 700;
         cursor: pointer;
         font-family: var(--font);
-        text-align: left;
         transition:
           background 0.15s ease,
-          transform 0.15s ease,
-          border-color 0.15s ease;
+          transform 0.15s ease;
+        text-align: left;
+        white-space: normal;
+        line-height: 1.3;
       }
-
       .chip:hover {
         background: var(--card-hover);
         transform: translateY(-1px);
       }
-
       .cardRow {
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 10px;
       }
-
       .homeCard {
         border: 1px solid var(--border-soft);
         border-radius: 18px;
@@ -483,27 +405,22 @@
           transform 0.15s ease,
           background 0.15s ease;
       }
-
       .homeCard:hover {
         background: var(--card-hover);
         transform: translateY(-1px);
       }
-
       .homeCardTitle {
         margin: 0 0 4px;
         font-size: 13px;
         font-weight: 800;
         color: var(--ns-text);
-        letter-spacing: -0.01em;
       }
-
       .homeCardSub {
         margin: 0;
         font-size: 12px;
         line-height: 1.35;
         color: var(--ns-muted);
       }
-
       .ctaPanel {
         border: 1px solid var(--border-soft);
         border-radius: 18px;
@@ -514,73 +431,30 @@
         align-items: center;
         gap: 12px;
       }
-
       .ctaPanelTitle {
         margin: 0 0 4px;
         font-size: 13px;
         font-weight: 900;
         color: var(--ns-text);
       }
-
       .ctaPanelText {
         margin: 0;
         font-size: 12px;
         line-height: 1.4;
         color: var(--ns-muted);
       }
-
-      .composerMain {
-        flex: 1 1 auto;
-        display: flex;
-        align-items: flex-end;
-        gap: 10px;
-        border: 1px solid var(--input-border);
-        background: var(--input-bg);
-        border-radius: 20px;
-        padding: 10px 14px;
-      }
-
-      .composerMain:focus-within {
-        border-color: var(--ns-accent);
-        box-shadow: 0 0 0 1px var(--input-focus);
-      }
-
-      #homePrompt {
-        width: 100%;
-        min-height: 32px;
-        max-height: 120px;
-        resize: none;
-        border: none;
-        outline: none;
-        background: transparent;
-        color: var(--ns-text);
-        font-size: 13px;
-        line-height: 1.45;
-        font-family: var(--font);
-        padding: 5px 0;
-        margin: 0;
-      }
-
-      #homePrompt:disabled {
-        opacity: 0.7;
-        cursor: not-allowed;
-      }
-
       .message {
         display: flex;
         width: 100%;
         gap: 10px;
         animation: nsFadeIn 0.18s ease-out;
       }
-
       .message.assistant {
         justify-content: flex-start;
       }
-
       .message.user {
         justify-content: flex-end;
       }
-
       .avatar {
         width: 30px;
         height: 30px;
@@ -596,29 +470,24 @@
         box-shadow: 0 8px 20px rgba(37, 99, 235, 0.18);
         margin-top: 2px;
       }
-
       .bubbleWrap {
         max-width: min(84%, 320px);
         display: flex;
         flex-direction: column;
         gap: 5px;
       }
-
       .ns-shell.fullscreen .bubbleWrap {
         max-width: min(84%, 800px);
       }
-
       .message.user .bubbleWrap {
         align-items: flex-end;
       }
-
       .bubbleLabel {
         font-size: 11px;
         color: var(--ns-dim);
         font-weight: 700;
         padding: 0 2px;
       }
-
       .bubble {
         border-radius: 18px;
         padding: 13px 14px;
@@ -629,21 +498,18 @@
         font-size: 13px;
         overflow-wrap: anywhere;
       }
-
       .message.user .bubble {
         background: var(--user-bubble);
         color: #fff;
         border-color: transparent;
         box-shadow: 0 10px 28px rgba(37, 99, 235, 0.22);
       }
-
       .assistantActions {
         display: flex;
         gap: 8px;
         flex-wrap: wrap;
         margin-top: 8px;
       }
-
       .microPill {
         border-radius: 999px;
         padding: 8px 11px;
@@ -655,19 +521,18 @@
         cursor: pointer;
         font-family: var(--font);
         text-align: left;
+        white-space: normal;
+        line-height: 1.3;
       }
-
       .microPill:hover {
         background: var(--card-hover);
       }
-
       .typingBubble {
         display: inline-flex;
         align-items: center;
         gap: 6px;
         min-height: 18px;
       }
-
       .typingBubble span {
         width: 7px;
         height: 7px;
@@ -676,15 +541,12 @@
         display: block;
         animation: nsBlink 1.2s infinite ease-in-out;
       }
-
       .typingBubble span:nth-child(2) {
         animation-delay: 0.15s;
       }
-
       .typingBubble span:nth-child(3) {
         animation-delay: 0.3s;
       }
-
       @keyframes nsBlink {
         0%,
         80%,
@@ -692,40 +554,32 @@
           opacity: 0.35;
           transform: translateY(0);
         }
-
         40% {
           opacity: 1;
           transform: translateY(-1px);
         }
       }
-
       .richAnswer p {
         margin: 0 0 10px;
       }
-
       .richAnswer p:last-child {
         margin-bottom: 0;
       }
-
       .richAnswer ul,
       .richAnswer ol {
         margin: 0 0 10px 18px;
         padding: 0;
       }
-
       .richAnswer li {
         margin: 0 0 6px;
       }
-
       .richAnswer strong {
         font-weight: 800;
         color: var(--ns-text);
       }
-
       .message.user .richAnswer strong {
         color: #fff;
       }
-
       .richAnswer .callout {
         display: block;
         margin: 10px 0;
@@ -735,14 +589,12 @@
         border: 1px solid var(--border-soft);
         font-size: 12px;
       }
-
       .metaRow {
         display: flex;
         gap: 8px;
         flex-wrap: wrap;
         margin-top: 6px;
       }
-
       .metaTag {
         font-size: 11px;
         font-weight: 800;
@@ -752,7 +604,6 @@
         border-radius: 999px;
         padding: 6px 10px;
       }
-
       .stuckCard {
         margin-top: 2px;
         border: 1px solid var(--border-soft);
@@ -760,32 +611,27 @@
         border-radius: 18px;
         padding: 14px;
       }
-
       .stuckTitle {
         margin: 0 0 5px;
         font-size: 13px;
         font-weight: 900;
         color: var(--ns-text);
       }
-
       .stuckText {
         margin: 0 0 10px;
         font-size: 12px;
         line-height: 1.4;
         color: var(--ns-muted);
       }
-
       @container (max-width: 480px) {
         .support-btn-text {
           display: none !important;
         }
       }
-
       @media (max-width: 520px) {
         .support-btn-text {
           display: none;
         }
-
         .ns-shell {
           right: 12px;
           left: 12px;
@@ -795,22 +641,17 @@
           min-height: 540px;
           min-width: auto;
           max-width: calc(100vw - 24px);
-          resize: none;
         }
-
         .heroTitle {
           font-size: 26px;
         }
-
         .cardRow {
           grid-template-columns: 1fr;
         }
-
         .bubbleWrap {
           max-width: 88%;
         }
       }
-
       .ns-launcher-note {
         position: fixed;
         right: 18px;
@@ -831,13 +672,11 @@
         transform-origin: bottom right;
         cursor: pointer;
       }
-
       .ns-launcher-note.show {
         opacity: 1;
         pointer-events: auto;
         transform: translateY(0) scale(1);
       }
-
       .ns-launcher-note::after {
         content: "";
         position: absolute;
@@ -850,25 +689,11 @@
         border-bottom: 1px solid var(--border-soft);
         transform: rotate(45deg);
       }
-
       body.ns-theme-dark .ns-launcher-note {
         background: rgba(2, 6, 23, 0.92);
         color: #fff;
         border-color: rgba(255, 255, 255, 0.1);
       }
-
-      .sr-only {
-        position: absolute;
-        width: 1px;
-        height: 1px;
-        padding: 0;
-        margin: -1px;
-        overflow: hidden;
-        clip: rect(0, 0, 0, 0);
-        white-space: nowrap;
-        border-width: 0;
-      }
-
       .composer {
         padding: 12px 14px 16px 14px;
         border-top: 1px solid var(--border-soft);
@@ -878,7 +703,6 @@
         background: var(--ns-surface);
         z-index: 10;
       }
-
       .composerMain {
         flex: 1 1 auto;
         display: flex;
@@ -889,16 +713,13 @@
         border-radius: 20px;
         padding: 8px 14px;
       }
-
       .composerMain:focus-within {
         border-color: var(--ns-accent);
         box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.2);
       }
-
       body.ns-theme-dark .composerMain:focus-within {
         box-shadow: 0 0 0 1px var(--ns-accent);
       }
-
       .composer textarea {
         width: 100%;
         min-height: 26px;
@@ -914,12 +735,10 @@
         color: var(--ns-text);
         line-height: 1.45;
       }
-
       .composer textarea:disabled {
         opacity: 0.7;
         cursor: not-allowed;
       }
-
       .send {
         width: 44px;
         height: 44px;
@@ -935,35 +754,229 @@
           transform 0.15s ease,
           opacity 0.15s ease;
         flex: 0 0 auto;
-        margin-bottom: 0px;
         box-shadow: 0 10px 24px rgba(37, 99, 235, 0.22);
       }
-
       .send:active {
         transform: scale(0.95);
       }
-
       .send:disabled {
         opacity: 0.55;
         cursor: not-allowed;
       }
-
       .footerHint {
         font-size: 11px;
         color: var(--ns-dim);
         text-align: center;
         margin: 0 24px 12px;
       }
+      .ns-screen.home-search-mode {
+        display: flex;
+        flex-direction: column;
+      }
+      .googleHomeHero {
+        border: 0;
+        background: transparent;
+        box-shadow: none;
+        padding: 34px 16px 10px;
+        text-align: center;
+      }
+      .googleHomeHero .heroBadge {
+        margin: 0 auto 12px;
+        justify-content: center;
+      }
+      .googleHomeHero .heroTitle {
+        margin: 0 auto 10px;
+        font-size: clamp(30px, 5vw, 46px);
+        text-align: center;
+        letter-spacing: -0.055em;
+      }
+      .googleHomeHero .heroText {
+        margin: 0 auto;
+        max-width: 560px;
+        text-align: center;
+      }
+      .googleAskWrap {
+        width: 100%;
+        max-width: 760px;
+        margin: 10px auto 4px;
+      }
+      .googleAskBox {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        width: 100%;
+        min-height: 54px;
+        border: 1px solid rgba(15, 23, 42, 0.14);
+        background: rgba(255, 255, 255, 0.92);
+        border-radius: 999px;
+        padding: 9px 10px 9px 18px;
+        box-shadow: 0 8px 26px rgba(2, 6, 23, 0.07);
+        transition:
+          box-shadow 0.15s ease,
+          border-color 0.15s ease;
+      }
+      body.ns-theme-dark .googleAskBox {
+        background: rgba(15, 23, 42, 0.78);
+        border-color: rgba(148, 163, 184, 0.24);
+      }
+      .googleAskBox:focus-within {
+        border-color: var(--ns-accent);
+        box-shadow: 0 16px 46px rgba(37, 99, 235, 0.18);
+      }
+      .googleAskBox textarea {
+        width: 100%;
+        min-height: 28px;
+        max-height: 96px;
+        resize: none;
+        border: none;
+        outline: none;
+        background: transparent;
+        color: var(--ns-text);
+        font-size: 14px;
+        line-height: 1.45;
+        font-family: var(--font);
+        padding: 4px 0;
+        margin: 0;
+      }
+      .googleAskBox textarea::placeholder {
+        color: var(--ns-dim);
+      }
+      .googleAskSend {
+        width: 38px;
+        height: 38px;
+        border-radius: 999px;
+        border: 0;
+        background: linear-gradient(135deg, var(--ns-accent), #2563eb);
+        color: #fff;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        flex: 0 0 auto;
+        box-shadow: 0 10px 22px rgba(37, 99, 235, 0.22);
+      }
+      .googleAskActions {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-top: 12px;
+      }
+      .googleGhostBtn {
+        border: 1px solid var(--border-soft);
+        background: var(--chip-bg);
+        color: var(--ns-text);
+        padding: 10px 14px;
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 800;
+        font-family: var(--font);
+        cursor: pointer;
+      }
+      .googleBrowseWrap {
+        max-width: 760px;
+        width: 100%;
+        margin: 16px auto 0;
+      }
+      .googleBrowseWrap .quickSectionTitle {
+        text-align: center;
+        margin-bottom: 12px;
+      }
+      @media (max-width: 520px) {
+        .googleAskBox {
+          min-height: 50px;
+          border-radius: 24px;
+        }
+      }
+
+      /* ── Navigation bar ── */
+      .ns-nav-bar {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 6px 0 2px;
+      }
+      .ns-nav-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 7px 14px 7px 10px;
+        border-radius: 999px;
+        border: 1px solid var(--border-soft);
+        background: var(--ns-surface-2);
+        color: var(--ns-text);
+        font-size: 12px;
+        font-weight: 700;
+        font-family: var(--font);
+        cursor: pointer;
+        transition:
+          background 0.15s ease,
+          transform 0.1s ease;
+        white-space: nowrap;
+      }
+      .ns-nav-btn:hover {
+        background: var(--card-hover);
+        transform: translateY(-1px);
+      }
+      .ns-nav-btn:active {
+        transform: scale(0.97);
+      }
+      .ns-nav-home {
+        margin-left: auto;
+      }
+
+      /* ── Question list rows ── */
+      .ns-q-list {
+        display: flex;
+        flex-direction: column;
+        border: 1px solid var(--border-soft);
+        border-radius: 18px;
+        overflow: hidden;
+        background: var(--card-bg);
+      }
+      .ns-q-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        padding: 13px 14px;
+        border: none;
+        border-bottom: 1px solid var(--border-soft);
+        background: transparent;
+        color: var(--ns-text);
+        font-size: 13px;
+        font-weight: 500;
+        font-family: var(--font);
+        text-align: left;
+        cursor: pointer;
+        transition: background 0.12s ease;
+        line-height: 1.4;
+      }
+      .ns-q-row:last-child {
+        border-bottom: none;
+      }
+      .ns-q-row:hover {
+        background: var(--card-hover);
+      }
+      .ns-q-row:active {
+        background: var(--chip-bg);
+      }
+      .ns-q-text {
+        flex: 1;
+      }
+      .ns-q-arrow {
+        flex: 0 0 auto;
+        color: var(--ns-dim);
+      }
     </style>
   </head>
-
   <body class="ns-theme-light">
     <div class="ns-launcher-note" id="nsLauncherNote">Chat with us</div>
     <div class="ns-launcher" id="nsLauncher" aria-label="Open NerveSpa Support">
       <span class="dot"></span>
-      <span class="label">Support</span>
+      <span class="label">Ask NerveSpa GPT</span>
     </div>
-
     <div
       class="ns-shell"
       id="nsShell"
@@ -984,7 +997,6 @@
             >Beta</span
           >
         </div>
-
         <div class="ns-topbar-right">
           <button
             class="btn-icon"
@@ -1060,7 +1072,6 @@
           </button>
         </div>
       </div>
-
       <div class="ns-body">
         <div
           class="ns-screen"
@@ -1075,7 +1086,7 @@
             <textarea
               id="chatInput"
               rows="1"
-              placeholder="Ask a question about setup, troubleshooting,"
+              placeholder="Choose a topic below, or ask a question"
               aria-label="Reply"
             ></textarea>
           </div>
@@ -1106,7 +1117,6 @@
         </div>
       </div>
     </div>
-
     <script>
       const CONTACT_URL = "https://nervespa.com/contact";
       const WARRANTY_URL = "https://nervespa.com/warranty";
@@ -1122,8 +1132,8 @@
       const SIZE_KEY = "ns_widget_size_v1";
       const WINDOW_STATE_KEY = "ns_widget_window_state_v1";
 
-      const RATE_LIMIT_COUNT = 30; // Max questions
-      const RATE_LIMIT_WINDOW = 60000; // 1 minute in ms
+      const RATE_LIMIT_COUNT = 30;
+      const RATE_LIMIT_WINDOW = 60000;
       const BLOCK_KEY = "ns_user_blocked";
 
       function safeGetItem(key) {
@@ -1191,8 +1201,15 @@
 
       function restorePreviousView() {
         if (viewBeforeForm === "thread") renderThread();
-        else if (viewBeforeForm === "subcategory" && categoryBeforeForm?.categoryKey && categoryBeforeForm?.subcategoryKey)
-          renderSubcategory(categoryBeforeForm.categoryKey, categoryBeforeForm.subcategoryKey);
+        else if (
+          viewBeforeForm === "subcategory" &&
+          categoryBeforeForm?.categoryKey &&
+          categoryBeforeForm?.subcategoryKey
+        )
+          renderSubcategory(
+            categoryBeforeForm.categoryKey,
+            categoryBeforeForm.subcategoryKey,
+          );
         else if (viewBeforeForm === "category")
           renderCategory(categoryBeforeForm);
         else renderHome();
@@ -1244,18 +1261,15 @@
           if (elShell.classList.contains("open")) return;
           elLauncherNote.textContent = noteMessages[noteIndex];
           elLauncherNote.classList.add("show");
-
           setTimeout(() => {
             elLauncherNote.classList.remove("show");
             noteIndex = (noteIndex + 1) % noteMessages.length;
           }, 3500);
         };
-
         setTimeout(() => {
           showNextNote();
           setInterval(showNextNote, 7000);
         }, 2000);
-
         elLauncherNote.addEventListener("click", () => {
           elLauncherNote.classList.remove("show");
           openWidget();
@@ -1263,25 +1277,26 @@
       }
 
       function renderSupportForm() {
+        elScreen.classList.remove("home-search-mode");
         const html = `
-        <div class="thread">
-          <div class="quickGrid" style="margin-bottom:2px;">
-            <button class="chip" onclick="window.nsWidgetActions.restorePreviousView()">← Back</button>
-          </div>
-          <div class="hero">
-            <h1 class="heroTitle" style="font-size:24px;">Contact Support</h1>
-            <p class="heroText">We'll get back to you as soon as possible.</p>
-          </div>
-          <div class="stuckCard" style="display:flex; flex-direction:column; gap:12px;">
-            <input type="text" id="support-name" placeholder="Your name" style="padding:12px; border-radius:12px; border:1px solid var(--border-soft); background:var(--input-bg); color:var(--ns-text); font-family:var(--font);" />
-            <input type="email" id="support-email" placeholder="Your email" style="padding:12px; border-radius:12px; border:1px solid var(--border-soft); background:var(--input-bg); color:var(--ns-text); font-family:var(--font);" />
-            <input type="tel" id="support-phone" placeholder="Your phone number" oninput="this.value = this.value.replace(/[^0-9+]/g, '').replace(/(?!^)[+](?!$)/g, '')" style="padding:12px; border-radius:12px; border:1px solid var(--border-soft); background:var(--input-bg); color:var(--ns-text); font-family:var(--font);" />
-            <textarea id="support-msg" placeholder="How can we help you?" style="padding:12px; border-radius:12px; border:1px solid var(--border-soft); background:var(--input-bg); color:var(--ns-text); font-family:var(--font); min-height:100px; resize:vertical;"></textarea>
-            <div id="support-error" style="color:#ef4444; font-size:13px; display:none; padding-left:4px; font-weight:500;"></div>
-            <button class="btn-primary" id="support-submit" onclick="window.nsWidgetActions.submitSupportForm()" style="margin-top:4px;">Submit Request</button>
-          </div>
-        </div>
-      `;
+<div class="thread">
+<div class="quickGrid" style="margin-bottom:2px;">
+<button class="chip" onclick="window.nsWidgetActions.restorePreviousView()">← Back</button>
+</div>
+<div class="hero">
+<h1 class="heroTitle" style="font-size:24px;">Talk to a Human</h1>
+<p class="heroText">We'll get back to you as soon as possible.</p>
+</div>
+<div class="stuckCard" style="display:flex; flex-direction:column; gap:12px;">
+<input type="text" id="support-name" placeholder="Your name" style="padding:12px; border-radius:12px; border:1px solid var(--border-soft); background:var(--input-bg); color:var(--ns-text); font-family:var(--font);" />
+<input type="email" id="support-email" placeholder="Your email" style="padding:12px; border-radius:12px; border:1px solid var(--border-soft); background:var(--input-bg); color:var(--ns-text); font-family:var(--font);" />
+<input type="tel" id="support-phone" placeholder="Your phone number" oninput="this.value = this.value.replace(/[^0-9+]/g, '').replace(/(?!^)[+](?!$)/g, '')" style="padding:12px; border-radius:12px; border:1px solid var(--border-soft); background:var(--input-bg); color:var(--ns-text); font-family:var(--font);" />
+<textarea id="support-msg" placeholder="How can we help you?" style="padding:12px; border-radius:12px; border:1px solid var(--border-soft); background:var(--input-bg); color:var(--ns-text); font-family:var(--font); min-height:100px; resize:vertical;"></textarea>
+<div id="support-error" style="color:#ef4444; font-size:13px; display:none; padding-left:4px; font-weight:500;"></div>
+<button class="btn-primary" id="support-submit" onclick="window.nsWidgetActions.submitSupportForm()" style="margin-top:4px;">Submit Request</button>
+</div>
+</div>
+`;
         elScreen.innerHTML = html;
         elScreen.scrollTop = 0;
       }
@@ -1298,23 +1313,23 @@
           }
           return;
         }
-
         const html = `
-        <div class="thread">
-          <div class="quickGrid" style="margin-bottom:2px;">
-            <button class="chip" onclick="window.nsWidgetActions.restorePreviousView()">← Back</button>
-          </div>
-          <div class="hero">
-            <h1 class="heroTitle" style="font-size:24px;">Restricted Area</h1>
-          </div>
-          <div class="stuckCard" style="display:flex; flex-direction:column; gap:12px;">
-            <input type="email" id="dev-email" placeholder="Developer Email" style="padding:12px; border-radius:12px; border:1px solid var(--border-soft); background:var(--input-bg); color:var(--ns-text); font-family:var(--font);" />
-            <input type="password" id="dev-pass" placeholder="Password" style="padding:12px; border-radius:12px; border:1px solid var(--border-soft); background:var(--input-bg); color:var(--ns-text); font-family:var(--font);" />
-            <div id="dev-error" style="color:#ef4444; font-size:13px; display:none; padding-left:4px; font-weight:500;">Invalid credentials</div>
-            <button class="btn-primary" onclick="window.nsWidgetActions.submitDevLogin()" style="margin-top:4px; background: linear-gradient(135deg, #a855f7, #6b21a8);">Authenticate</button>
-          </div>
-        </div>
-        `;
+<div class="thread">
+<div class="quickGrid" style="margin-bottom:2px;">
+<button class="chip" onclick="window.nsWidgetActions.restorePreviousView()">← Back</button>
+</div>
+<div class="hero">
+<div class="heroBadge" style="background: rgba(168, 85, 247, 0.15); color: #c084fc; border-color: transparent;">Developer Access</div>
+<h1 class="heroTitle" style="font-size:24px;">Restricted Area</h1>
+</div>
+<div class="stuckCard" style="display:flex; flex-direction:column; gap:12px;">
+<input type="email" id="dev-email" placeholder="Developer Email" style="padding:12px; border-radius:12px; border:1px solid var(--border-soft); background:var(--input-bg); color:var(--ns-text); font-family:var(--font);" />
+<input type="password" id="dev-pass" placeholder="Password" style="padding:12px; border-radius:12px; border:1px solid var(--border-soft); background:var(--input-bg); color:var(--ns-text); font-family:var(--font);" />
+<div id="dev-error" style="color:#ef4444; font-size:13px; display:none; padding-left:4px; font-weight:500;">Invalid credentials</div>
+<button class="btn-primary" onclick="window.nsWidgetActions.submitDevLogin()" style="margin-top:4px; background: linear-gradient(135deg, #a855f7, #6b21a8);">Authenticate</button>
+</div>
+</div>
+`;
         elScreen.innerHTML = html;
         elScreen.scrollTop = 0;
       }
@@ -1326,14 +1341,11 @@
         const phone = document.getElementById("support-phone").value.trim();
         const msg = document.getElementById("support-msg").value.trim();
         const errEl = document.getElementById("support-error");
-
         const showError = (text) => {
           errEl.textContent = text;
           errEl.style.display = "block";
         };
-
         if (errEl) errEl.style.display = "none";
-
         if (!name) return showError("Please enter your name.");
         if (/\d/.test(name))
           return showError("Please enter a valid name without numbers.");
@@ -1344,34 +1356,29 @@
         if (!/^[\d+]+$/.test(phone))
           return showError("Please enter a valid phone number.");
         if (!msg) return showError("Please enter a message.");
-
         const origText = btn.textContent;
         btn.textContent = "Sending...";
         btn.disabled = true;
-
         try {
           const res = await fetch(SUPPORT_WEBHOOK_URL, {
             method: "POST",
             headers: { "Content-Type": "application/x-www-form-urlencoded" },
             body: new URLSearchParams({
               session_id: sessionId,
-              name: name,
-              email: email,
-              phone: phone,
-              msg: msg,
+              name,
+              email,
+              phone,
+              msg,
             }),
           });
-
           if (!res.ok) throw new Error("Server error");
-
           btn.textContent = "Sent Successfully! ✅";
           btn.style.background = "var(--success-bg)";
           btn.style.color = "var(--ns-text)";
-
           renderHome();
           thread.push({
             role: "assistant",
-            text: "Thank you! I've successfully shared your details with our support team. One of our specialists will reach out to you shortly. ✨\\n\\nIs there anything else I can help you with today?",
+            text: "Thank you! I've successfully shared your details with our support team. One of our specialists will reach out to you shortly. ✨\n\nIs there anything else I can help you with today?",
           });
           saveThread();
           renderThread();
@@ -1388,7 +1395,6 @@
         const em = document.getElementById("dev-email").value.trim();
         const pwd = document.getElementById("dev-pass").value.trim();
         const err = document.getElementById("dev-error");
-
         if (em === "nervespa@dev.com" && pwd === "Nervespa@1800") {
           safeSetItem("is_dev", "true");
           err.style.display = "none";
@@ -1409,7 +1415,10 @@
         viewBeforeForm = currentViewType;
         categoryBeforeForm =
           currentViewType === "subcategory"
-            ? { categoryKey: currentCategoryKey, subcategoryKey: currentSubcategoryKey }
+            ? {
+                categoryKey: currentCategoryKey,
+                subcategoryKey: currentSubcategoryKey,
+              }
             : currentCategoryKey;
         renderSupportForm();
       }
@@ -1469,7 +1478,6 @@
       async function postJSON(url, body) {
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), 12000);
-
         try {
           const r = await fetch(url, {
             method: "POST",
@@ -1477,9 +1485,7 @@
             body: JSON.stringify(body),
             signal: controller.signal,
           });
-
           clearTimeout(timeoutId);
-
           if (!r.ok) {
             let message = `Request failed with status ${r.status}`;
             try {
@@ -1488,23 +1494,16 @@
             } catch (e) {}
             throw new Error(message);
           }
-
           return await r.json();
         } catch (err) {
           clearTimeout(timeoutId);
-          if (err.name === "AbortError") {
-            throw new Error("Request timeout");
-          }
+          if (err.name === "AbortError") throw new Error("Request timeout");
           throw err;
         }
       }
 
-      function saveThread() {
-        // No need to persist old messages (kept in memory for current session only)
-      }
-
+      function saveThread() {}
       function loadThread() {
-        // Only return an empty array to start fresh without old messages
         return [];
       }
 
@@ -1527,7 +1526,6 @@
           const parsed = JSON.parse(saved);
           isFullscreen = !!parsed?.fullscreen;
           isMinimized = !!parsed?.minimized;
-
           if (isFullscreen) elShell.classList.add("fullscreen");
           if (isMinimized) elShell.classList.add("minimized");
           syncWindowButtons();
@@ -1554,12 +1552,10 @@
           if (!saved) return;
           const size = JSON.parse(saved);
           if (!size?.width || !size?.height) return;
-
           const maxWidth = Math.floor(window.innerWidth * 0.95);
           const maxHeight = Math.floor(window.innerHeight * 0.95);
           const width = Math.min(size.width, maxWidth);
           const height = Math.min(size.height, maxHeight);
-
           if (window.innerWidth > 520) {
             elShell.style.width = width + "px";
             elShell.style.height = height + "px";
@@ -1573,7 +1569,6 @@
           ? "Exit full screen"
           : "Enter full screen";
         btnResize.setAttribute("aria-label", btnResize.title);
-
         btnMinimize.textContent = isMinimized ? "▢" : "—";
         btnMinimize.title = isMinimized ? "Restore" : "Minimize";
         btnMinimize.setAttribute("aria-label", btnMinimize.title);
@@ -1582,14 +1577,12 @@
       function setFullscreen(next) {
         isFullscreen = !!next;
         elShell.classList.toggle("fullscreen", isFullscreen);
-
         if (isFullscreen) {
           elShell.classList.remove("minimized");
           isMinimized = false;
         } else {
           restoreSize();
         }
-
         syncWindowButtons();
         saveWindowState();
       }
@@ -1597,12 +1590,10 @@
       function setMinimized(next) {
         isMinimized = !!next;
         elShell.classList.toggle("minimized", isMinimized);
-
         if (isMinimized) {
           elShell.classList.remove("fullscreen");
           isFullscreen = false;
         }
-
         syncWindowButtons();
         saveWindowState();
       }
@@ -1610,11 +1601,9 @@
       btnResize.addEventListener("click", () => {
         setFullscreen(!isFullscreen);
       });
-
       btnMinimize.addEventListener("click", () => {
         setMinimized(!isMinimized);
       });
-
       btnClear.addEventListener("click", () => {
         clearConversation();
       });
@@ -1625,9 +1614,7 @@
       }
 
       function autoMobileFullscreen() {
-        if (window.innerWidth < 520) {
-          setFullscreen(true);
-        }
+        if (window.innerWidth < 520) setFullscreen(true);
       }
 
       window.addEventListener("resize", () => {
@@ -1641,15 +1628,20 @@
             "How does NerveSpa work?",
             "How quickly does NerveSpa work?",
             "What is NerveSpa?",
-            "Should a healthy hand be able to feel the “tingle” in the glove?",
+            "Should a healthy hand be able to feel the \u201ctingle\u201d in the glove?",
             "What is the difference between the NerveSpa Single and the NerveSpa Dual",
             "What is the set-up for treating both hands",
-            "Is conductive spray required for efficacy?",
+            "Is conductive spray and Epsom Salt required for efficacy?",
             "What conditions can NerveSpa support?",
+            "What conditions does the NerveSpa Nerve Bath treat?",
+            "What conditions does the NerveWave treat?",
+            "What conditions can the NerveSpa foot bath support?",
             "Who decides if NerveSpa is appropriate?",
             "Can NerveSpa be used with other treatments?",
             "How does NerveSpa compare to other nerve therapy systems?",
+            "How does NerveSpa compare to single-modality nerve therapy systems?",
             "What makes NerveSpa unique?",
+            "Why does NerveSpa use multiple modalities together rather than a single device?",
             "How does the NerveSpa family of products work together?",
             "Is NerveSpa safe for most patients?",
             "How do clinics contact NerveSpa for support?",
@@ -1659,41 +1651,42 @@
             "How should the NerveSpa Nerve Bath be set up?",
             "Why water-based therapy for the NerveSpa Nerve Bath?",
             "What consumables does the NerveSpa Nerve Bath use?",
+            "Is conductive spray required for efficacy?",
             "What are NerveSpa conductive foot pads, socks, and gloves?",
             "How are the NerveSpa conductive foot pads and gloves used in therapy?",
             "Who should not use NerveSpa conductive garments?",
+            "What is a Nerve spa Conductive Calf Pad?",
             "What is the NerveSpa Quake Plate?",
             "How do I set up and use the Quake Plate?",
             "Who should not use the Quake Plate?",
+            "What should I know before using the Quake Plate?",
             "What is the NerveBeam LED Light Therapy Wrap?",
             "How is the NerveBeam LED Wrap used?",
             "Who should not use the NerveBeam LED Wrap?",
-            "What is the NerveBeam Cold Laser?",
-            "How is the NerveBeam Cold Laser used?",
-            "Who should not use the NerveBeam Cold Laser?",
-            "What is the Knee Pro?",
-            "How is the Knee Pro used?",
-            "Who should not use the Knee Pro?",
-            "What is the Shoulder Pro?",
-            "How is the Shoulder Pro used?",
-            "Who should not use the Shoulder Pro?",
-            "What is the PowerWrap?",
-            "How is the PowerWrap used?",
-            "Who should not use the PowerWrap?",
-            "What are the NerveSpa Performance Diabetic Socks?",
-            "How do I put on the Diabetic Socks correctly?",
-            "Can the Diabetic Socks be worn all day?",
-            "Can supplements be used alone without devices?",
-            "Can the Nerve Bath be used with other devices the same day?",
-            "Can Quake Plate be used with other neuropathy devices?",
             "How long is an LED Wrap session?",
             "How should the LED Wrap be positioned for treatment?",
             "Who should not use the LED Wrap?",
+            "Which treatment mode should I use on the LED Wrap?",
+            "What should I avoid doing with the LED Wrap?",
+            "What is the NerveBeam Cold Laser?",
+            "How is the NerveBeam Cold Laser used?",
+            "Who should not use the NerveBeam Cold Laser?",
             "How should the Cold Laser be positioned during treatment?",
             "Who should not use the Cold Laser?",
+            "What is the Knee Pro?",
+            "How is the Knee Pro used?",
+            "Who should not use the Knee Pro?",
+            "How do I power the Knee Pro on/off and change modes?",
+            "How do I change Knee Pro modes?",
             "Can Knee Pro be used with other joint therapies?",
+            "What is the Shoulder Pro?",
+            "How is the Shoulder Pro used?",
+            "Who should not use the Shoulder Pro?",
+            "How do I change Shoulder Pro modes?",
             "Can Shoulder Pro be used with other joint therapies?",
-            "Can joint supplements be used alone without devices?",
+            "What is the PowerWrap?",
+            "How is the PowerWrap used?",
+            "Who should not use the PowerWrap?",
             "What power level should I start with on PowerWrap?",
             "How do I choose Constant vs Pulse mode on PowerWrap?",
             "What are the key safety rules for PowerWrap use?",
@@ -1701,19 +1694,28 @@
             "How is NerveWave typically used for neuropathy?",
             "How does NerveWave track usage?",
             "Can NerveWave be used with accessory tools?",
-            "Which treatment mode should I use on the LED Wrap?",
-            "What should I avoid doing with the LED Wrap?",
-            "How do I power the Knee Pro on/off and change modes?",
-            "What should I know before using the Quake Plate?",
-            "How do I place electrodes correctly?",
-            "How do I change Knee Pro modes?",
-            "How do I change Shoulder Pro modes?",
+            "What are the three ways a clinic can deploy NerveWave?",
+            "What do clinics typically standardize in the first week of deploying NerveWave?",
+            "Can supplements be used alone without devices?",
+            "Can joint supplements be used alone without devices?",
+            "What is the Nerve & Neuropathy Cream?",
+            "When and how is the Nerve & Neuropathy Cream used?",
+            "How do I use the Nerve & Neuropathy Cream and what are the ingredients?",
+            "What are the NerveSpa Performance Diabetic Socks?",
+            "How do I put on the Diabetic Socks correctly?",
+            "Can the Diabetic Socks be worn all day?",
+            "Can the Nerve Bath be used with other devices the same day?",
+            "Can Quake Plate be used with other neuropathy devices?",
             "Is tingling or warmth normal during a Nerve Bath session?",
             "What should I feel during LED wrap therapy?",
             "What should I feel during Cold Laser therapy?",
             "Is muscle fatigue normal after using the Quake Plate?",
             "What should I feel during a NerveWave session?",
             "What should providers do if a patient reports discomfort during use?",
+            "How do I place electrodes correctly?",
+            "Does the patient own the NerveSpa devices, or does the clinic keep them?",
+            "Where can I find NerveSpa sell sheets and tech specs?",
+            "What replacement parts and accessories are available for NerveSpa devices?",
           ],
           protocols: [
             "How do I get the best results from the NerveSpa program",
@@ -1721,61 +1723,93 @@
             "How long is a typical NerveSpa program?",
             "Can NerveSpa be combined with in-clinic treatments?",
             "What outcomes do patients commonly report?",
-            "How long is a typical NerveSpa Nerve Bath session?",
-            "How often should the NerveSpa Nerve Bath be used?",
-            "What improvements do patients report with the NerveSpa Nerve Bath?",
-            "How long and how often should I use the Quake Plate?",
-            "What outcomes are expected with LED wrap therapy?",
-            "What outcomes are expected with Cold Laser therapy?",
-            "What outcomes are expected with the Knee Pro?",
-            "What outcomes are expected with the Shoulder Pro?",
-            "What outcomes are expected with PowerWrap therapy?",
+            "What is more important: complexity or consistency?",
+            "Should I always use the full protocol immediately?",
+            "What is the biggest reason patients fail?",
+            "What if a patient struggles to follow the protocol?",
+            "What if a patient feels overwhelmed?",
+            "How do I know if the NerveSpa program is working?",
+            "What should I do if I miss several days of the NerveSpa program?",
+            "Can NerveSpa be used for chemotherapy-induced neuropathy?",
+            "What are the stages of peripheral neuropathy?",
+            "What makes the NerveSpa protocol effective?",
             "What is the NerveSpa Neuropathy Program?",
             "How does the Neuropathy Program work?",
             "What devices are used in the Neuropathy Program?",
             "Do patients need all the devices in the Neuropathy Program?",
             "How long does the Neuropathy Program take?",
+            "How long is a typical NerveSpa Neuropathy program?",
             "Why is consistency important in the Neuropathy Program?",
             "What happens after the initial Neuropathy Program is completed?",
             "Can the Neuropathy Program be adjusted over time?",
             "How do supplements fit into the Neuropathy Program?",
+            "What is the difference between the NerveSpa Classic, 60-day, and 90-day programs?",
+            "How long is a typical NerveSpa Nerve Bath session?",
+            "How often should the NerveSpa Nerve Bath be used?",
+            "What improvements do patients report with the NerveSpa Nerve Bath?",
             "How long is a typical Nerve Bath session?",
             "What should patients feel during a Nerve Bath session?",
+            "How long and how often should I use the Quake Plate?",
             "How often should the Quake Plate be used?",
             "How long should a Quake Plate session last?",
             "What should patients feel during Quake Plate therapy?",
+            "What outcomes are expected with LED wrap therapy?",
             "How often should the NerveBeam LED Wrap be used?",
             "What should patients feel during LED Wrap therapy?",
+            "What outcomes are expected with Cold Laser therapy?",
             "How often should the NerveBeam Cold Laser be used?",
             "How long is a Cold Laser session?",
             "What should patients feel during Cold Laser therapy?",
             "Can Cold Laser be combined with other neuropathy modalities?",
             "What supplements are commonly used in the Neuropathy Program?",
+            "what is the protocol for the Nerve and Neuropathy supplements?",
             "When should Nerve Rebuilder be taken?",
+            "How do I take Nerve Rebuilder and what is the dose?",
             "When should Nerve Regeneration be taken?",
+            "How do I take Nerve Regeneration Formula and what is the dose?",
             "When should Blood Flow Super Formula be taken?",
+            "How do I take Blood Flow Super Formula and what is the dose?",
             "How do supplements support the Neuropathy Program?",
+            "How do I take the Blessed Thistle tincture and what is the dose?",
+            "How do I take the Milk Thistle tincture and what is the dose?",
+            "How do I take the N1 Nerve + Neuropathy Support ODF?",
+            "What is the N1 product line?",
+            "What is the N1 Nerve + Neuropathy Support ODF?",
+            "What is the N1 Sleep Support supplement?",
+            "How do I take the N1 Sleep Support ODF?",
+            "What is the N1 Skinny Blend?",
+            "How do I take the N1 Skinny Blend ODF?",
+            "What is the Nerve Regeneration Formula?",
+            "How are NerveSpa supplements formulated and tested?",
             "What is the NerveSpa Joint & Mobility Program?",
             "How does the Joint & Mobility Program work?",
             "What devices are used in the Joint & Mobility Program?",
             "How long does the Joint & Mobility Program take?",
+            "How long does it take for the Knee pro and shoulder pro to work?",
             "Can the Joint & Mobility Program be adjusted over time?",
             "How often should patients use the Knee Pro?",
             "How long is a Knee Pro session?",
             "What should patients feel during Knee Pro therapy?",
+            "What outcomes are expected with the Knee Pro?",
             "How often should patients use the Shoulder Pro?",
             "How long is a Shoulder Pro session?",
             "What should patients feel during Shoulder Pro therapy?",
+            "What outcomes are expected with the Shoulder Pro?",
             "What joint supplements are commonly used in the Joint & Mobility Program?",
-            "When should Super Flex Joint Formula – Rebuild + Maintain be used?",
+            "When should Super Flex Joint Formula \u2013 Rebuild + Maintain be used?",
+            "How do I take Super Flex Joint Formula and what is the dose?",
             "When should OA & RA Relief Cream be used?",
+            "How do I use the OA/RA Cream and what is the dose?",
             "When should Nerve Target Roll-On be used?",
+            "How do I use the Nerve Target Roll-On and what is the dose?",
             "How do joint supplements fit into the Joint & Mobility Program?",
             "What is the PowerWrap used for in the Clinical Program?",
+            "What outcomes are expected with PowerWrap therapy?",
             "How long is a PowerWrap session?",
             "How often can I use PowerWrap in a day?",
             "Can PowerWrap be combined with other therapies?",
             "What is NerveWave used for in the Clinical Program?",
+            "What clinical programs can NerveWave support?",
             "How do I start a program on NerveWave?",
             "What is the recommended schedule for NerveWave regenerative pain control?",
             "What is the recommended schedule for NerveWave restorative recovery?",
@@ -1783,6 +1817,15 @@
             "How long should Vibe be used in a typical session?",
             "How is Vibe typically used within a clinical plan?",
             "What should patients feel during Vibe use?",
+            "What is the Metabolic, Gut and Immunity protocol?",
+            "How do I take ImmunoGut Heal + Seal and what is the dose?",
+            "How do I take ImmunoGut Rebuild + Maintain and what is the dose?",
+            "How do I take the N1 Gut Support ODF?",
+            "What pre-packaged program bundles are available for clinics to order?",
+            "What is included in the NerveSpa Nerve Bath 90-day supply program?",
+            "How do clinics typically structure and price the NerveSpa program for patients?",
+            "How does NerveSpa help clinics reduce patient cost compared to other programs?",
+            "Can NerveSpa integrate with a chiropractic or existing clinic program?",
             "When should I stop treatment and contact my provider?",
             "How do clinics measure patient engagement with NerveSpa?",
             "What non-diagnostic indicators can providers monitor when using NerveSpa?",
@@ -1805,83 +1848,101 @@
             "What situations require clinical judgment before continuing NerveSpa use?",
             "Are there any patient scenarios where NerveSpa may not be appropriate?",
             "How does NerveSpa support safe use alongside other clinical modalities?",
+            "Is there a video of Dr. Tim Kammerman discussing NerveWave results?",
+            "Is there a video of Dr. James Perkins on NerveSpa and Knee Pro results?",
           ],
           troubleshooting: [
             "What should I do if my Nerve Bath device is frozen?",
             "What if there is no stimulation or weak stimulation in the Nerve Bath?",
             "What if the Nerve Bath device does not power on?",
             "What if stimulation stops or the program ends short of 30 minutes?",
+            "What if stimulation stops or the program ends short of 30 minutes on the nervespa bath?",
+            "We have a patient that is using nervespa at home for foot neuropathy and he is reporting that his feet swell up shortly after using it",
+            "What if I don't feel stimulation in the water?",
+            "What if there is no sensation during a NerveSpa Nerve Bath session?",
+            "What if I feel no sensation during a Nerve Bath session?",
+            "What if I feel little or no sensation during a Nerve Bath session?",
+            "What if the sensation feels uneven between feet or hands?",
+            "What if stimulation feels uneven between hands or feet?",
+            "What if the water feels too hot or uncomfortable?",
+            "What if the water feels too warm or too cool?",
+            "What if the session stops before 30 minutes?",
             "What should I do if the LED Wrap lights are flickering or powering down early?",
-            "What if I’m having issues with stimulation on Knee Pro?",
+            "What should I do if the LED Wrap does not turn on?",
+            "What if the LED wrap does not turn on?",
+            "What if the LED Wrap lights flicker during use?",
+            "What should I do if the LED Wrap powers down early?",
+            "What if the wrap shuts off during a session?",
+            "What if the wrap does not stay secured?",
+            "What if the LEDs appear dim?",
+            "What if I'm having issues with stimulation on Knee Pro?",
+            "What should I do if Knee Pro does not power on?",
+            "What if the Knee Pro does not power on?",
+            "What if stimulation feels weak on Knee Pro?",
+            "What if the Knee Pro does not deliver sensation?",
+            "What if the Knee Pro strap feels too tight or loose?",
+            "What if Knee Pro shuts off during a session?",
+            "What if the Knee Pro feels uncomfortable around the knee?",
             "What if the Quake Plate makes a loud grinding noise?",
             "What if the Quake Plate remote does not work?",
             "What battery does the Quake Plate remote use?",
+            "What if the Quake Plate feels too intense?",
+            "What if the Quake Plate does not start vibrating?",
+            "What if the Quake Plate does not power on?",
+            "What if vibration feels too intense?",
             "What should I do if stimulation feels weak with conductive socks or gloves?",
+            "What if my conductive socks or garments do not work properly?",
+            "What if conductive socks or gloves feel dry during use?",
+            "What if stimulation cuts in and out when using conductive garments?",
+            "What if the garment no longer conducts stimulation well?",
             "What should I do if the Cold Laser does not turn on?",
+            "What if the Cold Laser does not activate?",
             "What if the Cold Laser shuts off during treatment?",
-            "What should I do if the LED Wrap does not turn on?",
-            "What if the LED Wrap lights flicker during use?",
-            "What should I do if the LED Wrap powers down early?",
+            "What if the Cold Laser does not emit light?",
+            "What if the Cold Laser does not power on?",
+            "What if the laser shuts off during treatment?",
+            "What if I do not feel any sensation from the laser?",
             "What should I do if the PowerWrap does not turn on?",
             "What should I do if my skin feels too sensitive after PowerWrap use?",
             "What if the PowerWrap remote does not respond?",
+            "What if PowerWrap feels uncomfortable during use?",
+            "What if the PowerWrap does not turn on?",
+            "What if the wrap feels too warm?",
             "What should I do if NerveWave does not power on?",
             "What if I feel no sensation during NerveWave use?",
             "What should I do if NerveWave stimulation feels too strong?",
             "What if the electrodes are not sticking properly?",
             "What should I do if NerveWave shuts off during treatment?",
-            "What should I do if the Vibe device does not turn on?",
-            "What if the Vibe stops during a session?",
-            "What should I do if Knee Pro does not power on?",
-            "What if stimulation feels weak on Knee Pro?",
-            "What should I do if Shoulder Pro does not power on?",
-            "What if stimulation feels weak on Shoulder Pro?",
-            "What if I feel little or no sensation during a Nerve Bath session?",
-            "What should I do if the Nerve Bath unit does not turn on?",
-            "What if the LED wrap does not turn on?",
-            "What if the Cold Laser does not activate?",
-            "What if the Quake Plate feels too intense?",
-            "What if the Quake Plate does not start vibrating?",
-            "What should I do if the PowerWrap does not power on?",
-            "What if PowerWrap feels uncomfortable during use?",
             "What if I feel little or no sensation during NerveWave use?",
             "What if NerveWave does not turn on?",
+            "What if I do not feel stimulation with NerveWave?",
+            "What if electrodes lose adhesion during use?",
+            "What if the NerveWave unit will not power on?",
+            "What should I do if the Vibe device does not turn on?",
+            "What if the Vibe stops during a session?",
+            "What if the Vibe device does not start?",
+            "What if vibration feels uncomfortable?",
+            "What should I do if Shoulder Pro does not power on?",
+            "What if stimulation feels weak on Shoulder Pro?",
+            "What if the Shoulder Pro feels uncomfortable during use?",
+            "What if the Shoulder Pro does not power on?",
+            "What if the Shoulder Pro shifts during use?",
+            "What if the Shoulder Pro shuts off unexpectedly?",
+            "What if a patient struggles to follow the protocol?",
+            "What if a patient feels overwhelmed?",
+            "What should I do if I miss several days of the NerveSpa program?",
             "When should I contact support for device issues?",
+            "When should I contact NerveSpa support?",
+            "When should a clinic contact NerveSpa support versus handling an issue internally?",
             "What if my device will not charge?",
             "What if my device turns off during use?",
             "What if stimulation feels too strong or uncomfortable?",
             "What if stimulation feels too weak?",
             "Can I continue treatment if I experience skin irritation?",
-            "What if my conductive socks or garments do not work properly?",
-            "What if I feel no sensation during a Nerve Bath session?",
-            "What if the water feels too hot or uncomfortable?",
             "What if the unit does not power on?",
-            "What if stimulation feels uneven between hands or feet?",
-            "What if the PowerWrap does not turn on?",
-            "What if the wrap feels too warm?",
-            "What if I do not feel stimulation with NerveWave?",
-            "What if electrodes lose adhesion during use?",
-            "What if the NerveWave unit will not power on?",
-            "What if the Vibe device does not start?",
-            "What if vibration feels uncomfortable?",
-            "What if the Knee Pro does not deliver sensation?",
-            "What if the Knee Pro strap feels too tight or loose?",
-            "What if the Shoulder Pro feels uncomfortable during use?",
-            "What if the Shoulder Pro does not power on?",
-            "What if I don’t feel stimulation in the water?",
-            "What if stimulation feels uneven between feet or hands?",
             "What if the unit shuts off during a session?",
-            "What if the Cold Laser does not emit light?",
+            "What if I do not feel anything during treatment?",
             "What if treatment feels ineffective?",
-            "What if vibration feels too intense?",
-            "What if the Quake Plate does not power on?",
-            "What if conductive socks or gloves feel dry during use?",
-            "What if stimulation cuts in and out when using conductive garments?",
-            "What if the garment no longer conducts stimulation well?",
-            "What if Knee Pro shuts off during a session?",
-            "What if the Knee Pro feels uncomfortable around the knee?",
-            "What if the Shoulder Pro shifts during use?",
-            "What if the Shoulder Pro shuts off unexpectedly?",
             "What if the screen does not respond or freezes?",
             "What if lead wires appear damaged?",
             "What if a device will not power on?",
@@ -1890,30 +1951,16 @@
             "What if an error message appears on the screen?",
             "What if the battery drains faster than expected?",
             "What if accessories are lost or damaged?",
-            "When should I contact NerveSpa support?",
-            "What if there is no sensation during a NerveSpa Nerve Bath session?",
-            "What if the sensation feels uneven between feet or hands?",
-            "What if the water feels too warm or too cool?",
-            "What if the session stops",
-            "What if the session stops before 30 minutes?",
-            "What if the device will not power on?",
-            "What if stimulation feels too strong?",
-            "What if the wrap shuts off during a session?",
-            "What if I do not feel anything during treatment?",
-            "What if the Cold Laser does not power on?",
-            "What if the laser shuts off during treatment?",
-            "What if I do not feel any sensation from the laser?",
             "What should I do if the device overheats?",
-            "What if the wrap does not stay secured?",
-            "What if the LEDs appear dim?",
-            "What if the Knee Pro does not power on?",
             "What if the stimulation feels too strong?",
             "What if the stimulation feels too weak?",
-            "When should a clinic contact NerveSpa support versus handling an issue internally?",
+            "What if the device will not power on?",
+            "What if stimulation feels too strong?",
+            "What if stimulation feels uneven between feet or hands?",
           ],
           orders: [
             "How can clinics order NerveSpa or request a demo?",
-            "What are NerveSpa’s pricing options?",
+            "What are NerveSpa's pricing options?",
             "Is NerveSpa FDA-registered?",
             "Is NerveSpa covered by insurance?",
             "Where is NerveSpa manufactured?",
@@ -1931,6 +1978,20 @@
             "Are international certifications or markets planned for NerveSpa?",
             "Can clinics outside the U.S. request information or express interest?",
             "How does NerveSpa evaluate expansion into new regions or care settings?",
+            "What are the three ways a clinic can deploy NerveWave?",
+            "What does the NerveWave rental revenue model look like in practice?",
+            "Is NerveWave sanitization-ready for repeated clinic and rental use?",
+            "What is the revenue opportunity for a clinic adding NerveSpa programs?",
+            "We currently use Blueprint or ReBuilder \u2014 why consider NerveSpa?",
+            "Why doesn't NerveSpa combine PEMF inside the LED wrap like some competitors claim to?",
+            "What is the difference between NerveWave and the NerveSpa Nerve Bath?",
+            "How does a clinic open a NerveSpa wholesale account?",
+            "What does onboarding look like after a clinic opens a NerveSpa account?",
+            "Does NerveSpa offer private label options for clinics?",
+            "Does NerveSpa offer a free trial for clinics?",
+            "How does the NerveSpa wholesale ordering process work?",
+            "How do patients reorder consumables like Epsom salt, tablets, and garments?",
+            "What do I tell my doctor about using NerveSpa alongside my current care?",
           ],
           care: [
             "What warranty and return policy does NerveSpa offer?",
@@ -1947,6 +2008,27 @@
             "Can devices be shared between patients?",
             "How should devices be cleaned after use?",
             "What should staff say if a patient asks whether NerveSpa replaces medical treatment?",
+            "What is NerveSpa's approach to warranty edge cases and patient issues?",
+            "Is there a rolling cart available for NerveWave?",
+            "Are there size extender straps for the Knee Pro?",
+            "Do you have testimonials from clinics or doctors using NerveSpa?",
+            "Do you have patient testimonials for NerveSpa?",
+            "Is there a video overview of why clinics choose NerveSpa?",
+            "Is there a setup video for the NerveSpa Nerve Bath?",
+            "Is there a demo video for the Knee Pro?",
+            "Is there a demo video for the PowerWrap?",
+            "Is there a video explaining how red and infrared light therapy works?",
+            "Is there a patient testimonial video for NerveSpa?",
+            "Where can I watch NerveSpa training and clinical videos?",
+            "Is there a video of Dr. Cory Frogley from Data Driven Practice discussing NerveSpa?",
+            "Is there a video of Dr. Andrew Fetterman from Creative Health & Spine on NerveWave?",
+            "Is there a video of Dr. Stephen Chalk on NerveWave?",
+            "Is there a video of Dr. Rosie Main (Olympic team chiropractor) discussing NerveSpa?",
+            "Is there a video of Dr. Mike Bystrom on NerveSpa?",
+            "Is there a video of Dr. Sam Hosseini on why his clinic switched to NerveSpa?",
+            "Is there a video of Dr. Corey Brumbaugh on NerveSpa's drug-free approach?",
+            "Is there a video of Dr. Sebastian Castelli on the Knee Pro?",
+            "Is there a video of Dr. Mark Beck reviewing the NerveSpa PowerWrap?",
           ],
         };
 
@@ -1955,63 +2037,255 @@
 
       const CATEGORY_SUBCATEGORIES = {
         setup: [
-          { key: "general", title: "General", sub: "NerveSpa overview, candidacy, and system basics" },
-          { key: "nerve-bath", title: "Nerve Bath", sub: "Setup, consumables, and first-use guidance" },
-          { key: "conductive-accessories", title: "Conductive Accessories", sub: "Pads, socks, gloves, and garments" },
-          { key: "nervewave", title: "NerveWave", sub: "Intensity, accessories, and device basics" },
-          { key: "quake-plate", title: "Quake Plate", sub: "Setup, positioning, and vibration basics" },
-          { key: "led-wrap", title: "LED Wrap", sub: "Positioning, modes, and first-use guidance" },
-          { key: "cold-laser", title: "Cold Laser", sub: "Setup, positioning, and safe use" },
-          { key: "knee-pro", title: "Knee Pro", sub: "Wear, modes, and treatment setup" },
-          { key: "shoulder-pro", title: "Shoulder Pro", sub: "Wear, modes, and treatment setup" },
-          { key: "powerwrap", title: "PowerWrap", sub: "Mode selection, power, and use basics" },
+          {
+            key: "general",
+            title: "General",
+            sub: "NerveSpa overview, candidacy, and system basics",
+          },
+          {
+            key: "nerve-bath",
+            title: "Nerve Bath",
+            sub: "Setup, consumables, and first-use guidance",
+          },
+          {
+            key: "conductive-accessories",
+            title: "Conductive Accessories",
+            sub: "Pads, socks, gloves, and garments",
+          },
+          {
+            key: "nervewave",
+            title: "NerveWave",
+            sub: "Intensity, accessories, and device basics",
+          },
+          {
+            key: "quake-plate",
+            title: "Quake Plate",
+            sub: "Setup, positioning, and vibration basics",
+          },
+          {
+            key: "led-wrap",
+            title: "LED Wrap",
+            sub: "Positioning, modes, and first-use guidance",
+          },
+          {
+            key: "cold-laser",
+            title: "Cold Laser",
+            sub: "Setup, positioning, and safe use",
+          },
+          {
+            key: "knee-pro",
+            title: "Knee Pro",
+            sub: "Wear, modes, and treatment setup",
+          },
+          {
+            key: "shoulder-pro",
+            title: "Shoulder Pro",
+            sub: "Wear, modes, and treatment setup",
+          },
+          {
+            key: "powerwrap",
+            title: "PowerWrap",
+            sub: "Mode selection, power, and use basics",
+          },
           { key: "vibe", title: "Vibe", sub: "Session basics and typical use" },
-          { key: "supplements", title: "Supplements", sub: "How supplements fit with device use" },
-          { key: "diabetic-socks", title: "Diabetic Socks", sub: "Fit, wear guidance, and daily use" },
+          {
+            key: "supplements",
+            title: "Supplements",
+            sub: "How supplements fit with device use",
+          },
+          {
+            key: "diabetic-socks",
+            title: "Diabetic Socks",
+            sub: "Fit, wear guidance, and daily use",
+          },
         ],
         protocols: [
-          { key: "general", title: "General", sub: "Program structure, expectations, and outcomes" },
-          { key: "neuropathy-program", title: "Neuropathy Program", sub: "Devices, timing, and supplement support" },
-          { key: "joint-mobility-program", title: "Joint & Mobility Program", sub: "Joint-focused treatment plans and support" },
-          { key: "nerve-bath", title: "Nerve Bath", sub: "Session length, frequency, and expected experience" },
-          { key: "nervewave", title: "NerveWave", sub: "Schedules, programs, and clinical use" },
-          { key: "quake-plate", title: "Quake Plate", sub: "Frequency, duration, and expected experience" },
-          { key: "led-wrap", title: "LED Wrap", sub: "Session timing and expected experience" },
-          { key: "cold-laser", title: "Cold Laser", sub: "Treatment timing and combination use" },
-          { key: "knee-pro", title: "Knee Pro", sub: "Usage frequency, session length, and feel" },
-          { key: "shoulder-pro", title: "Shoulder Pro", sub: "Usage frequency, session length, and feel" },
-          { key: "powerwrap", title: "PowerWrap", sub: "Protocol timing and combination use" },
-          { key: "vibe", title: "Vibe", sub: "Session timing and role in care plans" },
-          { key: "supplements", title: "Supplements", sub: "Timing, fit, and support within programs" },
+          {
+            key: "general",
+            title: "General",
+            sub: "Program structure, expectations, and outcomes",
+          },
+          {
+            key: "neuropathy-program",
+            title: "Neuropathy Program",
+            sub: "Devices, timing, and supplement support",
+          },
+          {
+            key: "joint-mobility-program",
+            title: "Joint & Mobility Program",
+            sub: "Joint-focused treatment plans and support",
+          },
+          {
+            key: "nerve-bath",
+            title: "Nerve Bath",
+            sub: "Session length, frequency, and expected experience",
+          },
+          {
+            key: "nervewave",
+            title: "NerveWave",
+            sub: "Schedules, programs, and clinical use",
+          },
+          {
+            key: "quake-plate",
+            title: "Quake Plate",
+            sub: "Frequency, duration, and expected experience",
+          },
+          {
+            key: "led-wrap",
+            title: "LED Wrap",
+            sub: "Session timing and expected experience",
+          },
+          {
+            key: "cold-laser",
+            title: "Cold Laser",
+            sub: "Treatment timing and combination use",
+          },
+          {
+            key: "knee-pro",
+            title: "Knee Pro",
+            sub: "Usage frequency, session length, and feel",
+          },
+          {
+            key: "shoulder-pro",
+            title: "Shoulder Pro",
+            sub: "Usage frequency, session length, and feel",
+          },
+          {
+            key: "powerwrap",
+            title: "PowerWrap",
+            sub: "Protocol timing and combination use",
+          },
+          {
+            key: "vibe",
+            title: "Vibe",
+            sub: "Session timing and role in care plans",
+          },
+          {
+            key: "supplements",
+            title: "Supplements",
+            sub: "Timing, fit, and support within programs",
+          },
         ],
         troubleshooting: [
-          { key: "general-power", title: "General Power & Charging", sub: "Charging, overheating, battery, and screen issues" },
-          { key: "nerve-bath", title: "Nerve Bath", sub: "Power, stimulation, temperature, and session issues" },
-          { key: "conductive-accessories", title: "Conductive Accessories", sub: "Weak conduction, dryness, and garment issues" },
-          { key: "nervewave", title: "NerveWave", sub: "Power, intensity, electrodes, and shutdown issues" },
-          { key: "quake-plate", title: "Quake Plate", sub: "Noise, remote, vibration, and power issues" },
-          { key: "led-wrap", title: "LED Wrap", sub: "Lights, flicker, warmth, and shutdown issues" },
-          { key: "cold-laser", title: "Cold Laser", sub: "Power, light output, and treatment issues" },
-          { key: "knee-pro", title: "Knee Pro", sub: "Power, fit, shutdown, and stimulation issues" },
-          { key: "shoulder-pro", title: "Shoulder Pro", sub: "Power, fit, shutdown, and stimulation issues" },
-          { key: "powerwrap", title: "PowerWrap", sub: "Power, comfort, warmth, and remote issues" },
-          { key: "vibe", title: "Vibe", sub: "Start, stop, and vibration comfort issues" },
+          {
+            key: "general-power",
+            title: "General Power & Charging",
+            sub: "Charging, overheating, battery, and screen issues",
+          },
+          {
+            key: "nerve-bath",
+            title: "Nerve Bath",
+            sub: "Power, stimulation, temperature, and session issues",
+          },
+          {
+            key: "conductive-accessories",
+            title: "Conductive Accessories",
+            sub: "Weak conduction, dryness, and garment issues",
+          },
+          {
+            key: "nervewave",
+            title: "NerveWave",
+            sub: "Power, intensity, electrodes, and shutdown issues",
+          },
+          {
+            key: "quake-plate",
+            title: "Quake Plate",
+            sub: "Noise, remote, vibration, and power issues",
+          },
+          {
+            key: "led-wrap",
+            title: "LED Wrap",
+            sub: "Lights, flicker, warmth, and shutdown issues",
+          },
+          {
+            key: "cold-laser",
+            title: "Cold Laser",
+            sub: "Power, light output, and treatment issues",
+          },
+          {
+            key: "knee-pro",
+            title: "Knee Pro",
+            sub: "Power, fit, shutdown, and stimulation issues",
+          },
+          {
+            key: "shoulder-pro",
+            title: "Shoulder Pro",
+            sub: "Power, fit, shutdown, and stimulation issues",
+          },
+          {
+            key: "powerwrap",
+            title: "PowerWrap",
+            sub: "Power, comfort, warmth, and remote issues",
+          },
+          {
+            key: "vibe",
+            title: "Vibe",
+            sub: "Start, stop, and vibration comfort issues",
+          },
         ],
         orders: [
-          { key: "ordering-demos", title: "Ordering & Demos", sub: "Purchasing, demos, and direct sales questions" },
-          { key: "pricing-bundles", title: "Pricing & Bundles", sub: "Pricing options, kits, and bundles" },
-          { key: "shipping-tracking", title: "Shipping & Tracking", sub: "Delivery timing and order status" },
-          { key: "insurance-hcpcs", title: "Insurance & HCPCS", sub: "Coverage, coding, and reimbursement questions" },
-          { key: "fda-compliance", title: "FDA & Compliance", sub: "Listings, certifications, and manufacturing" },
-          { key: "international", title: "International", sub: "Availability outside the U.S. and expansion" },
+          {
+            key: "ordering-demos",
+            title: "Ordering & Demos",
+            sub: "Purchasing, demos, and direct sales questions",
+          },
+          {
+            key: "pricing-bundles",
+            title: "Pricing & Bundles",
+            sub: "Pricing options, kits, and bundles",
+          },
+          {
+            key: "shipping-tracking",
+            title: "Shipping & Tracking",
+            sub: "Delivery timing and order status",
+          },
+          {
+            key: "insurance-hcpcs",
+            title: "Insurance & HCPCS",
+            sub: "Coverage, coding, and reimbursement questions",
+          },
+          {
+            key: "fda-compliance",
+            title: "FDA & Compliance",
+            sub: "Listings, certifications, and manufacturing",
+          },
+          {
+            key: "international",
+            title: "International",
+            sub: "Availability outside the U.S. and expansion",
+          },
         ],
         care: [
-          { key: "cleaning-maintenance", title: "Cleaning & Maintenance", sub: "Cleaning steps and regular upkeep" },
-          { key: "conductive-care", title: "Conductive Accessories Care", sub: "Socks, gloves, garments, and replacement" },
-          { key: "storage-travel", title: "Storage & Travel", sub: "Traveling with devices and storage best practices" },
-          { key: "warranty-returns", title: "Warranty & Returns", sub: "Coverage, replacements, and return policy" },
-          { key: "manuals-training", title: "Manuals & Training", sub: "Guides, setup help, and clinic training" },
-          { key: "general-safety", title: "General Safety / Medical Care", sub: "Medical disclaimers and treatment expectations" },
+          {
+            key: "cleaning-maintenance",
+            title: "Cleaning & Maintenance",
+            sub: "Cleaning steps and regular upkeep",
+          },
+          {
+            key: "conductive-care",
+            title: "Conductive Accessories Care",
+            sub: "Socks, gloves, garments, and replacement",
+          },
+          {
+            key: "storage-travel",
+            title: "Storage & Travel",
+            sub: "Traveling with devices and storage best practices",
+          },
+          {
+            key: "warranty-returns",
+            title: "Warranty & Returns",
+            sub: "Coverage, replacements, and return policy",
+          },
+          {
+            key: "manuals-training",
+            title: "Manuals & Training",
+            sub: "Guides, setup help, and clinic training",
+          },
+          {
+            key: "general-safety",
+            title: "General Safety / Medical Care",
+            sub: "Medical disclaimers and treatment expectations",
+          },
         ],
       };
 
@@ -2023,69 +2297,323 @@
         const q = String(question || "").toLowerCase();
 
         if (categoryKey === "setup") {
-          if (matchesAny(q, ["nervewave"])) return "nervewave";
-          if (matchesAny(q, ["nerve bath", "water-based", "water feels", "in the water"])) return "nerve-bath";
-          if (matchesAny(q, ["conductive foot pads", "conductive garments", "conductive socks", "glove", "gloves", "pads"])) return "conductive-accessories";
+          if (matchesAny(q, ["nervewave", "nerve wave"])) return "nervewave";
+          if (
+            matchesAny(q, [
+              "nerve bath",
+              "foot bath",
+              "water-based",
+              "water feels",
+              "in the water",
+              "nervespa pro",
+              "nerve spa pro",
+            ])
+          )
+            return "nerve-bath";
+          if (
+            matchesAny(q, [
+              "conductive foot pads",
+              "conductive garments",
+              "conductive socks",
+              "conductive glove",
+              "glove",
+              "gloves",
+              "pads",
+              "calf pad",
+            ])
+          )
+            return "conductive-accessories";
           if (matchesAny(q, ["quake plate"])) return "quake-plate";
-          if (matchesAny(q, ["led wrap", "led wrap therapy", "led light therapy wrap"])) return "led-wrap";
-          if (matchesAny(q, ["cold laser", "laser"])) return "cold-laser";
+          if (
+            matchesAny(q, [
+              "led wrap",
+              "led light therapy wrap",
+              "nervebeam led",
+            ])
+          )
+            return "led-wrap";
+          if (matchesAny(q, ["cold laser", "nervebeam cold"]))
+            return "cold-laser";
           if (matchesAny(q, ["knee pro"])) return "knee-pro";
           if (matchesAny(q, ["shoulder pro"])) return "shoulder-pro";
-          if (matchesAny(q, ["powerwrap"])) return "powerwrap";
+          if (matchesAny(q, ["powerwrap", "power wrap"])) return "powerwrap";
           if (matchesAny(q, ["vibe"])) return "vibe";
-          if (matchesAny(q, ["supplement", "joint supplements"])) return "supplements";
+          if (
+            matchesAny(q, [
+              "supplement",
+              "joint supplements",
+              "nerve rebuilder",
+              "nerve regeneration",
+              "blood flow",
+              "n1 ",
+              "immunogut",
+              "cream",
+              "roll-on",
+              "blessed thistle",
+              "milk thistle",
+              "skinny blend",
+              "sleep support",
+              "super flex",
+            ])
+          )
+            return "supplements";
           if (matchesAny(q, ["diabetic socks"])) return "diabetic-socks";
           return "general";
         }
 
         if (categoryKey === "protocols") {
-          if (matchesAny(q, ["neuropathy program"])) return "neuropathy-program";
-          if (matchesAny(q, ["joint & mobility program", "joint and mobility program"])) return "joint-mobility-program";
-          if (matchesAny(q, ["nervewave"])) return "nervewave";
+          if (matchesAny(q, ["neuropathy program"]))
+            return "neuropathy-program";
+          if (
+            matchesAny(q, [
+              "joint & mobility program",
+              "joint and mobility program",
+              "joint.*mobility",
+            ])
+          )
+            return "joint-mobility-program";
+          if (matchesAny(q, ["nervewave", "nerve wave"])) return "nervewave";
           if (matchesAny(q, ["nerve bath"])) return "nerve-bath";
           if (matchesAny(q, ["quake plate"])) return "quake-plate";
           if (matchesAny(q, ["led wrap"])) return "led-wrap";
           if (matchesAny(q, ["cold laser"])) return "cold-laser";
           if (matchesAny(q, ["knee pro"])) return "knee-pro";
           if (matchesAny(q, ["shoulder pro"])) return "shoulder-pro";
-          if (matchesAny(q, ["powerwrap"])) return "powerwrap";
+          if (matchesAny(q, ["powerwrap", "power wrap"])) return "powerwrap";
           if (matchesAny(q, ["vibe"])) return "vibe";
-          if (matchesAny(q, ["supplement", "nervе rebuild", "nerve rebuilder", "blood flow super formula", "super flex joint formula", "oa & ra relief cream", "nerve target roll-on", "nervе regeneration", "nerve regeneration"])) return "supplements";
+          if (
+            matchesAny(q, [
+              "supplement",
+              "nerve rebuild",
+              "nerve rebuilder",
+              "blood flow",
+              "super flex",
+              "oa & ra",
+              "oa/ra",
+              "nerve target",
+              "nerve.*neuropathy cream",
+              "n1 ",
+              "gut support",
+              "immunogut",
+              "blessed thistle",
+              "milk thistle",
+              "skinny blend",
+              "sleep support",
+              "nerve regeneration",
+              "metabolic",
+              "gut.*immunity",
+            ])
+          )
+            return "supplements";
           return "general";
         }
 
         if (categoryKey === "troubleshooting") {
-          if (matchesAny(q, ["charge", "battery", "screen", "freezes", "overheats", "error message", "device becomes warm", "device will not power on", "device turns off during use"])) return "general-power";
+          if (
+            matchesAny(q, [
+              "charge",
+              "battery",
+              "screen",
+              "freezes",
+              "overheats",
+              "error message",
+              "device becomes warm",
+              "device will not power on",
+              "device turns off during use",
+              "accessories are lost",
+            ])
+          )
+            return "general-power";
           if (matchesAny(q, ["nervewave", "electrode"])) return "nervewave";
-          if (matchesAny(q, ["nerve bath", "in the water", "water feels", "session stops before 30 minutes"])) return "nerve-bath";
-          if (matchesAny(q, ["conductive socks", "conductive garments", "conductive gloves", "garment", "gloves", "socks"])) return "conductive-accessories";
+          if (
+            matchesAny(q, [
+              "nerve bath",
+              "in the water",
+              "water feels",
+              "session stops before 30",
+              "feet swell",
+              "stimulation stops or the program",
+            ])
+          )
+            return "nerve-bath";
+          if (
+            matchesAny(q, [
+              "conductive socks",
+              "conductive garments",
+              "conductive gloves",
+              "garment",
+              "gloves",
+              "socks",
+            ])
+          )
+            return "conductive-accessories";
           if (matchesAny(q, ["quake plate"])) return "quake-plate";
-          if (matchesAny(q, ["led wrap", "leds", "lights flicker", "lights are flickering", "wrap shuts off"])) return "led-wrap";
+          if (
+            matchesAny(q, [
+              "led wrap",
+              "leds",
+              "lights flicker",
+              "lights are flickering",
+              "wrap shuts off",
+              "wrap does not stay",
+              "leds appear",
+            ])
+          )
+            return "led-wrap";
           if (matchesAny(q, ["cold laser", "laser"])) return "cold-laser";
           if (matchesAny(q, ["knee pro"])) return "knee-pro";
           if (matchesAny(q, ["shoulder pro"])) return "shoulder-pro";
-          if (matchesAny(q, ["powerwrap"])) return "powerwrap";
+          if (matchesAny(q, ["powerwrap", "power wrap"])) return "powerwrap";
           if (matchesAny(q, ["vibe"])) return "vibe";
           return "general-power";
         }
 
         if (categoryKey === "orders") {
-          if (matchesAny(q, ["demo", "purchase directly", "order ", "bulk order", "starter kits"])) return "ordering-demos";
-          if (matchesAny(q, ["pricing", "bundle", "kits"])) return "pricing-bundles";
-          if (matchesAny(q, ["ship", "tracking", "delivered"])) return "shipping-tracking";
-          if (matchesAny(q, ["insurance", "reimbursement", "hcpcs", "coverage"])) return "insurance-hcpcs";
-          if (matchesAny(q, ["fda", "certification", "certifications", "manufactured", "pmt", "listings", "verify"])) return "fda-compliance";
-          if (matchesAny(q, ["outside the united states", "international", "outside the u.s.", "regions"])) return "international";
+          if (
+            matchesAny(q, [
+              "demo",
+              "purchase directly",
+              "open a nervespa",
+              "wholesale account",
+              "onboarding",
+              "free trial",
+              "private label",
+              "starter kits",
+              "how can clinics order",
+            ])
+          )
+            return "ordering-demos";
+          if (
+            matchesAny(q, [
+              "pricing",
+              "bundle",
+              "kits",
+              "revenue",
+              "rental",
+              "sell to patient",
+              "business model",
+              "deploy nervewave",
+              "competitor",
+              "blueprint",
+              "rebuilder",
+              "pemf",
+              "nervewave.*nerve bath",
+              "difference between nervewave",
+              "reorder consumable",
+            ])
+          )
+            return "pricing-bundles";
+          if (matchesAny(q, ["ship", "tracking", "delivered", "lead time"]))
+            return "shipping-tracking";
+          if (
+            matchesAny(q, [
+              "insurance",
+              "reimbursement",
+              "hcpcs",
+              "coverage",
+              "tell my doctor",
+            ])
+          )
+            return "insurance-hcpcs";
+          if (
+            matchesAny(q, [
+              "fda",
+              "certification",
+              "certifications",
+              "manufactured",
+              "pmt",
+              "listings",
+              "verify",
+              "sanitization",
+              "sanitiz",
+            ])
+          )
+            return "fda-compliance";
+          if (
+            matchesAny(q, [
+              "outside the united states",
+              "international",
+              "outside the u.s.",
+              "regions",
+            ])
+          )
+            return "international";
           return "ordering-demos";
         }
 
         if (categoryKey === "care") {
-          if (matchesAny(q, ["warranty", "return policy", "returns"])) return "warranty-returns";
+          if (
+            matchesAny(q, [
+              "warranty",
+              "return policy",
+              "returns",
+              "oops program",
+              "edge cases",
+            ])
+          )
+            return "warranty-returns";
           if (matchesAny(q, ["travel", "storage"])) return "storage-travel";
-          if (matchesAny(q, ["manuals", "guides", "training"])) return "manuals-training";
-          if (matchesAny(q, ["replace medical care", "replace medical treatment", "medical treatment"])) return "general-safety";
-          if (matchesAny(q, ["conductive socks", "gloves", "garments", "replaced"])) return "conductive-care";
-          if (matchesAny(q, ["clean", "cleaning", "washed", "devices be shared", "cleaned after use", "maintenance"])) return "cleaning-maintenance";
+          if (
+            matchesAny(q, [
+              "manuals",
+              "guides",
+              "training",
+              "sell sheets",
+              "tech specs",
+              "video",
+              "youtube",
+              "watch",
+              "testimonial",
+              "real stories",
+              "demo video",
+              "setup video",
+              "dr.*kammerman",
+              "dr.*frogley",
+              "dr.*fetterman",
+              "dr.*chalk",
+              "dr.*main",
+              "dr.*bystrom",
+              "dr.*hosseini",
+              "dr.*perkins",
+              "dr.*brumbaugh",
+              "dr.*castelli",
+              "dr.*beck",
+              "patient.*testimonial",
+              "clinic.*say",
+              "rolling cart",
+              "extender strap",
+            ])
+          )
+            return "manuals-training";
+          if (
+            matchesAny(q, [
+              "replace medical care",
+              "replace medical treatment",
+              "medical treatment",
+            ])
+          )
+            return "general-safety";
+          if (
+            matchesAny(q, [
+              "conductive socks",
+              "gloves",
+              "garments",
+              "replaced",
+              "clean conductive",
+            ])
+          )
+            return "conductive-care";
+          if (
+            matchesAny(q, [
+              "clean",
+              "cleaning",
+              "washed",
+              "devices be shared",
+              "cleaned after use",
+              "maintenance",
+            ])
+          )
+            return "cleaning-maintenance";
           return "cleaning-maintenance";
         }
 
@@ -2097,8 +2625,9 @@
       }
 
       function getQuestionsForSubcategory(categoryKey, subcategoryKey) {
-        return seedQuestionsForCategory(categoryKey).filter((question) =>
-          classifyQuestion(categoryKey, question) === subcategoryKey,
+        return seedQuestionsForCategory(categoryKey).filter(
+          (question) =>
+            classifyQuestion(categoryKey, question) === subcategoryKey,
         );
       }
 
@@ -2112,7 +2641,7 @@
 
       function formatAnswerText(raw) {
         let text = String(raw || "").trim();
-        if (!text) return "<p>I’m here to help.</p>";
+        if (!text) return "<p>I'm here to help.</p>";
 
         text = text.replace(/\r\n/g, "\n");
 
@@ -2145,18 +2674,19 @@
         function formatInline(str) {
           let s = escapeHtml(str);
 
-          s = s.replace(/[“"\u201c]Contact Support[”"\u201d]/gi, (match) => {
-            return `<button class="btn-primary" onclick="window.nsWidgetActions.openContact()" style="padding: 4px 12px; font-size: 11px; vertical-align: middle; margin: 0 4px; display: inline-flex;">Contact Support</button>`;
-          });
+          s = s.replace(
+            /["\u201c]Talk to a Human["\u201d]/gi,
+            () =>
+              `<button class="btn-primary" onclick="window.nsWidgetActions.openContact()" style="padding: 4px 12px; font-size: 11px; vertical-align: middle; margin: 0 4px; display: inline-flex;">Talk to a Human</button>`,
+          );
 
           s = s.replace(/&lt;br\s*\/?&gt;/gi, "<br>");
 
           s = s.replace(/\[([^\]]+)\]\(([^)\s]+)\)/g, (match, p1, p2) => {
             let url = p2;
-            if (url.includes("mailto:support@nervespa.com")) {
+            if (url.includes("mailto:support@nervespa.com"))
               url =
                 "https://mail.google.com/mail/?view=cm&fs=1&to=support@nervespa.com";
-            }
             return `<a href="${url}" target="_blank" rel="noopener" style="text-decoration:underline; font-weight:700; color:var(--ns-accent);">${p1}</a>`;
           });
 
@@ -2174,17 +2704,11 @@
           s = s.replace(urlRegex, (match, skipGroup, p2, p3, offset, str) => {
             if (skipGroup) return skipGroup;
             let href = match;
-            if (!href.match(/^https?:\/\//i)) {
-              href = "https://" + href;
-            }
-
+            if (!href.match(/^https?:\/\//i)) href = "https://" + href;
             let linkText = "Click Here";
             const lowerHref = href.toLowerCase();
-
-            // Helper to check for NerveBeam manual patterns
             const isNerveBeamManual =
               lowerHref.includes("nervebeam") && lowerHref.includes("manual");
-
             if (
               lowerHref.includes("youtube.com") ||
               lowerHref.includes("youtu.be")
@@ -2194,16 +2718,14 @@
               if (
                 lowerHref.includes("led-wrap") ||
                 lowerHref.includes("led_wrap")
-              ) {
+              )
                 linkText = "NerveBeam LED Wrap User Manual";
-              } else if (
+              else if (
                 lowerHref.includes("power-wrap") ||
                 lowerHref.includes("power_wrap")
-              ) {
+              )
                 linkText = "NerveBeam Power Wrap User Manual";
-              } else {
-                linkText = "NerveBeam User Manual";
-              }
+              else linkText = "NerveBeam User Manual";
             } else if (
               lowerHref.includes("quakeplate") &&
               lowerHref.includes("manual")
@@ -2213,7 +2735,6 @@
               lowerHref.includes("drive.google.com") ||
               lowerHref.includes("docs.google.com")
             ) {
-              // Check for specific NerveSpa bath guides
               if (lowerHref.includes("1abwl8au"))
                 linkText = "Nerve Bath Quick Guide";
               else if (lowerHref.includes("1ieghxbo"))
@@ -2226,37 +2747,33 @@
                   prefix.includes("quick") ||
                   prefix.includes("setup") ||
                   prefix.includes("start")
-                ) {
+                )
                   linkText = "Quick Start Guide";
-                } else if (
+                else if (
                   prefix.includes("full") ||
                   prefix.includes("manual") ||
                   prefix.includes("user") ||
                   prefix.includes("complete")
-                ) {
+                )
                   linkText = "Complete User Manual";
-                } else {
-                  linkText = "View Document";
-                }
+                else linkText = "View Document";
               }
             } else if (lowerHref.includes("nervespa.com/products")) {
               const productPath = lowerHref.split("nervespa.com/products/")[1];
-              if (productPath && productPath.includes("/")) {
-                linkText = "Buy it from our website";
-              } else {
-                linkText = "View More Products";
-              }
+              linkText =
+                productPath && productPath.includes("/")
+                  ? "Buy it from our website"
+                  : "View More Products";
             } else if (lowerHref.includes("nervespa.com/collections")) {
               linkText = "View More Products";
             } else if (lowerHref.includes("nervespa.com")) {
               linkText = "Visit NerveSpa";
             } else if (lowerHref.endsWith(".pdf")) {
-              // Generic PDF handler
               const parts = href.split("/");
               const fileName = parts[parts.length - 1]
                 .replace(/_|-/g, " ")
                 .replace(/\.pdf$/i, "")
-                .replace(/\sv\d+.*$/i, ""); // strip version numbers
+                .replace(/\sv\d+.*$/i, "");
               linkText = fileName.charAt(0).toUpperCase() + fileName.slice(1);
             } else {
               try {
@@ -2274,24 +2791,20 @@
             /(^|[\s(])NOTE:\s*/g,
             '$1<span class="callout"><strong>Note:</strong> ',
           );
-          if (s.includes('<span class="callout">') && !s.endsWith("</span>")) {
+          if (s.includes('<span class="callout">') && !s.endsWith("</span>"))
             s += "</span>";
-          }
           return s;
         }
 
         for (const line of lines) {
           const trimmed = line.trim();
-
           if (!trimmed) {
             flushParagraph();
             closeLists();
             continue;
           }
-
           const ulMatch = trimmed.match(/^[-•]\s+(.+)/);
           const olMatch = trimmed.match(/^\d+\.\s+(.+)/);
-
           if (ulMatch) {
             flushParagraph();
             if (inOl) {
@@ -2305,7 +2818,6 @@
             html += `<li>${formatInline(ulMatch[1])}</li>`;
             continue;
           }
-
           if (olMatch) {
             flushParagraph();
             if (inUl) {
@@ -2319,286 +2831,258 @@
             html += `<li>${formatInline(olMatch[1])}</li>`;
             continue;
           }
-
           if (trimmed.toLowerCase().startsWith("note:")) {
             flushParagraph();
             closeLists();
             html += `<div class="callout"><strong>Note:</strong> ${formatInline(trimmed.slice(5).trim())}</div>`;
             continue;
           }
-
           closeLists();
           paragraph.push(trimmed);
         }
-
         flushParagraph();
         closeLists();
-
         return html || `<p>${formatInline(text)}</p>`;
       }
 
       function createAskBoxMarkup() {
         return `
-        <div class="hero" style="padding:14px;">
-          <div style="display:flex; flex-direction:column; gap:10px;">
-
-            <div class="composerMain">
-              <textarea
-                id="homePrompt"
-                rows="1"
-                placeholder="Type your question here…"
-              ></textarea>
-            </div>
-
-            <div style="display:flex; gap:10px; flex-wrap:wrap;">
-              <button class="btn-primary" onclick="window.nsWidgetActions.submitHomePrompt()">Send</button>
-              <button class="btn-secondary" onclick="window.nsWidgetActions.openContact()">Talk to a Human</button>
-            </div>
-          </div>
-        </div>
-      `;
+<div class="googleAskWrap">
+<div class="googleAskBox">
+<textarea id="homePrompt" rows="1" placeholder="Choose a topic below, or ask a question" aria-label="Ask NerveSpa support"></textarea>
+<button class="googleAskSend" onclick="window.nsWidgetActions.submitHomePrompt()" aria-label="Send question" title="Send question">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="transform: translateX(-1px);">
+<line x1="22" y1="2" x2="11" y2="13"></line>
+<polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+</svg>
+</button>
+</div>
+<div class="googleAskActions">
+<button class="googleGhostBtn" onclick="window.nsWidgetActions.openContact()">Talk to a Human</button>
+</div>
+</div>
+`;
       }
 
       function createHomeMarkup() {
         return `
-        <div class="thread">
-          <div class="hero">
-            <h1 class="heroTitle">How can we help?</h1>
-            <p class="heroText">Get instant answers for setup, troubleshooting, care, warranty, and orders — or reach a human quickly.</p>
-          </div>
+<div class="thread">
+<div class="hero googleHomeHero">
+<div class="heroBadge">NerveSpa GPT Beta</div>
+<h1 class="heroTitle">How can we help?</h1>
+</div>
+${createAskBoxMarkup()}
+<div class="googleBrowseWrap">
+<div class="quickSectionTitle">Browse support</div>
+<div class="cardRow">
+${CATEGORIES.map(
+  (c) => `
+<div class="homeCard" onclick="window.nsWidgetActions.renderCategory('${escapeHtml(c.key)}')">
+<div class="homeCardTitle">${escapeHtml(c.title)}</div>
+<p class="homeCardSub">${escapeHtml(c.sub)}</p>
+<div class="metaRow" style="margin-top:10px;">
+<span class="metaTag">${getSubcategoriesForCategory(c.key).length} sections</span>
+<span class="metaTag">${getCategoryQuestionCount(c.key)} questions</span>
+</div>
+</div>
+`,
+).join("")}
+</div>
+</div>
+</div>
+`;
+      }
 
-          ${createAskBoxMarkup()}
-
-          <div class="quickSectionTitle">Browse support</div>
-          <div class="cardRow">
-            ${CATEGORIES.map(
-              (c) => `
-              <div class="homeCard" onclick="window.nsWidgetActions.renderCategory('${escapeHtml(c.key)}')">
-                <div class="homeCardTitle">${escapeHtml(c.title)}</div>
-                <p class="homeCardSub">${escapeHtml(c.sub)}</p>
-                <div class="metaRow" style="margin-top:10px;">
-                  <span class="metaTag">${getSubcategoriesForCategory(c.key).length} sections</span>
-                  <span class="metaTag">${getCategoryQuestionCount(c.key)} questions</span>
-                </div>
-              </div>
-            `,
-            ).join("")}
-          </div>
-        </div>
-      `;
+      // backTarget: "home" | or a category key string like "setup", "protocols" etc.
+      function createNavBar(backTarget) {
+        const backOnclick =
+          backTarget === "home"
+            ? "window.nsWidgetActions.renderHome()"
+            : "window.nsWidgetActions.renderCategory('" + backTarget + "')";
+        return `
+<div class="ns-nav-bar">
+<button class="ns-nav-btn" onclick="${backOnclick}">
+<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+Back
+</button>
+<button class="ns-nav-btn ns-nav-home" onclick="window.nsWidgetActions.renderHome()">
+<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+Home
+</button>
+</div>`;
       }
 
       function createCategoryMarkup(key) {
         const category = CATEGORIES.find((x) => x.key === key);
         const label = category?.title || "Support";
         const subcategories = getSubcategoriesForCategory(key);
-
         return `
-        <div class="thread">
-          <div class="quickGrid" style="margin-bottom:2px;">
-            <button class="chip" onclick="window.nsWidgetActions.renderHome()">← Back</button>
-            <button class="chip" onclick="window.nsWidgetActions.renderHome()">Home</button>
-          </div>
-
-          <div class="hero">
-            <h1 class="heroTitle" style="font-size:24px;">${escapeHtml(label)}</h1>
-            <p class="heroText">Choose a subcategory to browse more focused questions by product or workflow.</p>
-          </div>
-
-          ${createAskBoxMarkup()}
-
-          <div class="quickSectionTitle">Subcategories</div>
-          <div class="cardRow">
-            ${subcategories
-              .map(
-                (subcat) => `
-              <div class="homeCard" onclick="window.nsWidgetActions.renderSubcategory('${escapeHtml(key)}', '${escapeHtml(subcat.key)}')">
-                <div class="homeCardTitle">${escapeHtml(subcat.title)}</div>
-                <p class="homeCardSub">${escapeHtml(subcat.sub)}</p>
-                <div class="metaRow" style="margin-top:10px;">
-                  <span class="metaTag">${getSubcategoryQuestionCount(key, subcat.key)} questions</span>
-                </div>
-              </div>
-            `,
-              )
-              .join("")}
-          </div>
-
-          <div class="ctaPanel">
-            <div>
-              <div class="ctaPanelTitle">Need a human?</div>
-              <p class="ctaPanelText">If this requires personalized guidance, our team can follow up directly.</p>
-            </div>
-            <button class="btn-primary" onclick="window.nsWidgetActions.openContact()">Talk to Support</button>
-          </div>
-        </div>
-      `;
+<div class="thread">
+${createNavBar("home")}
+<div class="hero" style="padding:14px 16px;">
+<h1 class="heroTitle" style="font-size:22px; margin-bottom:4px;">${escapeHtml(label)}</h1>
+<p class="heroText" style="font-size:13px;">Choose a topic to browse common questions.</p>
+</div>
+${createAskBoxMarkup()}
+<div class="quickSectionTitle">Topics</div>
+<div class="cardRow">
+${subcategories
+  .map(
+    (subcat) => `
+<div class="homeCard" onclick="window.nsWidgetActions.renderSubcategory('${escapeHtml(key)}', '${escapeHtml(subcat.key)}')">
+<div class="homeCardTitle">${escapeHtml(subcat.title)}</div>
+<p class="homeCardSub">${escapeHtml(subcat.sub)}</p>
+<div class="metaRow" style="margin-top:8px;">
+<span class="metaTag">${getSubcategoryQuestionCount(key, subcat.key)} questions</span>
+</div>
+</div>
+`,
+  )
+  .join("")}
+</div>
+<div class="ctaPanel">
+<div>
+<div class="ctaPanelTitle">Need a human?</div>
+<p class="ctaPanelText">Our team can follow up directly.</p>
+</div>
+<button class="btn-primary" onclick="window.nsWidgetActions.openContact()">Talk to a Human</button>
+</div>
+</div>
+`;
       }
 
       function createSubcategoryMarkup(categoryKey, subcategoryKey) {
         const category = CATEGORIES.find((x) => x.key === categoryKey);
-        const subcategory = getSubcategoriesForCategory(categoryKey).find((x) => x.key === subcategoryKey);
+        const subcategory = getSubcategoriesForCategory(categoryKey).find(
+          (x) => x.key === subcategoryKey,
+        );
         const categoryLabel = category?.title || "Support";
         const subcategoryLabel = subcategory?.title || "Questions";
         const prompts = getQuestionsForSubcategory(categoryKey, subcategoryKey);
-
+        const qList = prompts.length
+          ? prompts
+              .map(
+                (q) => `
+<button class="ns-q-row" onclick="window.nsWidgetActions.ask('${escapeJsString(q)}')">
+<span class="ns-q-text">${escapeHtml(q)}</span>
+<svg class="ns-q-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+</button>`,
+              )
+              .join("")
+          : `<div class="stuckCard"><p class="stuckTitle">Questions coming soon</p><p class="stuckText">Check back soon or ask your own question above.</p></div>`;
         return `
-        <div class="thread">
-          <div class="quickGrid" style="margin-bottom:2px;">
-            <button class="chip" onclick="window.nsWidgetActions.renderCategory('${escapeHtml(categoryKey)}')">← Back</button>
-            <button class="chip" onclick="window.nsWidgetActions.renderHome()">Home</button>
-          </div>
-
-          <div class="hero">
-            <h1 class="heroTitle" style="font-size:24px;">${escapeHtml(subcategoryLabel)}</h1>
-            <p class="heroText">Choose a common question below, or ask in your own words.</p>
-          </div>
-
-          ${createAskBoxMarkup()}
-
-          <div class="quickSectionTitle">Questions</div>
-          <div class="quickGrid">
-            ${prompts.length
-              ? prompts
-                  .map(
-                    (q) => `
-              <button class="chip" onclick="window.nsWidgetActions.ask('${escapeJsString(q)}')">${escapeHtml(q)}</button>
-            `,
-                  )
-                  .join("")
-              : `<div class="stuckCard"><p class="stuckTitle">Questions coming soon</p><p class="stuckText">This subcategory is ready in the navigation, but we still need to map more common questions into it.</p></div>`}
-          </div>
-
-          <div class="ctaPanel">
-            <div>
-              <div class="ctaPanelTitle">Need a human?</div>
-              <p class="ctaPanelText">If this requires personalized guidance, our team can follow up directly.</p>
-            </div>
-            <button class="btn-primary" onclick="window.nsWidgetActions.openContact()">Talk to Support</button>
-          </div>
-        </div>
-      `;
+<div class="thread">
+${createNavBar(categoryKey)}
+<div class="hero" style="padding:14px 16px;">
+<h1 class="heroTitle" style="font-size:22px; margin-bottom:4px;">${escapeHtml(subcategoryLabel)}</h1>
+<p class="heroText" style="font-size:13px;">Tap a question or ask your own.</p>
+</div>
+${createAskBoxMarkup()}
+<div class="quickSectionTitle">Common questions</div>
+<div class="ns-q-list">
+${qList}
+</div>
+<div class="ctaPanel">
+<div>
+<div class="ctaPanelTitle">Need a human?</div>
+<p class="ctaPanelText">Our team can follow up directly.</p>
+</div>
+<button class="btn-primary" onclick="window.nsWidgetActions.openContact()">Talk to a Human</button>
+</div>
+</div>
+`;
       }
 
       function createUserMessageHtml(text) {
         return `
-        <div class="message user">
-          <div class="bubbleWrap">
-            <div class="bubbleLabel">You</div>
-            <div class="bubble richAnswer">
-              <p>${escapeHtml(text)}</p>
-            </div>
-          </div>
-        </div>
-      `;
+<div class="message user">
+<div class="bubbleWrap">
+<div class="bubbleLabel">You</div>
+<div class="bubble richAnswer"><p>${escapeHtml(text)}</p></div>
+</div>
+</div>
+`;
       }
 
       function createAssistantMessageHtml(message) {
         const meta = [];
         if (message.category) meta.push(message.category);
         if (message.subcategory) meta.push(message.subcategory);
-
         let text = message.answer || message.text || "";
         let extraActions = "";
-
         if (
           text.includes("To provide the best recommendation") &&
           text.includes("category")
         ) {
-          // Strip bulleted lines from the text so they don't show as bullets
           text = text.replace(/^[•\-\*]\s*([^<\n\r]+)(?:\n|$)/gm, "");
-
           const cats = [
             "Nerve & Neuropathy",
             "Joint & Mobility",
             "Advanced Supplementation",
             "Clinical Devices",
           ];
-          extraActions = `
-                    <div class="assistantActions" style="margin-top: 10px;">
-                        ${cats.map((c) => `<button class="microPill" onclick="window.nsWidgetActions.ask('suggests me some products of ${escapeJsString(c)}?')">${escapeHtml(c)}</button>`).join("")}
-                    </div>
-                `;
+          extraActions = `<div class="assistantActions" style="margin-top: 10px;">${cats.map((c) => `<button class="microPill" onclick="window.nsWidgetActions.ask('suggests me some products of ${escapeJsString(c)}?')">${escapeHtml(c)}</button>`).join("")}</div>`;
         }
-
         return `
-        <div class="message assistant">
-          <div class="avatar">NS</div>
-          <div class="bubbleWrap">
-            <div class="bubbleLabel">NerveSpa Support</div>
-            <div class="bubble">
-              <div class="richAnswer">${formatAnswerText(text)}</div>
-              ${
-                meta.length
-                  ? `
-                <div class="metaRow">
-                  ${meta.map((m) => `<span class="metaTag">${escapeHtml(m)}</span>`).join("")}
-                </div>
-              `
-                  : ""
-              }
-              ${extraActions || ""}
-              ${
-                message.candidates?.length
-                  ? `
-                <div class="assistantActions">
-                  ${message.candidates
-                    .slice(0, 3)
-                    .map(
-                      (c) => `
-                    <button class="microPill" onclick="window.nsWidgetActions.ask('${escapeJsString(c.question)}')">${escapeHtml(truncate(c.question, 42))}</button>
-                  `,
-                    )
-                    .join("")}
-                </div>
-              `
-                  : ""
-              }
-            </div>
-          </div>
-        </div>
-      `;
+<div class="message assistant">
+<div class="avatar">NS</div>
+<div class="bubbleWrap">
+<div class="bubbleLabel">NerveSpa Support</div>
+<div class="bubble">
+<div class="richAnswer">${formatAnswerText(text)}</div>
+${meta.length ? `<div class="metaRow">${meta.map((m) => `<span class="metaTag">${escapeHtml(m)}</span>`).join("")}</div>` : ""}
+${extraActions || ""}
+${
+  message.candidates?.length
+    ? `<div class="assistantActions">${message.candidates
+        .slice(0, 3)
+        .map(
+          (c) =>
+            `<button class="microPill" onclick="window.nsWidgetActions.ask('${escapeJsString(c.question)}')">${escapeHtml(truncate(c.question, 42))}</button>`,
+        )
+        .join("")}</div>`
+    : ""
+}
+</div>
+</div>
+</div>
+`;
       }
 
       function createSystemCardHtml(title, body, actions = []) {
         return `
-        <div class="stuckCard">
-          <div class="stuckTitle">${escapeHtml(title)}</div>
-          <div class="stuckText">${escapeHtml(body)}</div>
-          <div class="assistantActions">
-            ${actions
-              .map((action) => {
-                if (action.type === "contact") {
-                  return `<button class="microPill" onclick="window.nsWidgetActions.openContact()">${escapeHtml(action.label)}</button>`;
-                }
-                if (action.type === "home") {
-                  return `<button class="microPill" onclick="window.nsWidgetActions.renderHome()">${escapeHtml(action.label)}</button>`;
-                }
-                if (action.type === "warranty") {
-                  return `<button class="microPill" onclick="window.nsWidgetActions.openWarranty()">${escapeHtml(action.label)}</button>`;
-                }
-                return "";
-              })
-              .join("")}
-          </div>
-        </div>
-      `;
+<div class="stuckCard">
+<div class="stuckTitle">${escapeHtml(title)}</div>
+<div class="stuckText">${escapeHtml(body)}</div>
+<div class="assistantActions">
+${actions
+  .map((action) => {
+    if (action.type === "contact")
+      return `<button class="microPill" onclick="window.nsWidgetActions.openContact()">${escapeHtml(action.label)}</button>`;
+    if (action.type === "home")
+      return `<button class="microPill" onclick="window.nsWidgetActions.renderHome()">${escapeHtml(action.label)}</button>`;
+    if (action.type === "warranty")
+      return `<button class="microPill" onclick="window.nsWidgetActions.openWarranty()">${escapeHtml(action.label)}</button>`;
+    return "";
+  })
+  .join("")}
+</div>
+</div>
+`;
       }
 
       function createTypingHtml() {
         return `
-        <div class="message assistant" id="typingIndicator">
-          <div class="avatar">NS</div>
-          <div class="bubbleWrap">
-            <div class="bubbleLabel">NerveSpa Support</div>
-            <div class="bubble">
-              <div class="typingBubble">
-                <span></span><span></span><span></span>
-              </div>
-            </div>
-          </div>
-        </div>
-      `;
+<div class="message assistant" id="typingIndicator">
+<div class="avatar">NS</div>
+<div class="bubbleWrap">
+<div class="bubbleLabel">NerveSpa Support</div>
+<div class="bubble">
+<div class="typingBubble"><span></span><span></span><span></span></div>
+</div>
+</div>
+</div>
+`;
       }
 
       function autoGrowHomePrompt() {
@@ -2612,7 +3096,6 @@
       function attachHomePromptEvents() {
         const elHomePrompt = document.getElementById("homePrompt");
         if (!elHomePrompt) return;
-
         elHomePrompt.addEventListener("input", autoGrowHomePrompt);
         elHomePrompt.addEventListener("keydown", (e) => {
           if (e.key === "Enter" && !e.shiftKey) {
@@ -2620,7 +3103,6 @@
             submitHomePrompt();
           }
         });
-
         autoGrowHomePrompt();
       }
 
@@ -2630,10 +3112,9 @@
         if (comp) comp.style.display = "none";
         const hint = document.querySelector(".footerHint");
         if (hint) hint.style.display = "none";
-
+        elScreen.classList.add("home-search-mode");
         elScreen.innerHTML = createHomeMarkup();
         elScreen.scrollTop = 0;
-
         setTimeout(() => {
           attachHomePromptEvents();
           const elHomePrompt = document.getElementById("homePrompt");
@@ -2650,10 +3131,9 @@
         if (comp) comp.style.display = "none";
         const hint = document.querySelector(".footerHint");
         if (hint) hint.style.display = "none";
-
+        elScreen.classList.remove("home-search-mode");
         elScreen.innerHTML = createCategoryMarkup(key);
         elScreen.scrollTop = 0;
-
         setTimeout(() => {
           attachHomePromptEvents();
           const elHomePrompt = document.getElementById("homePrompt");
@@ -2670,10 +3150,12 @@
         if (comp) comp.style.display = "none";
         const hint = document.querySelector(".footerHint");
         if (hint) hint.style.display = "none";
-
-        elScreen.innerHTML = createSubcategoryMarkup(categoryKey, subcategoryKey);
+        elScreen.classList.remove("home-search-mode");
+        elScreen.innerHTML = createSubcategoryMarkup(
+          categoryKey,
+          subcategoryKey,
+        );
         elScreen.scrollTop = 0;
-
         setTimeout(() => {
           attachHomePromptEvents();
           const elHomePrompt = document.getElementById("homePrompt");
@@ -2684,30 +3166,25 @@
 
       function renderThread() {
         currentViewType = "thread";
+        elScreen.classList.remove("home-search-mode");
         const comp = document.querySelector(".composer");
         if (comp) comp.style.display = "flex";
         const hint = document.querySelector(".footerHint");
         if (hint) hint.style.display = "block";
-
         const html = `
-        <div class="thread">
-          ${thread
-            .map((item) => {
-              if (item.role === "user") return createUserMessageHtml(item.text);
-              if (item.role === "assistant")
-                return createAssistantMessageHtml(item);
-              if (item.role === "system")
-                return createSystemCardHtml(
-                  item.title,
-                  item.body,
-                  item.actions || [],
-                );
-              return "";
-            })
-            .join("")}
-          ${isTyping ? createTypingHtml() : ""}
-        </div>
-      `;
+<div class="thread">
+${thread
+  .map((item) => {
+    if (item.role === "user") return createUserMessageHtml(item.text);
+    if (item.role === "assistant") return createAssistantMessageHtml(item);
+    if (item.role === "system")
+      return createSystemCardHtml(item.title, item.body, item.actions || []);
+    return "";
+  })
+  .join("")}
+${isTyping ? createTypingHtml() : ""}
+</div>
+`;
         elScreen.innerHTML = html;
         scrollToBottom();
       }
@@ -2720,7 +3197,6 @@
           last.body === card.body
         )
           return;
-
         thread.push({
           role: "system",
           title: card.title,
@@ -2735,8 +3211,7 @@
         const msg = String(error?.message || "").toLowerCase();
         let title = "Connection issue";
         let body =
-          "We couldn’t reach support right now. Please check your internet connection and try again.";
-
+          "We couldn't reach support right now. Please check your internet connection and try again.";
         if (msg.includes("timeout")) {
           title = "Request timed out";
           body =
@@ -2751,12 +3226,11 @@
           body =
             "Our support service is having trouble right now. Please try again shortly, or contact our team directly.";
         }
-
         pushSystemCard({
           title,
           body,
           actions: [
-            { type: "contact", label: "Contact Support" },
+            { type: "contact", label: "Talk to a Human" },
             { type: "home", label: "Home" },
           ],
         });
@@ -2765,33 +3239,28 @@
       function renderFallback(candidates = []) {
         thread.push({
           role: "assistant",
-          text: "I don’t see that exact detail in the current knowledge base. Please contact our team so we can provide the most accurate guidance.",
+          text: "I don't see that exact detail in the current knowledge base. Please contact our team so we can provide the most accurate guidance.",
           answer:
-            "I don’t see that exact detail in the current knowledge base.\n\n" +
-            "Please contact our team so we can provide the most accurate guidance.",
+            "I don't see that exact detail in the current knowledge base.\n\nPlease contact our team so we can provide the most accurate guidance.",
           candidates,
         });
-
         saveThread();
         renderThread();
-
         pushSystemCard({
           title: "Want direct help?",
           body: "Our team can follow up with personalized support for your device, order, or warranty question.",
           actions: [
-            { type: "contact", label: "Contact Support" },
+            { type: "contact", label: "Talk to a Human" },
             { type: "home", label: "Back Home" },
           ],
         });
       }
 
       function pushUserMessage(text) {
-        // Remove previous helpfulness system cards from history so they don't clutter the chat log
         thread = thread.filter(
           (item) =>
             !(item.role === "system" && item.title === "Was this helpful?"),
         );
-
         thread.push({ role: "user", text });
         saveThread();
         renderThread();
@@ -2806,7 +3275,6 @@
         if (btnSend) btnSend.disabled = true;
         renderThread();
       }
-
       function hideTyping() {
         isTyping = false;
         if (elFreeText) elFreeText.disabled = false;
@@ -2829,8 +3297,8 @@
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
               session_id: sessionId,
-              role: role,
-              message: message,
+              role,
+              message,
               is_dev: isDev,
             }),
           });
@@ -2846,9 +3314,9 @@
             body: JSON.stringify({
               session_id: sessionId,
               role: "audit",
-              action: action,
+              action,
               message: `[AUDIT] ${action}`,
-              metadata: metadata,
+              metadata,
               is_dev: isDev,
               timestamp: new Date().toISOString(),
             }),
@@ -2860,9 +3328,9 @@
         if (!wasHelpful) {
           pushSystemCard({
             title: "We can help directly",
-            body: "If the answer didn’t fully solve it, contact our team for personalized guidance.",
+            body: "If the answer didn't fully solve it, contact our team for personalized guidance.",
             actions: [
-              { type: "contact", label: "Contact Support" },
+              { type: "contact", label: "Talk to a Human" },
               { type: "home", label: "Back Home" },
             ],
           });
@@ -2875,43 +3343,35 @@
           pushSystemCard({
             title: "Access Restricted",
             body: "You have been temporarily blocked from sending more messages due to unusual activity. please contact support if this is a mistake.",
-            actions: [{ type: "contact", label: "Contact Support" }],
+            actions: [{ type: "contact", label: "Talk to a Human" }],
           });
           return;
         }
-
         if (isTyping) return;
-
         const q = (query || "").trim();
         if (!q) return;
 
-        // Rate Limiting Logic
         const now = Date.now();
         queryTimestamps = queryTimestamps.filter(
           (t) => now - t < RATE_LIMIT_WINDOW,
         );
-
         if (queryTimestamps.length >= RATE_LIMIT_COUNT) {
           safeSetItem(BLOCK_KEY, "true");
           logAudit("RATE_LIMIT_EXCEEDED", {
             query_count: queryTimestamps.length,
             last_query: q,
           });
-
-          // Disable UI
           if (elFreeText) elFreeText.disabled = true;
           if (btnSend) btnSend.disabled = true;
           const elHomePrompt = document.getElementById("homePrompt");
           if (elHomePrompt) elHomePrompt.disabled = true;
-
           pushSystemCard({
             title: "Access Restricted",
             body: "You have reached the limit of 30 questions per minute. Your access has been restricted to protect our services.",
-            actions: [{ type: "contact", label: "Contact Support" }],
+            actions: [{ type: "contact", label: "Talk to a Human" }],
           });
           return;
         }
-
         queryTimestamps.push(now);
 
         lastUserQuery = q;
@@ -2933,14 +3393,13 @@
           });
           return;
         }
-
         const hasAlphaNumeric = /[a-zA-Z0-9]/.test(q);
         if (!hasAlphaNumeric) {
           pushSystemCard({
             title: "Typo detected",
             body: "Please check your question and try again.",
             actions: [
-              { type: "contact", label: "Contact Support" },
+              { type: "contact", label: "Talk to a Human" },
               { type: "home", label: "Home" },
             ],
           });
@@ -2948,13 +3407,9 @@
         }
 
         showTyping();
-
         try {
           const isDev = safeGetItem("is_dev") === "true";
-          const url = `${WEBHOOK_URL}?chatInput=${encodeURIComponent(
-            q,
-          )}&sessionId=${encodeURIComponent(sessionId)}&is_dev=${isDev}`;
-
+          const url = `${WEBHOOK_URL}?chatInput=${encodeURIComponent(q)}&sessionId=${encodeURIComponent(sessionId)}&is_dev=${isDev}`;
           const res = await fetch(url, {
             method: "GET",
             headers: { Accept: "application/json" },
@@ -2969,12 +3424,10 @@
           else
             answer =
               "I received a response but couldn't parse it. Please try again.";
-
-          thread.push({ role: "assistant", text: answer, answer: answer });
+          thread.push({ role: "assistant", text: answer, answer });
           logToMessagesWebhook("bot", answer);
           saveThread();
           renderThread();
-
           pushSystemCard({
             title: "Was this helpful?",
             body: "You can ask a follow-up, choose a related question, or contact support directly.",
@@ -2997,7 +3450,6 @@
           if (typeof autoGrowHomePrompt === "function") autoGrowHomePrompt();
           return;
         }
-
         if (!elFreeText) return;
         elFreeText.value = text || "";
         elFreeText.focus();
@@ -3006,7 +3458,6 @@
       function submitHomePrompt() {
         if (isTyping) return;
         let val = "";
-
         const elHome = document.getElementById("homePrompt");
         if (elHome && elHome.offsetParent !== null) {
           val = elHome.value || "";
@@ -3019,7 +3470,6 @@
           elFreeText.value = "";
           if (window.autoGrowTextarea) window.autoGrowTextarea();
         }
-
         if (val.trim()) ask(val);
       }
 
@@ -3042,7 +3492,6 @@
       function clearConversation() {
         const confirmed = window.confirm("Clear this conversation?");
         if (!confirmed) return;
-
         thread = [];
         saveThread();
         renderHome();
@@ -3050,11 +3499,8 @@
 
       function openWidget() {
         elShell.classList.add("open");
-
-        if (isMinimized) {
-          setMinimized(false);
-        }
-
+        if (isMinimized) setMinimized(false);
+        if (window.innerWidth < 520) setFullscreen(true);
         renderHome();
       }
 
@@ -3074,25 +3520,19 @@
             submitHomePrompt();
           }
         });
-
         function autoGrowTextarea() {
           elFreeText.style.height = "26px";
           elFreeText.style.height =
             Math.min(elFreeText.scrollHeight, 110) + "px";
         }
         elFreeText.addEventListener("input", autoGrowTextarea);
-
-        // Expose globally so submitHomePrompt can trigger a reset
         window.autoGrowTextarea = autoGrowTextarea;
       }
 
       elLauncher.addEventListener("click", () => {
         if (elLauncherNote) elLauncherNote.classList.remove("show");
-        if (elShell.classList.contains("open")) {
-          closeWidget();
-        } else {
-          openWidget();
-        }
+        if (elShell.classList.contains("open")) closeWidget();
+        else openWidget();
       });
 
       document.addEventListener("keydown", (e) => {
@@ -3133,20 +3573,15 @@
       let sessionEndSent = false;
       function sendSessionEnd() {
         if (sessionEndSent) return;
-        
-        // Only track session if the user actually sent at least one message
-        const hasUserMessaged = thread.some(msg => msg.role === "user");
+        const hasUserMessaged = thread.some((msg) => msg.role === "user");
         if (!hasUserMessaged) return;
-
         sessionEndSent = true;
-        
         const data = JSON.stringify({
-          sessionId: sessionId,
+          sessionId,
           endedon: new Date().toISOString(),
-          ended_on: new Date().toISOString()
+          ended_on: new Date().toISOString(),
         });
         const url = "https://n8n.srv917960.hstgr.cloud/webhook/save-duration";
-
         try {
           fetch(url, {
             method: "POST",
@@ -3160,9 +3595,7 @@
       window.addEventListener("beforeunload", sendSessionEnd);
       window.addEventListener("pagehide", sendSessionEnd);
       document.addEventListener("visibilitychange", () => {
-         if (document.visibilityState === "hidden") {
-            sendSessionEnd();
-         }
+        if (document.visibilityState === "hidden") sendSessionEnd();
       });
 
       initTheme();
