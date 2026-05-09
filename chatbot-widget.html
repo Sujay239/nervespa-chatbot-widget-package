@@ -6,7 +6,7 @@
       name="viewport"
       content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
     />
-    <title>NerveSpa Support Widget — Premium Chat</title>
+    <title>Ned — NerveSpa Education Assistant</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -455,21 +455,26 @@
       .message.user {
         justify-content: flex-end;
       }
+
       .avatar {
-        width: 30px;
-        height: 30px;
+        width: 34px;
+        height: 34px;
         border-radius: 999px;
         flex: 0 0 auto;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 12px;
-        font-weight: 800;
-        color: #fff;
-        background: linear-gradient(135deg, var(--ns-accent), #2563eb);
+        font-size: 0;
+        color: transparent;
+        background-image: url("https://s3.us-east-2.amazonaws.com/cdn.hmsctl.com/publicshare/Ned1.0.png");
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
         box-shadow: 0 8px 20px rgba(37, 99, 235, 0.18);
         margin-top: 2px;
+        overflow: hidden;
       }
+
       .bubbleWrap {
         max-width: min(84%, 320px);
         display: flex;
@@ -832,7 +837,7 @@
         outline: none;
         background: transparent;
         color: var(--ns-text);
-        font-size: 14px;
+        font-size: 13px;
         line-height: 1.45;
         font-family: var(--font);
         padding: 4px 0;
@@ -840,6 +845,7 @@
       }
       .googleAskBox textarea::placeholder {
         color: var(--ns-dim);
+        font-size: 12px;
       }
       .googleAskSend {
         width: 38px;
@@ -969,20 +975,47 @@
         flex: 0 0 auto;
         color: var(--ns-dim);
       }
+
+      .ns-ned-icon {
+        width: 28px;
+        height: 28px;
+        border-radius: 999px;
+        object-fit: cover;
+        display: block;
+        flex: 0 0 auto;
+        box-shadow: 0 6px 16px rgba(37, 99, 235, 0.22);
+      }
+      .ns-home-ned-icon {
+        width: 72px;
+        height: 72px;
+        border-radius: 999px;
+        object-fit: cover;
+        display: block;
+        margin: 0 auto 14px;
+        box-shadow: 0 14px 34px rgba(37, 99, 235, 0.18);
+      }
     </style>
   </head>
   <body class="ns-theme-light">
-    <div class="ns-launcher-note" id="nsLauncherNote">Chat with us</div>
-    <div class="ns-launcher" id="nsLauncher" aria-label="Open NerveSpa Support">
-      <span class="dot"></span>
-      <span class="label">Ask NerveSpa GPT</span>
+    <div class="ns-launcher-note" id="nsLauncherNote">Ask Ned</div>
+    <div
+      class="ns-launcher"
+      id="nsLauncher"
+      aria-label="Open Ned, the NerveSpa Education Assistant"
+    >
+      <img
+        class="ns-ned-icon"
+        src="https://s3.us-east-2.amazonaws.com/cdn.hmsctl.com/publicshare/Ned1.0.png"
+        alt="Ned"
+      />
+      <span class="label">Ask Ned</span>
     </div>
     <div
       class="ns-shell"
       id="nsShell"
       role="dialog"
       aria-modal="true"
-      aria-label="NerveSpa Support Widget"
+      aria-label="Ned, the NerveSpa Education Assistant"
     >
       <div class="ns-topbar">
         <div class="ns-topbar-left">
@@ -993,7 +1026,7 @@
           />
           <span
             class="ns-beta-badge"
-            title="This is a beta version of the NerveSpa Support Assistant."
+            title="Ned is the beta version of the NerveSpa Education Assistant."
             >Beta</span
           >
         </div>
@@ -1033,8 +1066,8 @@
               align-items: center;
             "
             onclick="window.nsWidgetActions.openContact()"
-            aria-label="Support"
-            title="Support"
+            aria-label="Talk to a Human"
+            title="Talk to a Human"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -1052,7 +1085,7 @@
                 d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"
               ></path>
             </svg>
-            <span class="support-btn-text">Support</span>
+            <span class="support-btn-text">Talk to a Human</span>
           </button>
           <button
             class="btn-icon"
@@ -1086,8 +1119,8 @@
             <textarea
               id="chatInput"
               rows="1"
-              placeholder="Choose a topic below, or ask a question"
-              aria-label="Reply"
+              placeholder="Ask Ned a question"
+              aria-label="Ask Ned a question"
             ></textarea>
           </div>
           <button
@@ -1111,9 +1144,6 @@
               <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
             </svg>
           </button>
-        </div>
-        <div class="footerHint">
-          Bot can make mistakes. Always check facts before acting.
         </div>
       </div>
     </div>
@@ -1215,6 +1245,13 @@
         else renderHome();
       }
 
+      function goBackFromThread() {
+        if (currentCategoryKey && currentSubcategoryKey)
+          return renderSubcategory(currentCategoryKey, currentSubcategoryKey);
+        if (currentCategoryKey) return renderCategory(currentCategoryKey);
+        return renderHome();
+      }
+
       const elShell = document.getElementById("nsShell");
       const elLauncher = document.getElementById("nsLauncher");
       const elLauncherNote = document.getElementById("nsLauncherNote");
@@ -1250,9 +1287,9 @@
       }
 
       const noteMessages = [
-        "Chat with us!",
-        "Have any questions?",
-        "Need help?",
+        "Have questions?",
+        "Get setup and protocol help",
+        "Need help with an order?",
       ];
       let noteIndex = 0;
 
@@ -1266,10 +1303,8 @@
             noteIndex = (noteIndex + 1) % noteMessages.length;
           }, 3500);
         };
-        setTimeout(() => {
-          showNextNote();
-          setInterval(showNextNote, 7000);
-        }, 2000);
+        showNextNote();
+        setInterval(showNextNote, 7000);
         elLauncherNote.addEventListener("click", () => {
           elLauncherNote.classList.remove("show");
           openWidget();
@@ -1527,7 +1562,10 @@
           isFullscreen = !!parsed?.fullscreen;
           isMinimized = !!parsed?.minimized;
           if (isFullscreen) elShell.classList.add("fullscreen");
-          if (isMinimized) elShell.classList.add("minimized");
+          if (isMinimized) {
+            isMinimized = false;
+            safeRemoveItem(WINDOW_STATE_KEY);
+          }
           syncWindowButtons();
         } catch (e) {}
       }
@@ -2684,15 +2722,12 @@
 
           s = s.replace(/\[([^\]]+)\]\(([^)\s]+)\)/g, (match, p1, p2) => {
             let url = p2;
-            if (url.includes("mailto:support@nervespa.com"))
-              url =
-                "https://mail.google.com/mail/?view=cm&fs=1&to=support@nervespa.com";
             return `<a href="${url}" target="_blank" rel="noopener" style="text-decoration:underline; font-weight:700; color:var(--ns-accent);">${p1}</a>`;
           });
 
           s = s.replace(
             /(support@nervespa\.com)(?!")/g,
-            '<a href="https://mail.google.com/mail/?view=cm&fs=1&to=$1" target="_blank" rel="noopener" style="text-decoration:underline; font-weight:700; color:var(--ns-accent);">$1</a>',
+            '<a href="mailto:$1" target="_blank" rel="noopener" style="text-decoration:underline; font-weight:700; color:var(--ns-accent);">$1</a>',
           );
           s = s.replace(
             /(1-800-239-7880)/g,
@@ -2769,12 +2804,19 @@
             } else if (lowerHref.includes("nervespa.com")) {
               linkText = "Visit NerveSpa";
             } else if (lowerHref.endsWith(".pdf")) {
-              const parts = href.split("/");
-              const fileName = parts[parts.length - 1]
-                .replace(/_|-/g, " ")
-                .replace(/\.pdf$/i, "")
-                .replace(/\sv\d+.*$/i, "");
-              linkText = fileName.charAt(0).toUpperCase() + fileName.slice(1);
+              if (
+                lowerHref.includes("cdn.hmsctl.com") ||
+                lowerHref.includes("guide")
+              ) {
+                linkText = "Show Guide Document";
+              } else {
+                const parts = href.split("/");
+                const fileName = parts[parts.length - 1]
+                  .replace(/_|-/g, " ")
+                  .replace(/\.pdf$/i, "")
+                  .replace(/\sv\d+.*$/i, "");
+                linkText = fileName.charAt(0).toUpperCase() + fileName.slice(1);
+              }
             } else {
               try {
                 const urlObj = new URL(href);
@@ -2849,7 +2891,7 @@
         return `
 <div class="googleAskWrap">
 <div class="googleAskBox">
-<textarea id="homePrompt" rows="1" placeholder="Choose a topic below, or ask a question" aria-label="Ask NerveSpa support"></textarea>
+<textarea id="homePrompt" rows="1" placeholder="Ask Ned about setup, protocols, orders, or support" aria-label="Ask Ned a question"></textarea>
 <button class="googleAskSend" onclick="window.nsWidgetActions.submitHomePrompt()" aria-label="Send question" title="Send question">
 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="transform: translateX(-1px);">
 <line x1="22" y1="2" x2="11" y2="13"></line>
@@ -2868,8 +2910,7 @@
         return `
 <div class="thread">
 <div class="hero googleHomeHero">
-<div class="heroBadge">NerveSpa GPT Beta</div>
-<h1 class="heroTitle">How can we help?</h1>
+<h1 class="heroTitle">Hi, I’m Ned.</h1>
 </div>
 ${createAskBoxMarkup()}
 <div class="googleBrowseWrap">
@@ -3025,9 +3066,9 @@ ${qList}
         }
         return `
 <div class="message assistant">
-<div class="avatar">NS</div>
+<div class="avatar"></div>
 <div class="bubbleWrap">
-<div class="bubbleLabel">NerveSpa Support</div>
+<div class="bubbleLabel">Ned</div>
 <div class="bubble">
 <div class="richAnswer">${formatAnswerText(text)}</div>
 ${meta.length ? `<div class="metaRow">${meta.map((m) => `<span class="metaTag">${escapeHtml(m)}</span>`).join("")}</div>` : ""}
@@ -3057,6 +3098,8 @@ ${
 <div class="assistantActions">
 ${actions
   .map((action) => {
+    if (action.type === "back")
+      return `<button class="microPill" onclick="window.nsWidgetActions.goBackFromThread()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:4px;"><polyline points="15 18 9 12 15 6"></polyline></svg>${escapeHtml(action.label || "Back")}</button>`;
     if (action.type === "contact")
       return `<button class="microPill" onclick="window.nsWidgetActions.openContact()">${escapeHtml(action.label)}</button>`;
     if (action.type === "home")
@@ -3074,9 +3117,9 @@ ${actions
       function createTypingHtml() {
         return `
 <div class="message assistant" id="typingIndicator">
-<div class="avatar">NS</div>
+<div class="avatar"></div>
 <div class="bubbleWrap">
-<div class="bubbleLabel">NerveSpa Support</div>
+<div class="bubbleLabel">Ned</div>
 <div class="bubble">
 <div class="typingBubble"><span></span><span></span><span></span></div>
 </div>
@@ -3230,8 +3273,9 @@ ${isTyping ? createTypingHtml() : ""}
           title,
           body,
           actions: [
-            { type: "contact", label: "Talk to a Human" },
+            { type: "back", label: "Back" },
             { type: "home", label: "Home" },
+            { type: "contact", label: "Talk to a Human" },
           ],
         });
       }
@@ -3250,8 +3294,9 @@ ${isTyping ? createTypingHtml() : ""}
           title: "Want direct help?",
           body: "Our team can follow up with personalized support for your device, order, or warranty question.",
           actions: [
+            { type: "back", label: "Back" },
+            { type: "home", label: "Home" },
             { type: "contact", label: "Talk to a Human" },
-            { type: "home", label: "Back Home" },
           ],
         });
       }
@@ -3330,8 +3375,9 @@ ${isTyping ? createTypingHtml() : ""}
             title: "We can help directly",
             body: "If the answer didn't fully solve it, contact our team for personalized guidance.",
             actions: [
+              { type: "back", label: "Back" },
+              { type: "home", label: "Home" },
               { type: "contact", label: "Talk to a Human" },
-              { type: "home", label: "Back Home" },
             ],
           });
         }
@@ -3387,8 +3433,9 @@ ${isTyping ? createTypingHtml() : ""}
             title: "Language Not Supported",
             body: "I can only process questions in English. Please write your question in English and try again.",
             actions: [
-              { type: "contact", label: "Talk to Human" },
+              { type: "back", label: "Back" },
               { type: "home", label: "Home" },
+              { type: "contact", label: "Talk to a Human" },
             ],
           });
           return;
@@ -3399,8 +3446,9 @@ ${isTyping ? createTypingHtml() : ""}
             title: "Typo detected",
             body: "Please check your question and try again.",
             actions: [
-              { type: "contact", label: "Talk to a Human" },
+              { type: "back", label: "Back" },
               { type: "home", label: "Home" },
+              { type: "contact", label: "Talk to a Human" },
             ],
           });
           return;
@@ -3432,8 +3480,9 @@ ${isTyping ? createTypingHtml() : ""}
             title: "Was this helpful?",
             body: "You can ask a follow-up, choose a related question, or contact support directly.",
             actions: [
+              { type: "back", label: "Back" },
               { type: "home", label: "Home" },
-              { type: "contact", label: "Talk to Human" },
+              { type: "contact", label: "Talk to a Human" },
             ],
           });
         } catch (e) {
@@ -3500,7 +3549,7 @@ ${isTyping ? createTypingHtml() : ""}
       function openWidget() {
         elShell.classList.add("open");
         if (isMinimized) setMinimized(false);
-        if (window.innerWidth < 520) setFullscreen(true);
+        setFullscreen(true);
         renderHome();
       }
 
@@ -3568,6 +3617,7 @@ ${isTyping ? createTypingHtml() : ""}
         submitSupportForm,
         renderSupportForm,
         restorePreviousView,
+        goBackFromThread,
       });
 
       let sessionEndSent = false;
